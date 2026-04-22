@@ -558,57 +558,7 @@
     color: var(--blue);
   }
 
-  /* Detailed weather for selected hour */
-  .hour-detail {
-    padding: 6px 10px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
 
-  .detail-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-  }
-
-  .detail-tile {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 5px 7px;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .dt-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-  }
-  .dt-val {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text);
-    line-height: 1;
-  }
-  .dt-unit { font-size: 10px; color: var(--text2); }
-
-  .weather-advice {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--teal);
-    border-radius: 0 4px 4px 0;
-    padding: 5px 8px;
-    font-size: 11px;
-    color: var(--text2);
-    line-height: 1.4;
-  }
 
   .weather-loading {
     flex: 1;
@@ -794,7 +744,7 @@
       </div>
       <div class="hourly-label" id="hourlyLabel" style="display:none">Hourly forecast — tap to select</div>
       <div class="hourly-scroll" id="hourlyStrip" style="display:none"></div>
-      <div id="hourDetail" class="hour-detail"></div>
+
     </div>
   </div>
 
@@ -1725,16 +1675,7 @@ function getRunSuitability(temp, rain, wind, wmo) {
   return ['OK','#3b82f6'];
 }
 
-function getWeatherAdvice(temp, rain, wind, wmo) {
-  const tips = [];
-  if (temp < 5) tips.push('Cold — gloves, hat, layer up');
-  if (temp > 22) tips.push('Warm — extra hydration, reduce pace expectations');
-  if (rain > 40) tips.push('Rain likely — waterproof jacket or accept getting wet');
-  if (wind > 30) tips.push('Windy — head into the wind first, have tailwind to finish');
-  if (wmo >= 61 && wmo <= 82) tips.push('Wet underfoot — watch footing on trail sections');
-  if (tips.length === 0) tips.push('Conditions look fine for running');
-  return tips.join(' · ');
-}
+
 
 function isToday(date) {
   const today = new Date();
@@ -1786,69 +1727,38 @@ function buildHourlyStrip(data, date) {
   return strip;
 }
 
-function renderHourDetail(data, h) {
-  const hours = data.hourly;
-  const temp = Math.round(hours.temperature_2m[h]);
-  const feelsLike = Math.round(hours.apparent_temperature[h]);
-  const rain = Math.round(hours.precipitation_probability[h]);
-  const precip = hours.precipitation[h];
-  const wind = Math.round(hours.windspeed_10m[h]);
-  const humidity = Math.round(hours.relativehumidity_2m[h]);
-  const wmo = hours.weathercode[h];
-  const [suitLabel, suitCol] = getRunSuitability(temp, rain, wind, wmo);
-  const advice = getWeatherAdvice(temp, rain, wind, wmo);
 
-  return `
-    <div class="detail-grid">
-      <div class="detail-tile">
-        <div class="dt-label">Temp</div>
-        <div class="dt-val">${temp}<span class="dt-unit">°C</span></div>
-      </div>
-      <div class="detail-tile">
-        <div class="dt-label">Feels Like</div>
-        <div class="dt-val">${feelsLike}<span class="dt-unit">°C</span></div>
-      </div>
-      <div class="detail-tile">
-        <div class="dt-label">Humidity</div>
-        <div class="dt-val">${humidity}<span class="dt-unit">%</span></div>
-      </div>
-      <div class="detail-tile">
-        <div class="dt-label">Rain Chance</div>
-        <div class="dt-val" style="color:${rain>50?'#3b82f6':rain>20?'#f59e0b':'#22c55e'}">${rain}<span class="dt-unit">%</span></div>
-      </div>
-      <div class="detail-tile">
-        <div class="dt-label">Precipitation</div>
-        <div class="dt-val">${precip}<span class="dt-unit">mm</span></div>
-      </div>
-      <div class="detail-tile">
-        <div class="dt-label">Wind</div>
-        <div class="dt-val">${wind}<span class="dt-unit">km/h</span></div>
-      </div>
-    </div>
-    <div class="weather-advice">🏃 <strong style="color:${suitCol}">${suitLabel} for running</strong> — ${advice}</div>
-  `;
-}
 
 function selectHour(h) {
   selectedHour = h;
   if (weatherData) {
     document.getElementById('hourlyStrip').innerHTML = buildHourlyStrip(weatherData, currentDate);
-    document.getElementById('hourDetail').innerHTML = renderHourDetail(weatherData, h);
+    rerenderCurrentConditions(h);
   }
 }
 
 function showWeatherLoading() {
-  document.getElementById('currentConditions').style.display = 'none';
+  const cc = document.getElementById('currentConditions');
+  cc.style.display = 'grid';
+  document.getElementById('curTemp').innerHTML = '<div class="spinner"></div>';
+  document.getElementById('curCondition').textContent = 'Fetching weather…';
+  document.getElementById('curMeta').innerHTML = '';
+  document.getElementById('suitVal').textContent = '—';
+  document.getElementById('suitVal').style.color = 'var(--text3)';
   document.getElementById('hourlyLabel').style.display = 'none';
   document.getElementById('hourlyStrip').style.display = 'none';
-  document.getElementById('hourDetail').innerHTML = '<div class="weather-loading"><div class="spinner"></div> Fetching weather for BR6…</div>';
 }
 
 function showWeatherUnavailable(msg) {
-  document.getElementById('currentConditions').style.display = 'none';
+  const cc = document.getElementById('currentConditions');
+  cc.style.display = 'grid';
+  document.getElementById('curTemp').innerHTML = '📅';
+  document.getElementById('curCondition').textContent = msg;
+  document.getElementById('curMeta').innerHTML = '';
+  document.getElementById('suitVal').textContent = '—';
+  document.getElementById('suitVal').style.color = 'var(--text3)';
   document.getElementById('hourlyLabel').style.display = 'none';
   document.getElementById('hourlyStrip').style.display = 'none';
-  document.getElementById('hourDetail').innerHTML = `<div class="weather-unavail"><div class="big">📅</div><div>${msg}</div></div>`;
 }
 
 async function loadWeather() {
@@ -1898,10 +1808,7 @@ async function loadWeather() {
   }
 }
 
-function rerenderWeather() {
-  if (!weatherData) return;
-
-  const h = selectedHour;
+function rerenderCurrentConditions(h) {
   const hours = weatherData.hourly;
   const temp = Math.round(hours.temperature_2m[h]);
   const feelsLike = Math.round(hours.apparent_temperature[h]);
@@ -1913,7 +1820,6 @@ function rerenderWeather() {
   const cond = WMO_CODES[wmo] || 'Unknown';
   const [suitLabel, suitCol] = getRunSuitability(temp, rain, wind, wmo);
 
-  // Current conditions bar
   const cc = document.getElementById('currentConditions');
   cc.style.display = 'grid';
   document.getElementById('curTemp').innerHTML = `${icon} ${temp}<span>°C</span>`;
@@ -1926,6 +1832,13 @@ function rerenderWeather() {
   `;
   document.getElementById('suitVal').textContent = suitLabel;
   document.getElementById('suitVal').style.color = suitCol;
+}
+
+function rerenderWeather() {
+  if (!weatherData) return;
+
+  const h = selectedHour;
+  rerenderCurrentConditions(h);
 
   // Hourly strip
   const hourlyLabel = document.getElementById('hourlyLabel');
@@ -1939,9 +1852,6 @@ function rerenderWeather() {
     const chips = hourlyStrip.querySelectorAll('.hour-chip');
     if (chips[h]) chips[h].scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
   }, 50);
-
-  // Hour detail
-  document.getElementById('hourDetail').innerHTML = renderHourDetail(weatherData, h);
 }
 
 // ═══════════════════════════════════════════════
