@@ -126,6 +126,14 @@
     color: var(--text);
     flex: 1;
   }
+  .day-context {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    min-height: 13px;
+  }
   .date-display .day-name { color: var(--orange); font-size: 11px; letter-spacing: 0.1em; }
 
 
@@ -671,6 +679,130 @@
     color: var(--orange);
   }
   .race-day-sub { font-size: 11px; color: var(--text2); text-align: center; line-height: 1.5; }
+  /* ── CALENDAR OVERLAY ── */
+  #calOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #calOverlay.open { display: flex; }
+
+  #calModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(360px, 92vw);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #calHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+
+  #calMonthLabel {
+    flex: 1;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .cal-nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .cal-nav-btn:hover { background: var(--surface3); }
+
+  #calClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #calClose:hover { color: var(--text); background: var(--surface3); }
+
+  #calDayHeaders {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  #calDayHeaders span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    text-align: center;
+    padding: 2px 0;
+  }
+
+  #calGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .cal-day:hover:not(.cal-dim) { background: var(--surface3); border-color: var(--border2); }
+  .cal-day.cal-dim {
+    color: var(--text3);
+    cursor: default;
+    opacity: 0.35;
+  }
+  .cal-day.cal-today {
+    border-color: rgba(20,184,166,0.5);
+    color: var(--teal);
+    background: rgba(20,184,166,0.1);
+  }
+  .cal-day.cal-active {
+    background: var(--orange-dim);
+    border-color: var(--orange-border);
+    color: var(--orange);
+    font-weight: 800;
+  }
+  .cal-day.cal-empty { cursor: default; }
+
 </style>
 </head>
 <body>
@@ -679,12 +811,13 @@
     <div class="logo">Nat's <span>Training Plan</span></div>
     <div class="nav-controls">
       <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
-      <div class="date-display">
+      <div class="date-display" id="dateDisplayWrap" onclick="openCalendar()" style="cursor:pointer">
+        <div class="day-context" id="dayContext"></div>
         <div class="day-name" id="dayName">—</div>
         <div id="dateDisplay">—</div>
       </div>
       <button class="nav-btn" id="nextBtn" onclick="navigate(1)">&#8594;</button>
-      <button class="today-btn" onclick="goToday()">Today</button>
+      <button class="today-btn" id="todayBtn" onclick="goToday()">Today</button>
     </div>
   </div>
 
@@ -751,6 +884,22 @@
     </div>
     <div class="footer-center" id="footerCenter">Sub-2:55:00 · 6 December 2026 · Valencia</div>
     <div class="pb-info">PB <strong>3:05:46</strong> London 2025</div>
+  </div>
+</div>
+
+<!-- CALENDAR OVERLAY -->
+<div id="calOverlay" onclick="handleOverlayClick(event)">
+  <div id="calModal">
+    <div id="calHeader">
+      <button class="cal-nav-btn" id="calPrev" onclick="calNavigate(-1)">&#8592;</button>
+      <div id="calMonthLabel"></div>
+      <button class="cal-nav-btn" id="calNext" onclick="calNavigate(1)">&#8594;</button>
+      <button id="calClose" onclick="closeCalendar()">&#10005;</button>
+    </div>
+    <div id="calDayHeaders">
+      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+    </div>
+    <div id="calGrid"></div>
   </div>
 </div>
 
@@ -1858,6 +2007,29 @@ function render() {
   document.getElementById('dayName').textContent = getDayOfWeekName(currentDate).toUpperCase();
   document.getElementById('dateDisplay').textContent = formatDate(currentDate);
 
+  // Today / Tomorrow button
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  const todayBtn = document.getElementById('todayBtn');
+  if (currentDate.getTime() === today.getTime()) {
+    todayBtn.style.display = 'none';
+  } else {
+    todayBtn.style.display = '';
+    todayBtn.textContent = 'Today';
+    todayBtn.onclick = goToday;
+    todayBtn.classList.remove('tomorrow');
+  }
+  const ctx = document.getElementById('dayContext');
+  if (currentDate.getTime() === today.getTime()) {
+    ctx.textContent = 'Today';
+    ctx.style.color = 'var(--orange)';
+  } else if (currentDate.getTime() === tomorrow.getTime()) {
+    ctx.textContent = 'Tomorrow';
+    ctx.style.color = 'var(--teal)';
+  } else {
+    ctx.textContent = '';
+  }
+
   // Countdown
   renderCountdown();
 
@@ -1915,6 +2087,82 @@ function render() {
     }
   }, { passive: true });
 })();
+
+// ═══════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════
+let calYear = 0, calMonth = 0;
+
+function openCalendar() {
+  calYear = currentDate.getFullYear();
+  calMonth = currentDate.getMonth();
+  renderCalendar();
+  document.getElementById('calOverlay').classList.add('open');
+}
+
+function closeCalendar() {
+  document.getElementById('calOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('calOverlay')) closeCalendar();
+}
+
+function calNavigate(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent =
+    `${MONTHS[calMonth]} ${calYear}`;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const planStart = new Date(PLAN_START); planStart.setHours(0,0,0,0);
+  const planEnd = new Date(RACE_DATE); planEnd.setHours(0,0,0,0);
+
+  // First day of month, adjusted so Mon=0
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDow = firstDay.getDay(); // 0=Sun
+  startDow = (startDow === 0) ? 6 : startDow - 1; // Mon=0, Sun=6
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  let html = '';
+
+  // Empty cells before first day
+  for (let i = 0; i < startDow; i++) {
+    html += `<div class="cal-day cal-empty"></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    date.setHours(0,0,0,0);
+
+    const isToday = date.getTime() === today.getTime();
+    const isActive = date.getTime() === currentDate.getTime();
+    const inRange = date >= planStart && date <= planEnd;
+
+    let cls = 'cal-day';
+    if (!inRange) cls += ' cal-dim';
+    else if (isActive) cls += ' cal-active';
+    else if (isToday) cls += ' cal-today';
+
+    const onclick = inRange ? `calSelectDay(${calYear},${calMonth},${d})` : '';
+    html += `<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>${d}</div>`;
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function calSelectDay(y, m, d) {
+  currentDate = new Date(y, m, d);
+  currentDate.setHours(0,0,0,0);
+  closeCalendar();
+  render();
+}
 
 // ═══════════════════════════════════════════════
 // INIT
