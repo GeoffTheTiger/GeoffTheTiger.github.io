@@ -84,6 +84,26 @@
     padding-left: 60px;
   }
 
+  #weekSummaryBtn {
+    position: absolute;
+    left: 0;
+    background: rgba(20,184,166,0.15);
+    border: 1px solid rgba(20,184,166,0.35);
+    color: var(--teal);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    width: auto;
+    height: auto;
+  }
+  #weekSummaryBtn:hover { background: rgba(20,184,166,0.25); }
+
   .today-btn {
     background: var(--orange-dim);
     border: 1px solid var(--orange-border);
@@ -804,6 +824,186 @@
   }
   .cal-day.cal-empty { cursor: default; }
 
+  /* ── WEEK SUMMARY OVERLAY ── */
+  #weekOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #weekOverlay.open { display: flex; }
+
+  #weekModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(380px, 94vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #weekModalHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #weekModalTitle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  #weekModalClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #weekModalClose:hover { color: var(--text); background: var(--surface3); }
+
+  #weekModalBadges {
+    display: flex;
+    gap: 6px;
+    padding: 8px 14px 6px;
+    flex-shrink: 0;
+  }
+
+  #weekModalTable {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 14px;
+  }
+  #weekModalTable::-webkit-scrollbar { width: 3px; }
+  #weekModalTable::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .ws-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.12s;
+  }
+  .ws-row:hover { background: var(--surface2); }
+  .ws-row:last-child { border-bottom: none; }
+  .ws-row.ws-active { background: rgba(245,130,10,0.06); }
+
+  .ws-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 2px;
+  }
+
+  .ws-day {
+    padding: 8px 8px 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .ws-day-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .ws-session-type {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.02em;
+  }
+
+  .ws-time, .ws-km {
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+  }
+  .ws-km { color: var(--orange); min-width: 80px; padding-right: 4px; }
+  .ws-time { color: var(--teal); }
+
+  .ws-col-headers {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    padding: 4px 4px 4px 12px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 2px;
+  }
+  .ws-col-h {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .ws-col-h.right {
+    text-align: right;
+    min-width: 70px;
+    padding-right: 6px;
+  }
+  .ws-col-h.right.km { min-width: 80px; padding-right: 4px; }
+
+  #weekModalTotals {
+    border-top: 1px solid var(--border2);
+    padding: 8px 14px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .ws-total-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  .ws-total-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--teal);
+    text-align: right;
+    min-width: 70px;
+    padding-right: 6px;
+  }
+  .ws-total-km {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--orange);
+    text-align: right;
+    min-width: 80px;
+    padding-right: 4px;
+  }
+
 </style>
 </head>
 <body>
@@ -811,6 +1011,7 @@
   <div id="header">
     <div class="logo">Nat's <span>Training Plan</span></div>
     <div class="nav-controls">
+      <button id="weekSummaryBtn" onclick="openWeekSummary()">Week</button>
       <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
       <div class="date-display" id="dateDisplayWrap" onclick="openCalendar()" style="cursor:pointer">
         <div class="day-context" id="dayContext"></div>
@@ -853,7 +1054,7 @@
 
     <div id="weather-panel">
       <div class="weather-header">
-        <div class="weather-title">🌤 Weather — BR6</div>
+        <div class="weather-title" id="weatherTitle">🌤 Weather — BR6</div>
         <div class="weather-loc" id="weatherTimeLabel">Live conditions</div>
       </div>
       <div id="currentConditions" class="current-conditions" style="display:none">
@@ -901,6 +1102,19 @@
       <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
     </div>
     <div id="calGrid"></div>
+  </div>
+</div>
+
+<!-- WEEK SUMMARY OVERLAY -->
+<div id="weekOverlay" onclick="handleWeekOverlayClick(event)">
+  <div id="weekModal">
+    <div id="weekModalHeader">
+      <div id="weekModalTitle"></div>
+      <button id="weekModalClose" onclick="closeWeekSummary()">&#10005;</button>
+    </div>
+    <div id="weekModalBadges"></div>
+    <div id="weekModalTable"></div>
+    <div id="weekModalTotals"></div>
   </div>
 </div>
 
@@ -1797,6 +2011,30 @@ function renderCountdown() {
 // ═══════════════════════════════════════════════
 const BR6_LAT = 51.37;
 const BR6_LON = 0.05;
+let userLat = BR6_LAT;
+let userLon = BR6_LON;
+let usingLiveLocation = false;
+
+function getLocation() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve(false); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        userLat = pos.coords.latitude;
+        userLon = pos.coords.longitude;
+        usingLiveLocation = true;
+        resolve(true);
+      },
+      () => {
+        userLat = BR6_LAT;
+        userLon = BR6_LON;
+        usingLiveLocation = false;
+        resolve(false);
+      },
+      { timeout: 5000, maximumAge: 300000 }
+    );
+  });
+}
 
 const WMO_CODES = {
   0:'Clear', 1:'Mainly Clear', 2:'Partly Cloudy', 3:'Overcast',
@@ -1844,7 +2082,7 @@ function isPast(date) {
 
 async function fetchWeather(date) {
   const d = date.toISOString().slice(0,10);
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${BR6_LAT}&longitude=${BR6_LON}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=Europe%2FLondon&start_date=${d}&end_date=${d}`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=auto&start_date=${d}&end_date=${d}`;
   const r = await fetch(url);
   return r.json();
 }
@@ -1910,12 +2148,6 @@ function showWeatherUnavailable(msg) {
 async function loadWeather() {
   const dateKey = currentDate.toISOString().slice(0,10);
 
-  // Don't reload if same date
-  if (weatherForDate === dateKey && weatherData) {
-    rerenderWeather();
-    return;
-  }
-
   // Past dates — no weather
   if (isPast(currentDate)) {
     showWeatherUnavailable('No historical forecast needed for past dates');
@@ -1923,11 +2155,21 @@ async function loadWeather() {
     return;
   }
 
-  // Check if within forecast range (16 days)
+  // Check if within forecast range (14 days)
   const daysOut = daysBetween(new Date(), currentDate);
   if (daysOut > 14) {
     showWeatherUnavailable('Weather forecast not available this far ahead — check closer to the date');
     document.getElementById('weatherTimeLabel').textContent = 'Too far ahead';
+    return;
+  }
+
+  // Try to get live location (reuse if same date already loaded with same location)
+  await getLocation();
+  const locationKey = `${userLat.toFixed(3)},${userLon.toFixed(3)}`;
+  const cacheKey = `${dateKey}|${locationKey}`;
+
+  if (weatherForDate === cacheKey && weatherData) {
+    rerenderWeather();
     return;
   }
 
@@ -1936,16 +2178,17 @@ async function loadWeather() {
   try {
     const data = await fetchWeather(currentDate);
     weatherData = data;
-    weatherForDate = dateKey;
+    weatherForDate = cacheKey;
+
+    const locLabel = usingLiveLocation ? 'Current Location' : 'BR6';
+    document.getElementById('weatherTitle').textContent = `🌤 Weather — ${locLabel}`;
 
     if (isToday(currentDate)) {
-      // Default to current hour
       selectedHour = new Date().getHours();
-      document.getElementById('weatherTimeLabel').textContent = 'Live conditions · BR6';
+      document.getElementById('weatherTimeLabel').textContent = `Live · ${locLabel}`;
     } else {
-      // Default to 05:00
       selectedHour = 5;
-      document.getElementById('weatherTimeLabel').textContent = `Forecast 05:00 · BR6`;
+      document.getElementById('weatherTimeLabel').textContent = `Forecast 05:00 · ${locLabel}`;
     }
 
     rerenderWeather();
@@ -2166,6 +2409,134 @@ function calSelectDay(y, m, d) {
   currentDate.setHours(0,0,0,0);
   closeCalendar();
   render();
+}
+
+// ═══════════════════════════════════════════════
+// WEEK SUMMARY
+// ═══════════════════════════════════════════════
+let summaryWeekIdx = 0;
+
+function openWeekSummary() {
+  const planDay = getPlanDay(currentDate);
+  summaryWeekIdx = planDay ? planDay.weekIdx : 0;
+  renderWeekSummary();
+  document.getElementById('weekOverlay').classList.add('open');
+}
+
+function closeWeekSummary() {
+  document.getElementById('weekOverlay').classList.remove('open');
+}
+
+function handleWeekOverlayClick(e) {
+  if (e.target === document.getElementById('weekOverlay')) closeWeekSummary();
+}
+
+function summaryNavigate(delta) {
+  summaryWeekIdx = Math.max(0, Math.min(38, summaryWeekIdx + delta));
+  renderWeekSummary();
+}
+
+function summaryGoToDay(weekIdx, dayIdx) {
+  const d = new Date(PLAN_START);
+  d.setDate(d.getDate() + weekIdx * 7 + dayIdx);
+  currentDate = new Date(d);
+  currentDate.setHours(0,0,0,0);
+  closeWeekSummary();
+  render();
+}
+
+function renderWeekSummary() {
+  const week = weeks[summaryWeekIdx];
+  const weekStart = new Date(PLAN_START);
+  weekStart.setDate(weekStart.getDate() + summaryWeekIdx * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  // Title with nav arrows
+  document.getElementById('weekModalTitle').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;flex:1">
+      <button class="cal-nav-btn" onclick="summaryNavigate(-1)" ${summaryWeekIdx === 0 ? 'disabled style="opacity:0.3"' : ''}>&#8592;</button>
+      <div style="flex:1;text-align:center;font-family:\'Barlow Condensed\',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase">
+        Week ${summaryWeekIdx + 1} &nbsp;·&nbsp; ${weekStart.getDate()} ${MONTHS[weekStart.getMonth()]} – ${weekEnd.getDate()} ${MONTHS[weekEnd.getMonth()]}
+      </div>
+      <button class="cal-nav-btn" onclick="summaryNavigate(1)" ${summaryWeekIdx === 38 ? 'disabled style="opacity:0.3"' : ''}>&#8594;</button>
+    </div>`;
+
+  // Badges
+  const phaseMap = {
+    'Base Build':'phase-base','Marathon Block':'phase-marathon',
+    'Peak':'phase-peak','Consolidation':'phase-consol',
+    'Taper':'phase-taper','Race Week':'phase-race'
+  };
+  const wtMap = {
+    'CUT-BACK':'wt-cutback','BUILD':'wt-build','BRIDGE':'wt-bridge',
+    'TRANSITION':'wt-bridge','RACE':'phase-race'
+  };
+  let wtClass = 'wt-default';
+  let wtText = week.weekA_B ? `Week ${week.weekA_B}` : '';
+  if (week.weekType) {
+    const key = Object.keys(wtMap).find(k => week.weekType.includes(k));
+    if (key) { wtClass = wtMap[key]; wtText = week.weekType; }
+    else if (week.weekA_B === 'A') { wtClass = 'wt-weeka'; wtText = 'Week A'; }
+    else if (week.weekA_B === 'B') { wtClass = 'wt-weekb'; wtText = 'Week B'; }
+  }
+
+  let badgesHtml = `<span class="phase-badge ${phaseMap[week.phase] || 'phase-base'}">${week.phase}</span>`;
+  if (wtText) badgesHtml += `<span class="week-type-badge ${wtClass}">${wtText}</span>`;
+  document.getElementById('weekModalBadges').innerHTML = badgesHtml;
+
+  // Effort accent colours
+  const accentMap = {
+    easy:'#22c55e', threshold:'#ef4444', vo2max:'#a855f7',
+    mp:'#3b82f6', progression:'#f59e0b'
+  };
+
+  // Col headers
+  let tableHtml = `
+    <div class="ws-col-headers">
+      <div class="ws-col-h">Day / Session</div>
+      <div class="ws-col-h right">Time</div>
+      <div class="ws-col-h right km">Distance</div>
+    </div>`;
+
+  const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+
+  DAY_COLS.forEach((dayKey, i) => {
+    const d = week.days[dayKey];
+    const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + i);
+    const isActiveDay = dayDate.getTime() === currentDate.getTime();
+    const isToday = dayDate.getTime() === todayMidnight.getTime();
+
+    const accent = accentMap[d.effort] || '#636b76';
+    const timeVal = d.time || '—';
+    const kmVal = d.km || (d.rest ? 'Rest' : d.holiday ? 'Holiday' : d.strengthOnly ? 'Strength' : '—');
+    const kmStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
+    const timeStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
+
+    let dayLabel = DAY_NAMES_FULL[i];
+    if (isToday) dayLabel += ' <span style="color:var(--orange);font-size:9px;font-weight:800">TODAY</span>';
+
+    tableHtml += `
+      <div class="ws-row ${isActiveDay ? 'ws-active' : ''}" 
+           onclick="summaryGoToDay(${summaryWeekIdx}, ${i})"
+           style="cursor:pointer">
+        <div class="ws-accent" style="background:${accent}"></div>
+        <div class="ws-day">
+          <div class="ws-day-name">${dayLabel}</div>
+          <div class="ws-session-type">${d.type}</div>
+        </div>
+        <div class="ws-time" style="${timeStyle}">${timeVal}</div>
+        <div class="ws-km" style="${kmStyle}">${kmVal}</div>
+      </div>`;
+  });
+
+  document.getElementById('weekModalTable').innerHTML = tableHtml;
+
+  // Totals
+  document.getElementById('weekModalTotals').innerHTML = `
+    <div class="ws-total-label">Week Total</div>
+    <div class="ws-total-time">${week.time}</div>
+    <div class="ws-total-km">${week.km}</div>`;
 }
 
 // ═══════════════════════════════════════════════
