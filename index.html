@@ -993,8 +993,9 @@
     inset: 0;
     background: rgba(0,0,0,0.75);
     z-index: 1000;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 10vh;
   }
   #logOverlay.open { display: flex; }
 
@@ -2465,9 +2466,25 @@ function render() {
   document.getElementById('dayName').textContent = getDayOfWeekName(currentDate).toUpperCase();
   document.getElementById('dateDisplay').textContent = formatDate(currentDate);
 
-  // Today / Tomorrow button
+  // Today / Tomorrow panel borders
   const today = new Date(); today.setHours(0,0,0,0);
   const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  const topStrip = document.getElementById('top-strip');
+  const sessionPanel = document.getElementById('session-panel');
+  const weatherPanel = document.getElementById('weather-panel');
+  if (currentDate.getTime() === today.getTime()) {
+    topStrip.style.borderColor = 'rgba(245,130,10,0.45)';
+    sessionPanel.style.borderColor = 'rgba(245,130,10,0.45)';
+    weatherPanel.style.borderColor = 'rgba(245,130,10,0.45)';
+  } else if (currentDate.getTime() === tomorrow.getTime()) {
+    topStrip.style.borderColor = 'rgba(20,184,166,0.45)';
+    sessionPanel.style.borderColor = 'rgba(20,184,166,0.45)';
+    weatherPanel.style.borderColor = 'rgba(20,184,166,0.45)';
+  } else {
+    topStrip.style.borderColor = 'var(--border)';
+    sessionPanel.style.borderColor = 'var(--border)';
+    weatherPanel.style.borderColor = 'var(--border)';
+  }
   const todayBtn = document.getElementById('todayBtn');
   if (currentDate.getTime() === today.getTime()) {
     todayBtn.style.display = 'none';
