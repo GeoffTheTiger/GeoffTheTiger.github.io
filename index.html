@@ -2536,7 +2536,15 @@ function render() {
   renderProgress(planDay);
   renderTopStrip(planDay);
   renderSession(planDay);
-  updateLogBtn();
+
+  // Hide log session button for future dates
+  const logBtnWrap = document.getElementById('log-btn-wrap');
+  if (currentDate > today) {
+    logBtnWrap.style.display = 'none';
+  } else {
+    logBtnWrap.style.display = '';
+    updateLogBtn();
+  }
 
   // Reset weather cache if date changed
   loadWeather();
