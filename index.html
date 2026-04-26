@@ -1903,6 +1903,12 @@ const DAY_NAMES_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Satu
 let currentDate = new Date();
 currentDate.setHours(0,0,0,0);
 
+// After 19:30, default to tomorrow
+const initNow = new Date();
+if (initNow.getHours() > 19 || (initNow.getHours() === 19 && initNow.getMinutes() >= 30)) {
+  currentDate.setDate(currentDate.getDate() + 1);
+}
+
 let weatherData = null;
 let selectedHour = null;
 let weatherForDate = null;
