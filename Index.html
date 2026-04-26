@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="apple-touch-icon" href="/assets/icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nat's Plan">
+<title>Nat's Training Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f11;
+    --surface: #141719;
+    --surface2: #1a1d21;
+    --surface3: #21252b;
+    --border: #2a2f36;
+    --border2: #343a42;
+    --text: #e8eaed;
+    --text2: #9aa0aa;
+    --text3: #636b76;
+    --orange: #f5820a;
+    --orange-dim: rgba(245,130,10,0.15);
+    --orange-border: rgba(245,130,10,0.35);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.12);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --purple: #a855f7;
+    --purple-dim: rgba(168,85,247,0.12);
+    --amber: #f59e0b;
+    --teal: #14b8a6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 8px 10px 16px;
+    gap: 6px;
+    touch-action: pan-y;
+  }
+
+  /* ── HEADER ── */
+  #header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0 2px;
+  }
+
+  .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-align: center;
+  }
+  .logo span { color: var(--orange); }
+
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    position: relative;
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+
+  #weekSummaryBtn {
+    position: absolute;
+    left: 0;
+    background: rgba(20,184,166,0.15);
+    border: 1px solid rgba(20,184,166,0.35);
+    color: var(--teal);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    width: auto;
+    height: auto;
+  }
+  #weekSummaryBtn:hover { background: rgba(20,184,166,0.25); }
+
+  .today-btn {
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+    color: var(--orange);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    position: absolute;
+    right: 0;
+  }
+  .today-btn:hover { background: rgba(245,130,10,0.25); }
+
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-btn:hover { background: var(--surface3); border-color: var(--border2); }
+  .nav-btn:active { transform: scale(0.95); }
+
+  .date-display {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+    flex: 1;
+  }
+  .day-context {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    min-height: 13px;
+  }
+  .date-display .day-name { color: var(--orange); font-size: 11px; letter-spacing: 0.1em; }
+
+
+
+  /* ── BOTTOM PROGRESS BAR ── */
+  #progress-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 0 2px;
+  }
+  .progress-label-bottom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .progress-bar-full {
+    width: 100%;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--amber));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* ── TOP STRIP (phase + week aim) ── */
+  #top-strip {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+  }
+
+  .phase-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .week-type-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .sep { color: var(--border2); font-size: 10px; }
+
+  .week-aim {
+    font-size: 11px;
+    color: var(--text2);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .week-aim strong { color: var(--text); }
+
+  .week-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  /* ── SESSION PANEL ── */
+  #session-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-header {
+    padding: 7px 10px 5px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .session-type-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .day-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .stat-block {
+    padding: 6px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .stat-block:first-child { border-right: 1px solid var(--border); }
+
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .stat-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .stat-value.km { color: var(--orange); }
+  .stat-value.time { color: var(--teal); }
+
+  /* Session body */
+  .session-body {
+    padding: 7px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .session-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .session-text .label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    display: block;
+    margin-bottom: 2px;
+    margin-top: 5px;
+  }
+
+  .session-text .label:first-child { margin-top: 0; }
+
+  .session-text p { margin-bottom: 2px; }
+
+  .effort-chip {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+  }
+
+  .coach-cue {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 4px 4px 0;
+    padding: 5px 8px;
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.4;
+  }
+
+  .coach-cue.fuel { border-left-color: var(--green); }
+  .coach-cue.hr { border-left-color: var(--blue); }
+  .coach-cue.effort { border-left-color: var(--orange); }
+  .coach-cue.key { border-left-color: var(--amber); }
+
+  .strength-section {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 8px;
+  }
+  .strength-header {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 3px;
+  }
+
+  .rest-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px;
+  }
+  .rest-icon { font-size: 32px; }
+  .rest-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+  }
+  .rest-sub { font-size: 11px; color: var(--text3); text-align: center; }
+
+  /* ── WEATHER PANEL ── */
+  #weather-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weather-header {
+    padding: 7px 10px 5px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .weather-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .weather-loc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text3);
+  }
+
+  /* Current conditions */
+  .current-conditions {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .current-temp {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+  }
+  .current-temp span { font-size: 18px; color: var(--text2); }
+
+  .current-desc {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .current-condition {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .current-meta {
+    font-size: 10px;
+    color: var(--text2);
+    display: flex;
+    gap: 8px;
+  }
+  .current-meta span { display: flex; align-items: center; gap: 2px; }
+
+  .run-suitability {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .suit-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .suit-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Hourly strip */
+  .hourly-label {
+    padding: 4px 10px 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    flex-shrink: 0;
+  }
+
+  .hourly-scroll {
+    display: flex;
+    gap: 4px;
+    padding: 2px 10px 6px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .hourly-scroll::-webkit-scrollbar { height: 2px; }
+  .hourly-scroll::-webkit-scrollbar-track { background: transparent; }
+  .hourly-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 1px; }
+
+  .hour-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    min-width: 40px;
+    background: var(--surface2);
+  }
+  .hour-chip:hover { border-color: var(--border2); }
+  .hour-chip.active {
+    border-color: var(--orange-border);
+    background: var(--orange-dim);
+  }
+  .hour-chip.now-chip {
+    border-color: rgba(59,130,246,0.4);
+    background: var(--blue-dim);
+  }
+  .hour-chip.now-chip.active {
+    border-color: var(--orange-border);
+    background: var(--orange-dim);
+  }
+
+  .hc-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text3);
+  }
+  .hour-chip.active .hc-time,
+  .hour-chip.now-chip .hc-time { color: var(--text2); }
+
+  .hc-icon { font-size: 13px; line-height: 1; }
+
+  .hc-temp {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .hc-rain {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--blue);
+  }
+
+
+
+  .weather-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .weather-unavail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text3);
+    font-size: 11px;
+  }
+  .weather-unavail .big { font-size: 24px; }
+
+  /* Phase colours */
+  .phase-base { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .phase-marathon { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .phase-peak { background: rgba(239,68,68,0.15); color: #f87171; }
+  .phase-consol { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .phase-taper { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .phase-race { background: rgba(245,130,10,0.2); color: var(--orange); }
+
+  .wt-cutback { background: rgba(239,68,68,0.12); color: #f87171; }
+  .wt-build { background: rgba(34,197,94,0.12); color: #4ade80; }
+  .wt-bridge { background: rgba(245,158,11,0.12); color: #fbbf24; }
+  .wt-weeka { background: rgba(245,130,10,0.12); color: var(--orange); }
+  .wt-weekb { background: rgba(59,130,246,0.12); color: #60a5fa; }
+  .wt-holiday { background: rgba(168,85,247,0.12); color: #c084fc; }
+  .wt-default { background: var(--surface3); color: var(--text2); }
+
+  /* Race day special */
+  .race-day-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+  }
+  .race-day-icon { font-size: 36px; }
+  .race-day-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+  }
+  .race-day-sub { font-size: 11px; color: var(--text2); text-align: center; line-height: 1.5; }
+  /* ── CALENDAR OVERLAY ── */
+  #calOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #calOverlay.open { display: flex; }
+
+  #calModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(360px, 92vw);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #calHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+
+  #calMonthLabel {
+    flex: 1;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .cal-nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .cal-nav-btn:hover { background: var(--surface3); }
+
+  #calClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #calClose:hover { color: var(--text); background: var(--surface3); }
+
+  #calDayHeaders {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  #calDayHeaders span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    text-align: center;
+    padding: 2px 0;
+  }
+
+  #calGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .cal-day:hover:not(.cal-dim) { background: var(--surface3); border-color: var(--border2); }
+  .cal-day.cal-dim {
+    color: var(--text3);
+    cursor: default;
+    opacity: 0.35;
+  }
+  .cal-day.cal-today {
+    border-color: rgba(20,184,166,0.5);
+    color: var(--teal);
+    background: rgba(20,184,166,0.1);
+  }
+  .cal-day.cal-active {
+    background: var(--orange-dim);
+    border-color: var(--orange-border);
+    color: var(--orange);
+    font-weight: 800;
+  }
+  .cal-day.cal-empty { cursor: default; }
+
+  /* ── WEEK SUMMARY OVERLAY ── */
+  #weekOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #weekOverlay.open { display: flex; }
+
+  #weekModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(380px, 94vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #weekModalHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #weekModalTitle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  #weekModalClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #weekModalClose:hover { color: var(--text); background: var(--surface3); }
+
+  #weekModalBadges {
+    display: flex;
+    gap: 6px;
+    padding: 8px 14px 6px;
+    flex-shrink: 0;
+  }
+
+  #weekModalTable {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 14px;
+  }
+  #weekModalTable::-webkit-scrollbar { width: 3px; }
+  #weekModalTable::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .ws-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.12s;
+  }
+  .ws-row:hover { background: var(--surface2); }
+  .ws-row:last-child { border-bottom: none; }
+  .ws-row.ws-active { background: rgba(245,130,10,0.06); }
+
+  .ws-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 2px;
+  }
+
+  .ws-day {
+    padding: 8px 8px 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .ws-day-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .ws-session-type {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.02em;
+  }
+
+  .ws-time, .ws-km {
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+  }
+  .ws-km { color: var(--orange); min-width: 80px; padding-right: 4px; }
+  .ws-time { color: var(--teal); }
+
+  .ws-col-headers {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    padding: 4px 4px 4px 12px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 2px;
+  }
+  .ws-col-h {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .ws-col-h.right {
+    text-align: right;
+    min-width: 70px;
+    padding-right: 6px;
+  }
+  .ws-col-h.right.km { min-width: 80px; padding-right: 4px; }
+
+  #weekModalTotals {
+    border-top: 1px solid var(--border2);
+    padding: 8px 14px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .ws-total-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  .ws-total-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--teal);
+    text-align: right;
+    min-width: 70px;
+    padding-right: 6px;
+  }
+  .ws-total-km {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--orange);
+    text-align: right;
+    min-width: 80px;
+    padding-right: 4px;
+  }
+
+  /* ── LOG SESSION BUTTON ── */
+  #log-btn-wrap {
+    padding: 4px 0 2px;
+    display: flex;
+    justify-content: center;
+  }
+  #logSessionBtn {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 7px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  #logSessionBtn:hover { background: var(--surface3); border-color: var(--orange-border); color: var(--orange); }
+  #logSessionBtn.has-log { border-color: var(--orange-border); color: var(--orange); background: var(--orange-dim); }
+
+  /* ── SESSION LOG OVERLAY ── */
+  #logOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+  }
+  #logOverlay.open { display: flex; }
+
+  #logModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(380px, 94vw);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #logModalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #logModalTitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  #logModalClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  #logModalClose:hover { color: var(--text); background: var(--surface3); }
+
+  #logModalBody {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .log-slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .log-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .log-slider-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .log-slider-desc {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--orange);
+    letter-spacing: 0.04em;
+  }
+
+  .log-slider-track {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .log-slider-min, .log-slider-max {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    flex-shrink: 0;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--orange);
+    cursor: pointer;
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 4px rgba(245,130,10,0.4);
+  }
+
+  .log-notes-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #logNotes {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    padding: 8px 10px;
+    resize: none;
+    height: 70px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #logNotes:focus { border-color: var(--orange-border); }
+  #logNotes::placeholder { color: var(--text3); }
+
+  #logModalFooter {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  #logExportBtn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #logExportBtn:hover { background: var(--surface3); color: var(--text); }
+
+  #logSaveBtn {
+    flex: 1;
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+    color: var(--orange);
+    padding: 7px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  #logSaveBtn:hover { background: rgba(245,130,10,0.25); }
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="logo">Nat's <span>Training Plan</span></div>
+    <div class="nav-controls">
+      <button id="weekSummaryBtn" onclick="openWeekSummary()">Week</button>
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
+      <div class="date-display" id="dateDisplayWrap" onclick="openCalendar()" style="cursor:pointer">
+        <div class="day-context" id="dayContext"></div>
+        <div class="day-name" id="dayName">—</div>
+        <div id="dateDisplay">—</div>
+      </div>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">&#8594;</button>
+      <button class="today-btn" id="todayBtn" onclick="goToday()">Today</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="top-strip">
+      <span class="phase-badge" id="phaseBadge">—</span>
+      <span class="week-type-badge" id="weekTypeBadge">—</span>
+      <span class="sep">|</span>
+      <span class="week-aim" id="weekAim">—</span>
+      <span class="week-label" id="weekLabel">—</span>
+    </div>
+
+    <div id="session-panel">
+      <div class="panel-header">
+        <div class="session-type-label" id="sessionTypeLabel">—</div>
+        <div class="day-badge" id="dayColLabel">—</div>
+      </div>
+      <div class="stats-row" id="statsRow">
+        <div class="stat-block">
+          <div class="stat-label">Distance</div>
+          <div class="stat-value km" id="statKm">—</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Duration</div>
+          <div class="stat-value time" id="statTime">—</div>
+        </div>
+      </div>
+      <div class="session-body" id="sessionBody">
+        <div class="session-text"><p>Loading...</p></div>
+      </div>
+    </div>
+
+    <div id="weather-panel">
+      <div class="weather-header">
+        <div class="weather-title" id="weatherTitle">🌤 Weather — BR6</div>
+        <div class="weather-loc" id="weatherTimeLabel">Live conditions</div>
+      </div>
+      <div id="currentConditions" class="current-conditions" style="display:none">
+        <div class="current-temp" id="curTemp">—<span>°C</span></div>
+        <div class="current-desc">
+          <div class="current-condition" id="curCondition">—</div>
+          <div class="current-meta" id="curMeta">—</div>
+        </div>
+        <div class="run-suitability" id="runSuit">
+          <div class="suit-label">Running</div>
+          <div class="suit-val" id="suitVal">—</div>
+        </div>
+      </div>
+      <div class="hourly-label" id="hourlyLabel" style="display:none">Hourly forecast — tap to select</div>
+      <div class="hourly-scroll" id="hourlyStrip" style="display:none"></div>
+
+    </div>
+  </div>
+
+  <div id="log-btn-wrap">
+    <button id="logSessionBtn" onclick="openSessionLog()">Log Session</button>
+  </div>
+
+  <div id="progress-bottom">
+    <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
+    <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- CALENDAR OVERLAY -->
+<div id="calOverlay" onclick="handleOverlayClick(event)">
+  <div id="calModal">
+    <div id="calHeader">
+      <button class="cal-nav-btn" id="calPrev" onclick="calNavigate(-1)">&#8592;</button>
+      <div id="calMonthLabel"></div>
+      <button class="cal-nav-btn" id="calNext" onclick="calNavigate(1)">&#8594;</button>
+      <button id="calClose" onclick="closeCalendar()">&#10005;</button>
+    </div>
+    <div id="calDayHeaders">
+      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+    </div>
+    <div id="calGrid"></div>
+  </div>
+</div>
+
+<!-- WEEK SUMMARY OVERLAY -->
+<div id="weekOverlay" onclick="handleWeekOverlayClick(event)">
+  <div id="weekModal">
+    <div id="weekModalHeader">
+      <div id="weekModalTitle"></div>
+      <button id="weekModalClose" onclick="closeWeekSummary()">&#10005;</button>
+    </div>
+    <div id="weekModalBadges"></div>
+    <div id="weekModalTable"></div>
+    <div id="weekModalTotals"></div>
+  </div>
+</div>
+
+<!-- SESSION LOG OVERLAY -->
+<div id="logOverlay" onclick="handleLogOverlayClick(event)">
+  <div id="logModal">
+    <div id="logModalHeader">
+      <div id="logModalTitle"></div>
+      <button id="logModalClose" onclick="closeSessionLog()">&#10005;</button>
+    </div>
+    <div id="logModalBody">
+      <div class="log-slider-group">
+        <div class="log-slider-header">
+          <span class="log-slider-label">Effort</span>
+          <span class="log-slider-desc" id="effortDesc">As planned</span>
+        </div>
+        <div class="log-slider-track">
+          <span class="log-slider-min">−2</span>
+          <input type="range" min="-2" max="2" step="1" value="0" id="effortSlider" oninput="updateSlider('effort')">
+          <span class="log-slider-max">+2</span>
+        </div>
+      </div>
+      <div class="log-slider-group">
+        <div class="log-slider-header">
+          <span class="log-slider-label">Legs</span>
+          <span class="log-slider-desc" id="legsDesc">Normal</span>
+        </div>
+        <div class="log-slider-track">
+          <span class="log-slider-min">−2</span>
+          <input type="range" min="-2" max="2" step="1" value="0" id="legsSlider" oninput="updateSlider('legs')">
+          <span class="log-slider-max">+2</span>
+        </div>
+      </div>
+      <div class="log-slider-group">
+        <div class="log-slider-header">
+          <span class="log-slider-label">Energy</span>
+          <span class="log-slider-desc" id="energyDesc">Normal</span>
+        </div>
+        <div class="log-slider-track">
+          <span class="log-slider-min">−2</span>
+          <input type="range" min="-2" max="2" step="1" value="0" id="energySlider" oninput="updateSlider('energy')">
+          <span class="log-slider-max">+2</span>
+        </div>
+      </div>
+      <div class="log-notes-group">
+        <div class="log-slider-label">Notes <span style="color:var(--text3);font-weight:400;font-size:10px">(optional)</span></div>
+        <textarea id="logNotes" placeholder="Anything else? Niggles, conditions, cut short…"></textarea>
+      </div>
+    </div>
+    <div id="logModalFooter">
+      <button id="logExportBtn" onclick="exportLog()">Export Log</button>
+      <button id="logSaveBtn" onclick="saveSessionLog()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// PLAN DATA
+// ═══════════════════════════════════════════════
+const PLAN_START = new Date(2026, 2, 9); // 9 Mar 2026 (Mon)
+const RACE_DATE  = new Date(2026, 11, 6); // 6 Dec 2026
+
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Week data indexed 0–38 (weeks 1–39)
+const weeks = [
+  // Week 1 — 9 Mar
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'16.2–21.5km', time:'2h05m–2h30m',
+    aim:'3 run days · All easy HR 130–155 · Thu/Fri/Sun = rest · Building the aerobic base from scratch',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only — bodyweight', detail:'Bodyweight strength session only, no run this week.\n\nExercises: single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs.\n3×12–15 reps.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'4.3–5.7km', time:'25–30 min', session:'Easy run', detail:'25–30 min easy effort. Fully conversational pace throughout.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'4.9–6.3km', time:'25–30 min + strides', session:'Easy run + strides', detail:'25–30 min easy followed by 4–6×100m strides (~0.6km). Strides: controlled acceleration over 100m, not a sprint.', effort:'easy', strides:true },
+      Thu:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'7.0–9.5km', time:'40–50 min', session:'Easy long run', detail:'40–50 min easy. Conversational throughout. Focus on time on feet.', effort:'easy' },
+      Sun:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+    }
+  },
+  // Week 2 — 16 Mar
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'18.2–23.7km', time:'2h16m–2h41m',
+    aim:'3 run days · Slight step up from week 1 · Still all easy',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs. 3×12–15.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'4.9–6.3km', time:'28–33 min', session:'Easy run', detail:'28–33 min easy. Conversational pace throughout.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'5.5–6.9km', time:'28–33 min + strides', session:'Easy run + strides', detail:'28–33 min easy + strides (~0.6km). 4–6×100m controlled accelerations.', effort:'easy', strides:true },
+      Thu:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'7.8–10.5km', time:'45–55 min', session:'Easy long run', detail:'45–55 min easy. Time on feet is the goal.', effort:'easy' },
+      Sun:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+    }
+  },
+  // Week 3 — 23 Mar
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'18.6–24.2km', time:'2h15m–2h40m',
+    aim:'3 run days · Strides added to Saturday long run',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15 reps.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'5.2–6.7km', time:'30–35 min', session:'Easy run', detail:'30–35 min easy pace.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'5.8–7.3km', time:'30–35 min + strides', session:'Easy run + strides', detail:'30–35 min easy + 4–6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long + Strides', km:'7.6–10.2km', time:'40–50 min + strides', session:'Easy long run + 6×100m strides', detail:'40–50 min easy then 6×100m strides at the end. First time strides appear on Saturday — keep them relaxed.', effort:'easy', strides:true },
+      Sun:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+    }
+  },
+  // Week 4 — 30 Mar
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'27.2–35.6km', time:'3h05m–3h40m',
+    aim:'5 run days · Thursday easy + Sunday recovery added · Bigger step up in volume',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15 reps.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'5.2–6.7km', time:'30–35 min', session:'Easy run', detail:'30–35 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'5.8–7.3km', time:'30–35 min + strides', session:'Easy run + strides', detail:'30–35 min easy + 4–6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'4.3–5.7km', time:'25–30 min', session:'Easy run', detail:'25–30 min easy. First Thursday run.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long + Strides', km:'8.4–11.1km', time:'45–55 min + strides', session:'Easy long run + strides', detail:'45–55 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Sun:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min very easy recovery. Z1–Z2 only (HR under 155). This is your first Sunday recovery run.', effort:'easy' },
+    }
+  },
+  // Week 5 — 6 Apr
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'31.6–40.2km', time:'3h30m–4h05m',
+    aim:'5 run days · Continued volume build · All easy',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'6.1–7.6km', time:'35–40 min', session:'Easy run', detail:'35–40 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'6.7–8.2km', time:'35–40 min + strides', session:'Easy run + strides', detail:'35–40 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'5.2–6.7km', time:'30–35 min', session:'Easy run', detail:'30–35 min easy.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long + Strides', km:'9.3–12.0km', time:'50–60 min + strides', session:'Easy long run + strides', detail:'50–60 min easy + strides.', effort:'easy', strides:true },
+      Sun:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run', detail:'25–30 min Z1–Z2 easy recovery.', effort:'easy' },
+    }
+  },
+  // Week 6 — 13 Apr
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'34.6–43.4km', time:'3h47m–4h22m',
+    aim:'5 run days · Fuelling practice from 45 min on long runs starts this week',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'6.6–8.2km', time:'38–43 min', session:'Easy run', detail:'38–43 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'7.2–8.8km', time:'38–43 min + strides', session:'Easy run + strides', detail:'38–43 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'5.7–7.2km', time:'33–38 min', session:'Easy run', detail:'33–38 min easy.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long + Strides', km:'10.2–12.9km', time:'55–65 min + strides', session:'Easy long run + strides · First fuelling session', detail:'55–65 min easy + strides. First fuelling practice: take a gel at ~45 min. Practise race-day nutrition now.', effort:'easy', strides:true, fuel:true },
+      Sun:{ type:'Recovery', km:'4.9–6.3km', time:'28–33 min', session:'Recovery run', detail:'28–33 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 7 — 20 Apr (CURRENT WEEK)
+  { phase:'Base Build', weekType:'BUILD', weekA_B:'',
+    km:'43.7–52.7km', time:'4h39m–5h14m',
+    aim:'BUILD WEEK · Proper step up from wk 6 · Holiday week (wk 8) acts as natural cut-back · 5 run days · Fri rest',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs.', strength:true, strengthOnly:true },
+      Tue:{ type:'Easy Run', km:'8.3–10.1km', time:'48–53 min', session:'Easy run', detail:'48–53 min easy. HR 130–155 throughout. Conversational pace.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'9.0–10.7km', time:'48–53 min + strides', session:'Easy run + strides', detail:'48–53 min easy + 4–6×100m strides (~0.6km). Strides at the end of the easy run — controlled acceleration, not a sprint. On trail routes, effort and HR matter more than pace.', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'7.5–9.1km', time:'43–48 min', session:'Easy run', detail:'43–48 min easy. Keep HR in Z2 (130–155).', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long + Strides', km:'12.8–15.2km', time:'70–80 min + strides', session:'Easy long run + strides', detail:'70–80 min easy + 6×100m strides at the end. Fuel every 45 min if running over 45 min. This is the biggest long run so far — HR 130–155 throughout.', effort:'easy', strides:true, fuel:true },
+      Sun:{ type:'Recovery', km:'6.1–7.6km', time:'35–40 min', session:'Recovery run', detail:'35–40 min Z1–Z2 easy recovery.', effort:'easy' },
+    }
+  },
+  // Week 8 — 27 Apr (HOLIDAY CUTBACK)
+  { phase:'Base Build', weekType:'CUT-BACK', weekA_B:'',
+    km:'36.2–45.3km', time:'4h–4h35m',
+    aim:'CUT-BACK / HOLIDAY WK · Trimmed Mon–Thu sessions · Natural cut-back via Fri–Sun holiday',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'7.8–9.5km', time:'45–50 min run + 30–45 min strength', session:'Easy run + Strength', detail:'45–50 min easy run then 30–45 min strength session.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'9.6–12.4km', time:'55–65 min', session:'Easy run', detail:'55–65 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'11.0–13.9km', time:'60–70 min + strides', session:'Easy run + 6×100m strides', detail:'60–70 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'7.8–9.5km', time:'45–50 min', session:'Easy run (last before holiday)', detail:'45–50 min easy. Last run before holiday departs.', effort:'easy' },
+      Fri:{ type:'Holiday', km:null, time:null, session:'Holiday — rest', holiday:true },
+      Sat:{ type:'Holiday', km:null, time:null, session:'Holiday — driving, rest', holiday:true },
+      Sun:{ type:'Holiday', km:null, time:null, session:'Holiday — back 8–9pm, rest', holiday:true },
+    }
+  },
+  // Week 9 — 4 May
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'45.2–55.3km', time:'4h48m–5h28m',
+    aim:'Mon = holiday (back from trip) · Fri run+strength swapped from Mon · All other days unchanged',
+    days:{
+      Mon:{ type:'Holiday', km:null, time:null, session:'Holiday — back from driving trip, rest', holiday:true },
+      Tue:{ type:'Easy Run', km:'7.5–9.1km', time:'43–48 min', session:'Easy run', detail:'43–48 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'8.1–9.7km', time:'43–48 min + strides', session:'Easy run + strides', detail:'43–48 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'6.4–8.0km', time:'37–42 min', session:'Easy run', detail:'37–42 min easy.', effort:'easy' },
+      Fri:{ type:'Easy + Strength', km:'6.1–7.6km', time:'35–40 min run + 30–45 min strength', session:'Easy run + Strength (Mon session moved to Fri)', detail:'Mon run+strength session moved to Friday this week due to bank holiday. 35–40 min easy + 30–45 min strength.', effort:'easy', strength:true },
+      Sat:{ type:'Easy Long + Strides', km:'11.5–13.9km', time:'63–73 min + strides', session:'Easy long run + strides', detail:'63–73 min easy + strides.', effort:'easy', strides:true },
+      Sun:{ type:'Recovery', km:'5.6–7.0km', time:'32–37 min', session:'Recovery run', detail:'32–37 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 10 — 11 May
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'57.0–65.2km', time:'5h13m–5h54m',
+    aim:'Work half marathon Thursday 14 May (easy Z2) · Saturday shortened · Fri rest',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'6.6–8.0km', time:'38–42 min run + 30–45 min strength', session:'Easy run + Strength', detail:'38–42 min easy run then strength.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'8.0–9.5km', time:'46–50 min', session:'Easy run', detail:'46–50 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'8.6–10.1km', time:'46–50 min + strides', session:'Easy run + strides', detail:'46–50 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Work Half Marathon', km:'21.1km', time:'~2h00m (easy Z2)', session:'Work Half Marathon — easy Z2 effort throughout', detail:'Easy effort throughout — Z2, HR 130–150. This is NOT a race. Treat it as a long easy run in company. Do not get carried away by the event atmosphere. Run conservationally — it replaces the quality session this week.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'7.0–9.5km', time:'40–50 min', session:'Easy run (shortened — legs may be heavy)', detail:'40–50 min easy. Go by feel — legs may be heavy after Thursday HM. Keep HR in Z1–Z2.', effort:'easy' },
+      Sun:{ type:'Recovery', km:'5.7–7.0km', time:'33–37 min', session:'Recovery run', detail:'33–37 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 11 — 18 May
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'55.6–64.0km', time:'5h33m–6h00m',
+    aim:'Both quality days · 6-day week · Fri rest · First proper threshold work',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'7.3–8.8km', time:'42–46 min run + 30–45 min strength', session:'Easy run + Strength', detail:'42–46 min easy then strength session.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 min warm-up easy → 4×5 min threshold (2 min easy recovery between each) → 15 min cool-down.\n\nThreshold effort: hard but controlled — single words only. HMP to 10k race feel. HR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'9.3–11.1km', time:'50–55 min + strides', session:'Easy run + strides', detail:'50–55 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 min easy → 15 min steady → 15 min threshold effort. Clear three-step staircase — do not blur the transitions. Never go into Marathon Pace territory on a progression.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'12.2–14.5km', time:'70–76 min', session:'Easy long run', detail:'70–76 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'6.3–7.6km', time:'36–40 min', session:'Recovery run', detail:'36–40 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 12 — 25 May
+  { phase:'Base Build', weekType:'', weekA_B:'',
+    km:'61.9–70.4km', time:'6h06m–6h33m',
+    aim:'Final base week · 6-day week · Both quality days',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.0–9.5km', time:'46–50 min run + 30–45 min strength', session:'Easy run + Strength', detail:'46–50 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'12.0–13.0km', time:'~57–60 min', session:'5×5 min threshold', detail:'15 min WU → 5×5 min threshold (90 sec recovery between reps) → 15 min CD.\n\nOne more rep than last week. Threshold: HR 165–178, single words only.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'10.2–12.0km', time:'55–60 min + strides', session:'Easy run + strides', detail:'55–60 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 min easy → 20 min steady → 20 min threshold. Three-step staircase. Never extend into Marathon Pace.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'12.7–15.0km', time:'73–79 min', session:'Easy long run', detail:'73–79 min easy. Fuel from 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.0–8.4km', time:'40–44 min', session:'Recovery run', detail:'40–44 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 13 — 1 Jun (TRANSITION)
+  { phase:'Marathon Block', weekType:'TRANSITION', weekA_B:'',
+    km:'55.5–64.8km', time:'4h58m–5h24m',
+    aim:'TRANSITION WK · Light threshold both days · 6 days · Entry into Marathon Block',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength. Light load introduced.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 min threshold / 2 min rec → 15 CD. Back to 4 reps — first week of Marathon Block, keep it controlled.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'11.0–13.6km', time:'60–68 min + strides', session:'Easy run + strides', detail:'60–68 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold. Clear staircase.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'15.3–18.7km', time:'88–98 min', session:'Easy long run', detail:'88–98 min easy. Fuel every 45 min. First long run in Marathon Block territory.', effort:'easy', fuel:true },
+      Sun:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+    }
+  },
+  // Week 14 — 8 Jun (WEEK B · VO2MAX WK 1)
+  { phase:'Marathon Block', weekType:'VO2MAX WK 1', weekA_B:'B',
+    km:'68.1–79.0km', time:'6h45m–7h23m',
+    aim:'WEEK B · VO2MAX WK 1 · 5k reps Tuesday · Sat easy · Sunday recovery returns',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9.0–10.9km', time:'52–57 min run + 30–45 min strength', session:'Easy run + Strength', detail:'52–57 min easy + strength with light load.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'12.0–13.0km', time:'~60–65 min', session:'5×1km at 5k effort', detail:'12 min WU → 5×1km at 5k effort (90 sec recovery between reps) → 10 min CD.\n\n5k effort: cannot speak, maximal breathing. HR 178–196. These are short hard bursts — effort is the point, not pace.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'11.4–13.9km', time:'62–70 min + strides', session:'Easy run + strides', detail:'62–70 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'16.0–19.4km', time:'92–102 min', session:'Easy long run', detail:'92–102 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.7–9.3km', time:'44–49 min', session:'Recovery run', detail:'44–49 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 15 — 15 Jun (WEEK A · VO2MAX WK 2)
+  { phase:'Marathon Block', weekType:'VO2MAX WK 2', weekA_B:'A',
+    km:'70.7–81.6km', time:'6h54m–7h32m',
+    aim:'WEEK A · VO2MAX WK 2 · First MP long run · Sat 20 min at Marathon Pace',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'13.0–14.0km', time:'~65–70 min', session:'6×1km at 5k effort', detail:'12 WU → 6×1km at 5k effort / 90 sec rec → 10 CD.\n\nOne more rep than last week. Cannot speak effort. HR 178–196.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'11.9–14.5km', time:'65–73 min + strides', session:'Easy run + strides', detail:'65–73 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run + MP Finish', km:'19.2–22.5km', time:'103–113 min (last 20 min at MP)', session:'Long run with 20 min Marathon Pace finish', detail:'Long run — first ~80–90 min easy, then last 20 min at Marathon Pace.\n\nMarathon Pace: a few words at a time, controlled and sustainable. HR 158–165. Should feel almost too easy early on. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'8.0–9.7km', time:'46–51 min', session:'Recovery run', detail:'46–51 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 16 — 22 Jun (WEEK B · VO2MAX WK 3)
+  { phase:'Marathon Block', weekType:'VO2MAX WK 3', weekA_B:'B',
+    km:'78.2–90.3km', time:'7h42m–8h20m',
+    aim:'WEEK B · VO2MAX WK 3 · 3-min reps Tuesday · Thu 45+45 MP · Fri rest',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9.9–11.8km', time:'57–62 min run + 30–45 min strength', session:'Easy run + Strength', detail:'57–62 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'11.5–12.5km', time:'~57–62 min', session:'5×3 min at 5k effort', detail:'15 WU → 5×3 min at 5k effort (3 min jog recovery between reps) → 12 CD.\n\nShorter reps, longer format. Cannot speak. HR 178–196.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'12.4–15.1km', time:'68–76 min + strides', session:'Easy run + strides', detail:'68–76 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → then immediately 45 min at Marathon Pace. No break between sections.\n\nMP: HR 158–165, a few words at a time. This is the closest session to race conditions.', effort:'mp' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'18.6–22.3km', time:'107–117 min', session:'Easy long run', detail:'107–117 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 17 — 29 Jun (CUT-BACK)
+  { phase:'Marathon Block', weekType:'CUT-BACK', weekA_B:'',
+    km:'61.7–71.8km', time:'6h08m–6h45m',
+    aim:'CUT-BACK · Quality identical · Only easy volume reduced · 4 hard weeks absorbed',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'7.5–9.1km', time:'43–48 min run + 30–45 min strength', session:'Easy run + Strength', detail:'43–48 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'13.0–14.0km', time:'~65–70 min', session:'6×1km at 5k effort', detail:'12 WU → 6×1km / 90 sec rec → 10 CD. Quality stays identical in cut-back weeks.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'8.9–11.1km', time:'48–55 min + strides', session:'Easy run + strides', detail:'48–55 min easy + strides (~0.6km). Shorter this week.', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'14.4–17.7km', time:'83–93 min', session:'Easy long run (shorter this week)', detail:'83–93 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'5.9–7.4km', time:'34–39 min', session:'Recovery run', detail:'34–39 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 18 — 6 Jul (WEEK A · VO2MAX WK 5)
+  { phase:'Marathon Block', weekType:'VO2MAX WK 5', weekA_B:'A',
+    km:'73.0–83.9km', time:'6h58m–7h39m',
+    aim:'WEEK A · VO2MAX WK 5 · Stepped return · Long run with 30 min MP · Thu threshold',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–67 min', session:'6×3 min at 5k effort', detail:'15 WU → 6×3 min at 5k effort / 3 min jog rec → 12 CD.\n\nHR 178–196, cannot speak.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'10.5–12.8km', time:'57–64 min + strides', session:'Easy run + strides', detail:'57–64 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Threshold', km:'12.5–13.5km', time:'~60–64 min', session:'3×8 min threshold', detail:'15 WU → 3×8 min threshold (2 min recovery between reps) → 12 CD.\n\nLonger threshold reps — HR 165–178. Hard but controlled.', effort:'threshold' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run + MP Finish', km:'21.1–24.3km', time:'110–120 min (last 30 min at MP)', session:'Long run with 30 min Marathon Pace finish', detail:'110–120 min total — first portion easy, last 30 min at Marathon Pace.\n\nMP: HR 158–165. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'7.7–9.3km', time:'44–49 min', session:'Recovery run', detail:'44–49 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 19 — 13 Jul (WEEK B · VO2MAX WK 6 FINAL)
+  { phase:'Marathon Block', weekType:'VO2MAX WK 6 FINAL', weekA_B:'B',
+    km:'77.2–89.0km', time:'7h35m–8h17m',
+    aim:'WEEK B · VO2MAX WK 6 FINAL · Thu 3×15 MP · End of VO2max block',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'13.5–14.5km', time:'~68–73 min', session:'7×1km at 5k effort', detail:'12 WU → 7×1km / 90 sec rec → 10 CD.\n\nFinal VO2max Tuesday. 7 reps. Cannot speak. HR 178–196.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'11.9–14.5km', time:'65–73 min + strides', session:'Easy run + strides', detail:'65–73 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Marathon Pace', km:'14.5–15.5km', time:'~73–77 min', session:'3×15 min at Marathon Pace', detail:'12 WU → 3×15 min at Marathon Pace (3 min jog recovery between reps) → 10 CD.\n\nMP: HR 158–165. A few words at a time. Controlled cruise intervals.', effort:'mp' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'19.7–23.4km', time:'113–123 min', session:'Easy long run', detail:'113–123 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.0–9.7km', time:'46–51 min', session:'Recovery run', detail:'46–51 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 20 — 20 Jul (WEEK A · MP BLOCK BEGINS)
+  { phase:'Marathon Block', weekType:'MP BLOCK BEGINS', weekA_B:'A',
+    km:'81.6–93.9km', time:'7h41m–8h23m',
+    aim:'WEEK A · MP BLOCK BEGINS · Odds & Evens Tuesday · Thu 3×8 threshold · Sat 40 min MP',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.1–12.0km', time:'58–63 min run + 30–45 min strength', session:'Easy run + Strength', detail:'58–63 min easy + strength with load.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'13.0–14.5km', time:'~62–67 min', session:'Odds & Evens threshold', detail:'12 WU → Odds & Evens format (odd reps at threshold effort, even reps at steady effort) → 10 CD.\n\nOdd reps: HR 165–178 threshold. Even reps: HR 155–163 steady. Alternating intensity.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'12.8–15.5km', time:'70–78 min + strides', session:'Easy run + strides', detail:'70–78 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Threshold', km:'12.5–13.5km', time:'~60–64 min', session:'3×8 min threshold', detail:'15 WU → 3×8 min threshold / 2 min rec → 12 CD.\n\nHR 165–178. Hard but controlled.', effort:'threshold' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run + MP Finish', km:'24.9–28.3km', time:'128–138 min (last 40 min at MP)', session:'Long run with 40 min Marathon Pace finish', detail:'128–138 min total — first portion easy, last 40 min at Marathon Pace.\n\nBiggest MP block yet. HR 158–165 for MP section. Fuel every 45 min from the start.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 21 — 27 Jul (WEEK B · FRI RECOVERY ADDED)
+  { phase:'Marathon Block', weekType:'FRI RECOVERY ADDED', weekA_B:'B',
+    km:'87.9–101.7km', time:'8h37m–9h19m',
+    aim:'WEEK B · FRI RECOVERY ADDED (past 85km threshold) · Thu 45+45 MP · 7-day week begins',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–66 min', session:'14×1 min on/off', detail:'12 WU → 14×1 min at 5k effort / 1 min easy → 12 CD.\n\nShort sharp reps. Cannot speak during on sections. HR 178–196 on reps.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'13.3–16.0km', time:'73–81 min + strides', session:'Easy run + strides', detail:'73–81 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → 45 min at Marathon Pace.\n\nMP: HR 158–165. Closest session to race conditions.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run (first Friday run)', detail:'25–30 min very easy. First Friday recovery run — keep it gentle, Z1–Z2.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'21.2–25.1km', time:'122–132 min', session:'Easy long run', detail:'122–132 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.7–10.5km', time:'50–55 min', session:'Recovery run', detail:'50–55 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 22 — 3 Aug (WEEK A)
+  { phase:'Marathon Block', weekType:'', weekA_B:'A',
+    km:'89.2–102.6km', time:'8h22m–9h07m',
+    aim:'WEEK A · Tue threshold · Thu moderate threshold · Sat long + 43 min MP',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.8–12.8km', time:'62–67 min run + 30–45 min strength', session:'Easy run + Strength', detail:'62–67 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'13.5–14.5km', time:'~62–66 min', session:'4×7 min threshold', detail:'15 WU → 4×7 min threshold / 90 sec rec → 12 CD.\n\nLonger threshold reps. HR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'13.6–16.4km', time:'75–83 min + strides', session:'Easy run + strides', detail:'75–83 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Threshold', km:'11.5–12.5km', time:'~56–59 min', session:'4×6 min threshold', detail:'13 WU → 4×6 min threshold / 90 sec rec → 13 CD.\n\nModerate Thursday quality. HR 165–178.', effort:'threshold' },
+      Fri:{ type:'Recovery', km:'4.7–6.1km', time:'27–32 min', session:'Recovery run', detail:'27–32 min very easy. Keep it gentle.', effort:'easy' },
+      Sat:{ type:'Long Run + MP Finish', km:'26.1–29.4km', time:'133–143 min (last 43 min at MP)', session:'Long run with 43 min Marathon Pace finish', detail:'133–143 min total — first portion easy, last 43 min at Marathon Pace.\n\nHR 158–165 for MP section. Fuel every 45 min from the start.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'9.0–10.9km', time:'52–57 min', session:'Recovery run', detail:'52–57 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 23 — 10 Aug (WEEK B)
+  { phase:'Marathon Block', weekType:'', weekA_B:'B',
+    km:'85.6–99.6km', time:'8h26m–9h12m',
+    aim:'WEEK B · Tue speed · Thu 3×15 MP · Sat easy',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'11.0–13.0km', time:'63–68 min run + 30–45 min strength', session:'Easy run + Strength', detail:'63–68 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'10.5–11.5km', time:'~53–57 min', session:'10×1 min on/off', detail:'15 WU → 10×1 min at 5k effort / 1 min easy → 15 CD.\n\nShort sharp reps. HR 178–196 on reps.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides', km:'13.8–16.6km', time:'76–84 min + strides', session:'Easy run + strides', detail:'76–84 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Marathon Pace', km:'14.5–15.5km', time:'~73–77 min', session:'3×15 min at Marathon Pace', detail:'12 WU → 3×15 min at MP / 3 min jog rec → 10 CD.\n\nMP: HR 158–165. Controlled cruise intervals.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'4.9–6.3km', time:'28–33 min', session:'Recovery run', detail:'28–33 min easy. Keep it gentle.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'21.7–25.7km', time:'125–135 min', session:'Easy long run', detail:'125–135 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'9.2–11.0km', time:'53–58 min', session:'Recovery run', detail:'53–58 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 24 — 17 Aug (CUT-BACK)
+  { phase:'Marathon Block', weekType:'CUT-BACK', weekA_B:'',
+    km:'63.7–75.0km', time:'6h17m–6h57m',
+    aim:'CUT-BACK · 4 hard weeks absorbed · Quality identical · Easy volume reduced',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'7.5–9.1km', time:'43–48 min run + 30–45 min strength', session:'Easy run + Strength', detail:'43–48 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'12.0–13.0km', time:'~57–60 min', session:'5×5 min threshold', detail:'15 WU → 5×5 / 90 sec rec → 15 CD. Quality identical to build weeks.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'8.4–10.5km', time:'45–52 min + strides', session:'Easy run + strides', detail:'45–52 min easy + strides. Shorter this week.', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Fri:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'14.4–17.7km', time:'83–93 min', session:'Easy long run (shorter this week)', detail:'83–93 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'5.9–7.4km', time:'34–39 min', session:'Recovery run', detail:'34–39 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 25 — 24 Aug (BRIDGE)
+  { phase:'Marathon Block', weekType:'BRIDGE', weekA_B:'',
+    km:'72.8–85.0km', time:'7h10m–7h50m',
+    aim:'BRIDGE · Stepped return after cut-back · Moderate sessions · Reduces rebound injury risk',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 / 2 min rec → 15 CD. Moderate — bridge week.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides', km:'10.5–12.8km', time:'57–64 min + strides', session:'Easy run + strides', detail:'57–64 min easy + strides.', effort:'easy', strides:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Fri:{ type:'Recovery', km:'3.8–5.1km', time:'22–27 min', session:'Recovery run', detail:'22–27 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'18.8–22.5km', time:'108–118 min', session:'Easy long run', detail:'108–118 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.5–9.1km', time:'43–48 min', session:'Recovery run', detail:'43–48 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 26 — 31 Aug (WEEK A · WED DOUBLE)
+  { phase:'Marathon Block', weekType:'WED DOUBLE ADDED', weekA_B:'A',
+    km:'87.3–102.9km', time:'8h17m–9h09m',
+    aim:'WEEK A · WED DOUBLE ADDED (past 95km) · Sat long + 47 min MP · Thu 20 min continuous threshold',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'12.5–13.5km', time:'~59–63 min', session:'5×6 min threshold', detail:'13 WU → 5×6 min threshold / 90 sec rec → 13 CD.\n\nHR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'15.9–20.8km', time:'AM: 68–76 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout (first Wed double)', detail:'AM: 68–76 min easy + strides.\nPM: 20–30 min easy shakeout — the first Wednesday double. Keep PM very gentle.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Threshold', km:'8.0–9.0km', time:'~40 min', session:'20 min continuous threshold', detail:'10 WU → 20 min sustained threshold effort → 10 CD.\n\nFeel-led, no splits. HR 165–178. Sustained hard effort rather than reps.', effort:'threshold' },
+      Fri:{ type:'Recovery', km:'4.9–6.3km', time:'28–33 min', session:'Recovery run', detail:'28–33 min easy.', effort:'easy' },
+      Sat:{ type:'Long Run + MP Finish', km:'26.6–30.0km', time:'135–145 min (last 47 min at MP)', session:'Long run with 47 min Marathon Pace finish', detail:'135–145 min total — last 47 min at Marathon Pace.\n\nMP: HR 158–165. Fuel every 45 min from the start.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'9.0–10.9km', time:'52–57 min', session:'Recovery run', detail:'52–57 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 27 — 7 Sep (WEEK B)
+  { phase:'Marathon Block', weekType:'', weekA_B:'B',
+    km:'95.3–111.6km', time:'9h09m–10h05m',
+    aim:'WEEK B · Thu 2×8km float session · Wed double · Sat easy',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'11.0–13.0km', time:'63–68 min run + 30–45 min strength', session:'Easy run + Strength', detail:'63–68 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–66 min', session:'14×1 min on/off', detail:'12 WU → 14×1 min at 5k effort / 1 min easy → 12 CD.\n\nHR 178–196 on reps.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'16.8–21.7km', time:'AM: 73–81 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 73–81 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Marathon Pace', km:'18.0–19.0km', time:'~83–87 min', session:'2×8km float session', detail:'8 WU → 8km at Marathon Pace / 2km easy float / 8km at Marathon Pace → 5 CD.\n\nRace-specific hybrid. MP: HR 158–165. The float (2km easy) is active recovery, not a full stop.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'5.2–6.7km', time:'30–35 min', session:'Recovery run', detail:'30–35 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'22.6–26.7km', time:'130–140 min', session:'Easy long run', detail:'130–140 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'9.2–11.0km', time:'53–58 min', session:'Recovery run', detail:'53–58 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 28 — 14 Sep (PEAK · WEEK A · PEAK LONG RUN 1)
+  { phase:'Peak', weekType:'PEAK LONG RUN 1', weekA_B:'A',
+    km:'94.8–112.2km', time:'9h03m–10h04m',
+    aim:'WEEK A · PEAK LONG RUN 1 · Thu PLANNED EASY (scheduled relief) · 50 min MP · 11 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'11.3–13.3km', time:'65–70 min run + 30–45 min strength', session:'Easy run + Strength', detail:'65–70 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'13.0–14.0km', time:'~60–64 min', session:'6×5 min threshold', detail:'12 WU → 6×5 / 90 sec rec → 13 CD.\n\nHR 165–178. 6 reps — biggest threshold volume.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'16.6–21.5km', time:'AM: 72–80 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 72–80 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Easy Run (Planned)', km:'9.0–12.0km', time:'52–63 min', session:'Easy run — PLANNED easy (no quality)', detail:'Planned easy day — intentional full recovery, not a missed session. HR 130–155. Do not be tempted to add quality.', effort:'easy' },
+      Fri:{ type:'Recovery', km:'5.2–6.7km', time:'30–35 min', session:'Recovery run', detail:'30–35 min easy.', effort:'easy' },
+      Sat:{ type:'Long Run + MP Finish', km:'30.3–33.5km', time:'155–163 min (last 50 min at MP)', session:'PEAK LONG RUN 1 — 50 min Marathon Pace finish', detail:'155–163 min total — last 50 min at Marathon Pace. Biggest long run to date.\n\nThis is your key session of the entire block. Respect it. HR 158–165 for MP section. Fuel every 45 min from the start.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'9.4–11.2km', time:'54–59 min', session:'Recovery run', detail:'54–59 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 29 — 21 Sep (WEEK B)
+  { phase:'Peak', weekType:'', weekA_B:'B',
+    km:'84.6–100.6km', time:'8h18m–9h13m',
+    aim:'WEEK B · Tue speed · Thu 2M1T hybrid · Wed double · 10 weeks out',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'10.5–11.5km', time:'~53–57 min', session:'10×1 min on/off', detail:'15 WU → 10×1 min at 5k effort / 1 min easy → 15 CD.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'15.9–20.8km', time:'AM: 68–76 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 68–76 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Marathon Pace', km:'13.5–14.5km', time:'~65–68 min', session:'2 Marathon + 1 Threshold hybrid', detail:'10 WU → 20 min at MP → 5 min threshold effort → 10 min at MP → 10 CD.\n\nLate-block hybrid. The threshold segment lifts HR, then you must find MP again — excellent race-specific conditioning.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'4.7–6.1km', time:'27–32 min', session:'Recovery run', detail:'27–32 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'20.9–24.8km', time:'120–130 min', session:'Easy long run', detail:'120–130 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.7–10.5km', time:'50–55 min', session:'Recovery run', detail:'50–55 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 30 — 28 Sep (WEEK A · PEAK LONG RUN 2 · HARDEST WEEK)
+  { phase:'Peak', weekType:'PEAK LONG RUN 2', weekA_B:'A',
+    km:'97.3–114.9km', time:'9h13m–10h15m',
+    aim:'WEEK A · PEAK LONG RUN 2 · 55 min MP · Thu PLANNED EASY · HARDEST WEEK · 9 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'11.7–13.7km', time:'67–72 min run + 30–45 min strength', session:'Easy run + Strength', detail:'67–72 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'13.5–14.5km', time:'~62–66 min', session:'4×7 min threshold', detail:'15 WU → 4×7 / 90 sec rec → 12 CD.\n\nHR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'17.0–21.9km', time:'AM: 74–82 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 74–82 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Easy Run (Planned)', km:'9.6–12.8km', time:'55–67 min', session:'Easy run — PLANNED easy (no quality)', detail:'Intentional full recovery. HR 130–155. No quality this week — you have the biggest long run Saturday.', effort:'easy' },
+      Fri:{ type:'Recovery', km:'5.2–6.7km', time:'30–35 min', session:'Recovery run', detail:'30–35 min easy.', effort:'easy' },
+      Sat:{ type:'Long Run + MP Finish', km:'30.7–33.9km', time:'155–163 min (last 55 min at MP)', session:'PEAK LONG RUN 2 — 55 min Marathon Pace finish', detail:'155–163 min total — last 55 min at Marathon Pace. This is the hardest session of the entire plan.\n\nHR 158–165 for MP section. Fuel every 45 min from the start. Trust your training.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'9.6–11.4km', time:'55–60 min', session:'Recovery run', detail:'55–60 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 31 — 5 Oct (CUT-BACK · 8 weeks to race)
+  { phase:'Peak', weekType:'CUT-BACK', weekA_B:'',
+    km:'66.7–80.2km', time:'6h35m–7h25m',
+    aim:'CUT-BACK · Peak block absorbed · Quality identical · 8 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'7.5–9.1km', time:'43–48 min run + 30–45 min strength', session:'Easy run + Strength', detail:'43–48 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 / 2 min rec → 15 CD. Quality identical.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'11.9–16.2km', time:'AM: 45–52 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout (shorter)', detail:'AM: 45–52 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Fri:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'14.4–17.7km', time:'83–93 min', session:'Easy long run (shorter)', detail:'83–93 min easy. Fuel if over 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'5.9–7.4km', time:'34–39 min', session:'Recovery run', detail:'34–39 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 32 — 12 Oct (BRIDGE · 7 weeks to race)
+  { phase:'Peak', weekType:'BRIDGE', weekA_B:'',
+    km:'72.8–87.2km', time:'7h12m–8h02m',
+    aim:'BRIDGE · Stepped return after peak cut-back · 7 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 / 2 min rec → 15 CD.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'13.7–18.1km', time:'AM: 55–62 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 55–62 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold. Bridge week — lighter progression.', effort:'progression' },
+      Fri:{ type:'Recovery', km:'3.8–5.1km', time:'22–27 min', session:'Recovery run', detail:'22–27 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'18.8–22.5km', time:'108–118 min', session:'Easy long run', detail:'108–118 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.3–9.0km', time:'42–47 min', session:'Recovery run', detail:'42–47 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 33 — 19 Oct (WEEK B · 6 weeks to race)
+  { phase:'Peak', weekType:'', weekA_B:'B',
+    km:'89.8–105.8km', time:'8h48m–9h40m',
+    aim:'WEEK B · Thu 45+45 MP · Wed double · 6 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–66 min', session:'14×1 min on/off', detail:'12 WU → 14×1 min at 5k effort / 1 min easy → 12 CD.\n\nHR 178–196 on reps.', effort:'vo2max' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'15.9–20.8km', time:'AM: 68–76 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 68–76 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → 45 min at MP.\n\nMP: HR 158–165. Closest session to race conditions.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'4.7–6.1km', time:'27–32 min', session:'Recovery run', detail:'27–32 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'20.5–24.4km', time:'118–128 min', session:'Easy long run', detail:'118–128 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 34 — 26 Oct (CONSOLIDATION · WEEK A · 5 weeks to race)
+  { phase:'Consolidation', weekType:'', weekA_B:'A',
+    km:'80.9–98.2km', time:'7h54m–8h57m',
+    aim:'WEEK A · Thu PLANNED EASY · Last MP long run · 5 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'13.0–14.5km', time:'~62–67 min', session:'Odds & Evens threshold', detail:'12 WU → Odds & Evens (odd reps threshold / even reps steady) → 10 CD.\n\nOdd: HR 165–178. Even: HR 155–163.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'14.9–19.6km', time:'AM: 62–70 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 62–70 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Easy Run (Planned)', km:'8.3–11.0km', time:'48–58 min', session:'Easy run — PLANNED easy (no quality)', detail:'Intentional full recovery. HR 130–155. Last MP long run is Saturday — protect your legs today.', effort:'easy' },
+      Fri:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run', detail:'25–30 min easy.', effort:'easy' },
+      Sat:{ type:'Long Run + MP Finish', km:'23.0–26.5km', time:'122–132 min (last 28 min at MP)', session:'LAST MP LONG RUN — 28 min Marathon Pace finish', detail:'122–132 min total — last 28 min at Marathon Pace. Final long run with MP finish.\n\nHR 158–165 for MP section. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
+      Sun:{ type:'Recovery', km:'7.8–9.5km', time:'45–50 min', session:'Recovery run', detail:'45–50 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 35 — 2 Nov (WEEK B · 4 weeks to race)
+  { phase:'Consolidation', weekType:'', weekA_B:'B',
+    km:'78.5–93.3km', time:'7h40m–8h34m',
+    aim:'WEEK B · Thu 3×15 MP · Last proper long run · 4 weeks to race',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength. Maintain load.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold', km:'12.0–13.0km', time:'~57–60 min', session:'5×5 min threshold', detail:'15 WU → 5×5 / 90 sec rec → 15 CD.\n\nHR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'13.7–18.1km', time:'AM: 55–62 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 55–62 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Marathon Pace', km:'14.5–15.5km', time:'~73–77 min', session:'3×15 min at Marathon Pace', detail:'12 WU → 3×15 at MP / 3 min jog rec → 10 CD.\n\nMP: HR 158–165. Final standalone MP session before taper.', effort:'mp' },
+      Fri:{ type:'Recovery', km:'3.8–5.1km', time:'22–27 min', session:'Recovery run', detail:'22–27 min easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'18.8–22.5km', time:'108–118 min', session:'Easy long run — LAST PROPER LONG RUN', detail:'108–118 min easy. Last significant long run. Fuel every 45 min. Absorb it, the taper starts next week.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.0–8.6km', time:'40–45 min', session:'Recovery run', detail:'40–45 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 36 — 9 Nov (TAPER T-3)
+  { phase:'Taper', weekType:'T-3', weekA_B:'',
+    km:'52.9–64.9km', time:'5h02m–5h48m',
+    aim:'T-3 · One proper stimulus (3×5 threshold) · One sharpening touch (strides) · Mon = strength only',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min (reduced 50%)', session:'Strength only (taper — 50% reduction)', detail:'Strength only, no run. Load reduced 50%. This is taper — protect the legs.', strength:true, strengthOnly:true },
+      Tue:{ type:'Threshold', km:'10.5–11.5km', time:'~52–55 min', session:'3×5 min threshold', detail:'15 WU → 3×5 / 2 min rec → 15 CD. Taper threshold — one proper stimulus. HR 165–178.', effort:'threshold' },
+      Wed:{ type:'Easy + Strides + PM Double', km:'12.8–17.3km', time:'AM: 50–58 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 50–58 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
+      Thu:{ type:'Easy + Strides', km:'7.8–9.5km', time:'45–50 min', session:'Easy run + 6–8×100m strides', detail:'45–50 min easy + 6–8×100m strides. Sharpening touch for the legs.', effort:'easy', strides:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'15.7–19.0km', time:'90–100 min (optional: last 10 min at MP)', session:'Easy long run (optional last 10 min at MP)', detail:'90–100 min easy. Optional: last 10 min at Marathon Pace if legs feel good. Fuel if over 45 min.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'6.1–7.6km', time:'35–40 min', session:'Recovery run', detail:'35–40 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 37 — 16 Nov (TAPER T-2)
+  { phase:'Taper', weekType:'T-2', weekA_B:'',
+    km:'36.5–46.4km', time:'3h50m–4h41m',
+    aim:'T-2 · Protective · Feel springy not trained · 2×5 threshold + strides · Mon = strength only',
+    days:{
+      Mon:{ type:'Strength', km:null, time:'30–45 min (reduced 50%)', session:'Strength only (taper — 50% reduction)', detail:'Strength only, no run. Load reduced 50%. Protect the legs. You are ready.', strength:true, strengthOnly:true },
+      Tue:{ type:'Threshold + Strides', km:'9.0–10.0km', time:'~45–48 min', session:'2×5 min threshold + 4–6×100m strides', detail:'15 WU → 2×5 min threshold / 2 min rec → 10 CD + strides at the end.\n\nLight touch. Feel sharp not tired.', effort:'threshold', strides:true },
+      Wed:{ type:'Easy + Strides', km:'6.7–8.8km', time:'35–43 min + strides', session:'Easy run + strides', detail:'35–43 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strides', km:'6.1–8.6km', time:'35–45 min', session:'Easy run + 6×100m strides', detail:'35–45 min easy + 6×100m strides. Last Thursday quality stimulus before race day.', effort:'easy', strides:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'10.4–13.3km', time:'60–70 min', session:'Easy long run', detail:'60–70 min easy. Comfortable aerobic run — no pressure.', effort:'easy' },
+      Sun:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run', detail:'25–30 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 38 — 23 Nov (TAPER T-1)
+  { phase:'Taper', weekType:'T-1', weekA_B:'',
+    km:'37.7–48.7km', time:'3h30m–4h09m',
+    aim:'T-1 · Easy + strides only · No threshold · No strength · Fri rest',
+    days:{
+      Mon:{ type:'Easy Run', km:'6.6–8.6km', time:'38–45 min', session:'Easy run (no strength this week)', detail:'38–45 min easy. No strength session this week — full taper.', effort:'easy' },
+      Tue:{ type:'Easy + Strides', km:'7.2–9.2km', time:'38–45 min + strides', session:'Easy run + 6×100m strides', detail:'38–45 min easy + 6×100m strides. Sharpness only, no threshold.', effort:'easy', strides:true },
+      Wed:{ type:'Easy + Strides', km:'5.5–7.3km', time:'28–35 min + strides', session:'Easy run + strides', detail:'28–35 min easy + strides (~0.6km).', effort:'easy', strides:true },
+      Thu:{ type:'Easy Run', km:'5.2–6.7km', time:'30–35 min', session:'Easy run', detail:'30–35 min easy. Very easy. You are nearly there.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'9.2–11.6km', time:'53–61 min', session:'Easy run', detail:'53–61 min easy. Last proper run before race week.', effort:'easy' },
+      Sun:{ type:'Recovery', km:'4.0–5.3km', time:'23–28 min', session:'Recovery run', detail:'23–28 min Z1–Z2 easy.', effort:'easy' },
+    }
+  },
+  // Week 39 — 30 Nov (RACE WEEK)
+  { phase:'Race Week', weekType:'RACE', weekA_B:'',
+    km:'21.4–31.5km + 42.2km race', time:'~5h taper + race',
+    aim:'5 easy runs · Legs awake · Trust the training · RACE SUNDAY 6 DECEMBER',
+    days:{
+      Mon:{ type:'Easy Run', km:'5.2–7.6km', time:'30–40 min', session:'Easy run', detail:'30–40 min easy. Very easy. Stay off your feet otherwise.', effort:'easy' },
+      Tue:{ type:'Easy + Strides', km:'6.4–9.1km', time:'35–45 min + strides', session:'Easy run + 6×100m strides', detail:'35–45 min easy + 6×100m strides. Last sharpening. Strides feel good? You are ready.', effort:'easy', strides:true },
+      Wed:{ type:'Easy Run', km:'4.3–6.7km', time:'25–35 min', session:'Easy run', detail:'25–35 min easy. Short and easy. Conserve energy.', effort:'easy' },
+      Thu:{ type:'Easy + Strides', km:'3.8–5.2km', time:'20–25 min + strides', session:'Easy run + 4×100m strides', detail:'20–25 min easy + 4×100m strides. Just keeping the legs ticking over.', effort:'easy', strides:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Shakeout', km:'1.7–2.9km', time:'10–15 min', session:'Very easy shakeout jog', detail:'10–15 min very easy shakeout. Just loosen up. Do not do more. Tomorrow is the day.', effort:'easy' },
+      Sun:{ type:'RACE', km:'42.2km', time:'Sub-2:55:00 target', session:'VALENCIA MARATHON — RACE DAY', detail:'Target: Sub-2:55:00\n\nHalf split: 1:27:30 — do not go through faster.\nKm 0–5: Will feel too easy. That is correct.\nKm 5–30: Locked in. HR check every 5km. Above 165 — ease back.\nKm 30–42: If controlled, push slightly harder than MP.\nFuelling: 60g carbs/hour. Gel every 5km from km 5.\n\nTrust the training. You have earned this.', raceDay:true },
+    }
+  }
+];
+
+// Day column mapping
+const DAY_COLS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_NAMES_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentDate = new Date();
+currentDate.setHours(0,0,0,0);
+
+let weatherData = null;
+let selectedHour = null;
+let weatherForDate = null;
+// Clear cache to ensure fresh fetch with current model
+weatherForDate = null;
+
+// ═══════════════════════════════════════════════
+// DATE UTILITIES
+// ═══════════════════════════════════════════════
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+
+function getPlanDay(date) {
+  const diff = daysBetween(PLAN_START, date);
+  if (diff < 0) return null;
+  const weekIdx = Math.floor(diff / 7);
+  const dayIdx = diff % 7; // 0=Mon, 6=Sun
+  if (weekIdx >= weeks.length) return null;
+  return { weekIdx, dayIdx, week: weeks[weekIdx], dayKey: DAY_COLS[dayIdx] };
+}
+
+function formatDate(d) {
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function getDayOfWeekName(d) {
+  return DAYS[d.getDay()];
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function navigate(delta) {
+  const nd = new Date(currentDate);
+  nd.setDate(nd.getDate() + delta);
+  currentDate = nd;
+  render();
+}
+
+function goToday() {
+  currentDate = new Date();
+  currentDate.setHours(0,0,0,0);
+  render();
+}
+
+// ═══════════════════════════════════════════════
+// EFFORT COLOURS
+// ═══════════════════════════════════════════════
+function effortChip(effort) {
+  const map = {
+    easy:       ['#22c55e','rgba(34,197,94,0.15)','Easy · Z1–Z2 · HR 130–155'],
+    threshold:  ['#ef4444','rgba(239,68,68,0.15)','Threshold · Z4 · HR 165–178'],
+    vo2max:     ['#a855f7','rgba(168,85,247,0.15)','5k/VO2max · Z5 · HR 178–196'],
+    mp:         ['#3b82f6','rgba(59,130,246,0.15)','Marathon Pace · Z3 · HR 158–165'],
+    progression:['#f59e0b','rgba(245,158,11,0.15)','Progression · Easy→Steady→Threshold'],
+  };
+  const [col, bg, label] = map[effort] || ['#9aa0aa','rgba(154,160,170,0.15)','Mixed'];
+  return `<span class="effort-chip" style="color:${col};background:${bg};border:1px solid ${col}40">${label}</span>`;
+}
+
+// ═══════════════════════════════════════════════
+// SESSION RENDER
+// ═══════════════════════════════════════════════
+function renderSession(planDay) {
+  const { weekIdx, dayKey, week } = planDay;
+  const dayData = week.days[dayKey];
+  const dayFull = DAY_NAMES_FULL[DAY_COLS.indexOf(dayKey)];
+
+  // Day badge
+  document.getElementById('dayColLabel').textContent = dayFull;
+
+  // Session type label
+  const stl = document.getElementById('sessionTypeLabel');
+  stl.textContent = dayData.type;
+
+  // Colour session type
+  let typeColour = 'var(--text)';
+  if (dayData.rest || dayData.holiday) typeColour = 'var(--text3)';
+  else if (dayData.raceDay) typeColour = 'var(--orange)';
+  else if (dayData.effort === 'threshold') typeColour = '#ef4444';
+  else if (dayData.effort === 'vo2max') typeColour = '#a855f7';
+  else if (dayData.effort === 'mp') typeColour = '#3b82f6';
+  else if (dayData.effort === 'progression') typeColour = '#f59e0b';
+  else if (dayData.effort === 'easy') typeColour = '#22c55e';
+  stl.style.color = typeColour;
+
+  // Stats
+  const statsRow = document.getElementById('statsRow');
+  const statKm = document.getElementById('statKm');
+  const statTime = document.getElementById('statTime');
+
+  if (dayData.rest || dayData.holiday) {
+    statsRow.style.display = 'none';
+  } else if (dayData.strengthOnly) {
+    statsRow.style.display = 'none';
+  } else if (dayData.raceDay) {
+    statsRow.style.display = 'grid';
+    statKm.innerHTML = '42.2<span style="font-size:12px;color:var(--text2)">km</span>';
+    statTime.innerHTML = 'Sub-2:55<span style="font-size:12px;color:var(--text2)"></span>';
+  } else {
+    statsRow.style.display = 'grid';
+    if (dayData.km) {
+      // Bold the range
+      statKm.innerHTML = `<span style="font-size:18px">${dayData.km}</span>`;
+    } else {
+      statKm.textContent = '—';
+    }
+    if (dayData.time) {
+      statTime.innerHTML = `<span style="font-size:18px">${dayData.time}</span>`;
+    } else {
+      statTime.textContent = '—';
+    }
+  }
+
+  // Session body
+  const body = document.getElementById('sessionBody');
+  body.innerHTML = '';
+
+  if (dayData.raceDay) {
+    body.innerHTML = `
+      <div class="race-day-card">
+        <div class="race-day-icon">🏅</div>
+        <div class="race-day-title">Race Day — Valencia</div>
+        <div class="race-day-sub">${dayData.detail.replace(/\n/g,'<br>')}</div>
+      </div>`;
+    return;
+  }
+
+  if (dayData.rest) {
+    body.innerHTML = `
+      <div class="rest-card">
+        <div class="rest-icon">😴</div>
+        <div class="rest-title">Rest Day</div>
+        <div class="rest-sub">Recovery is where adaptation happens.<br>Stay off your feet, sleep well, eat well.</div>
+      </div>`;
+    return;
+  }
+
+  if (dayData.holiday) {
+    body.innerHTML = `
+      <div class="rest-card">
+        <div class="rest-icon">🏖️</div>
+        <div class="rest-title">Holiday</div>
+        <div class="rest-sub">${dayData.session}</div>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Run section for combined days
+  const isMonday = dayKey === 'Mon';
+  const hasRun = dayData.km && !dayData.strengthOnly;
+  const hasStrength = dayData.strength && !dayData.strengthOnly;
+
+  if (dayData.strengthOnly) {
+    // Strength only
+    html += `<span class="label">Monday Strength Session</span>`;
+    html += `<div class="strength-section">`;
+    html += `<div class="strength-header">💪 Strength — 30–45 min</div>`;
+    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">${dayData.detail}</div>`;
+    html += `</div>`;
+    html += renderCoachStrength(weekIdx);
+    body.innerHTML = html;
+    return;
+  }
+
+  // Session title
+  html += `<span class="label">Session</span>`;
+  html += `<div class="session-text"><p>${dayData.session}</p></div>`;
+
+  // Effort chip
+  if (dayData.effort) {
+    html += effortChip(dayData.effort);
+  }
+
+  // Detail
+  if (dayData.detail) {
+    html += `<span class="label">What to do</span>`;
+    html += `<div class="session-text"><p>${dayData.detail.replace(/\n/g,'<br>')}</p></div>`;
+  }
+
+  // Strides note
+  if (dayData.strides) {
+    html += `<div class="coach-cue effort">⚡ Strides: 100m controlled accelerations — not sprints. On trail routes, effort and HR matter more than pace.</div>`;
+  }
+
+  // PM Double
+  if (dayData.pmDouble) {
+    html += `<div class="coach-cue key">🌙 PM double: Keep the shakeout very gentle — Z1 only. Its only purpose is to add blood flow, not additional stimulus.</div>`;
+  }
+
+  // MP finish cue
+  if (dayData.mpFinish) {
+    html += `<div class="coach-cue hr">🎯 MP finish: HR 158–165. A few words at a time. Should feel hard but sustainable. If HR climbs above 165 in the MP section, ease back — don't force it.</div>`;
+  }
+
+  // HR cue based on effort
+  html += renderHRCue(dayData.effort);
+
+  // Fuelling
+  if (dayData.fuel) {
+    html += `<div class="coach-cue fuel">🍬 Fuelling: Take a gel every 45 min. Practise what you plan to use on race day. Aim for ~60g carbs/hour on runs over 90 min.</div>`;
+  }
+
+  // Strength block for combined Monday sessions
+  if (hasStrength && hasRun) {
+    html += `<span class="label">Strength Session (after run)</span>`;
+    html += `<div class="strength-section">`;
+    html += `<div class="strength-header">💪 Strength — 30–45 min</div>`;
+    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">`;
+    html += renderStrengthDetail(weekIdx);
+    html += `</div></div>`;
+  }
+
+  body.innerHTML = html;
+}
+
+function renderHRCue(effort) {
+  const cues = {
+    easy:       `<div class="coach-cue hr">💓 HR target: 130–155 bpm (Z1–Z2). Fully conversational — complete sentences. If you can't speak in full sentences, slow down.</div>`,
+    threshold:  `<div class="coach-cue hr">💓 HR target: 165–178 bpm (Z4). Single words only — hard but controlled. Final reps may peak above 178 — that's normal drift.</div>`,
+    vo2max:     `<div class="coach-cue hr">💓 HR target: 178–196 bpm (Z5). Cannot speak. Maximal breathing. Short hard bursts — effort is the point, not pace.</div>`,
+    mp:         `<div class="coach-cue hr">💓 HR target: 158–165 bpm (Z3). A few words at a time. Controlled and sustainable. Should feel almost too easy in the first segment.</div>`,
+    progression:`<div class="coach-cue hr">💓 Progressive HR: Easy 130–155 → Steady 155–163 → Threshold 165–178. Clear steps — do not blur the transitions.</div>`,
+  };
+  return cues[effort] || '';
+}
+
+function renderCoachStrength(weekIdx) {
+  const phase = weekIdx < 7 ? 'early' : weekIdx < 12 ? 'mid-early' : weekIdx < 30 ? 'main' : 'late';
+  if (phase === 'early') {
+    return `<div class="coach-cue effort" style="margin-top:6px">Focus: single-leg glute bridges, lateral band walks, Copenhagen planks, clamshells — hip abductor and glute med priority given IT band history.</div>`;
+  }
+  if (phase === 'main') {
+    return `<div class="coach-cue effort" style="margin-top:6px">Add load: Bulgarian split squats, RDLs, single-leg calf raises, lateral band work. 3×10–12. Monitor for right-side asymmetry.</div>`;
+  }
+  return `<div class="coach-cue effort" style="margin-top:6px">Maintain load, reduce volume. Focus on quality over quantity.</div>`;
+}
+
+function renderStrengthDetail(weekIdx) {
+  if (weekIdx < 7) return 'Bodyweight: single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs. 3×12–15. Priority: hip abductors and glute med (IT band history).';
+  if (weekIdx < 12) return 'Light load introduced: add resistance bands and light dumbbells. Single-leg squats, hip thrusts, calf raises, lateral band walks. 3×12.';
+  return 'Load phase: Bulgarian split squats, RDLs, single-leg calf raises, lateral band work, Copenhagen planks. 3×10–12.';
+}
+
+// ═══════════════════════════════════════════════
+// TOP STRIP
+// ═══════════════════════════════════════════════
+function renderTopStrip(planDay) {
+  const { weekIdx, week } = planDay;
+
+  // Phase badge
+  const pb = document.getElementById('phaseBadge');
+  const phaseMap = {
+    'Base Build':    'phase-base',
+    'Marathon Block':'phase-marathon',
+    'Peak':          'phase-peak',
+    'Consolidation': 'phase-consol',
+    'Taper':         'phase-taper',
+    'Race Week':     'phase-race',
+  };
+  pb.className = `phase-badge ${phaseMap[week.phase] || 'phase-base'}`;
+  pb.textContent = week.phase;
+
+  // Week type badge
+  const wb = document.getElementById('weekTypeBadge');
+  const wt = week.weekType || '';
+  const weekA_B = week.weekA_B;
+
+  let wtClass = 'wt-default';
+  let wtText = weekA_B ? `Week ${weekA_B}` : '—';
+
+  if (wt.includes('CUT-BACK')) { wtClass = 'wt-cutback'; wtText = 'Cut-Back'; }
+  else if (wt.includes('BUILD')) { wtClass = 'wt-build'; wtText = 'Build Week'; }
+  else if (wt.includes('BRIDGE')) { wtClass = 'wt-bridge'; wtText = 'Bridge Week'; }
+  else if (wt.includes('TRANSITION')) { wtClass = 'wt-bridge'; wtText = 'Transition'; }
+  else if (wt.includes('HOLIDAY')) { wtClass = 'wt-holiday'; wtText = 'Holiday'; }
+  else if (wt.includes('RACE')) { wtClass = 'phase-race'; wtText = 'Race Week'; }
+  else if (wt) { wtClass = 'wt-default'; wtText = wt; }
+  else if (weekA_B === 'A') { wtClass = 'wt-weeka'; wtText = 'Week A'; }
+  else if (weekA_B === 'B') { wtClass = 'wt-weekb'; wtText = 'Week B'; }
+
+  wb.className = `week-type-badge ${wtClass}`;
+  wb.textContent = wtText;
+
+  // Week aim
+  document.getElementById('weekAim').innerHTML = week.aim;
+  document.getElementById('weekLabel').textContent = `Wk ${weekIdx+1} of 39 · ${week.km} · ${week.time}`;
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS BAR
+// ═══════════════════════════════════════════════
+function renderProgress(planDay) {
+  if (!planDay) { return; }
+  const totalDays = 39 * 7;
+  const elapsed = planDay.weekIdx * 7 + planDay.dayIdx + 1;
+  const pct = Math.min(100, (elapsed / totalDays) * 100).toFixed(1);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Week ${planDay.weekIdx+1} of 39 · Day ${planDay.dayIdx+1} of 7`;
+}
+
+// ═══════════════════════════════════════════════
+// COUNTDOWN
+// ═══════════════════════════════════════════════
+function renderCountdown() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const days = daysBetween(today, RACE_DATE);
+  if (days < 0) {
+    document.getElementById('countdown').textContent = 'Done!';
+  } else if (days === 0) {
+    document.getElementById('countdown').textContent = 'TODAY 🎉';
+  } else {
+    document.getElementById('countdown').textContent = `${days} days to go`;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// WEATHER
+// ═══════════════════════════════════════════════
+const BR6_LAT = 51.37;
+const BR6_LON = 0.05;
+let userLat = BR6_LAT;
+let userLon = BR6_LON;
+let usingLiveLocation = false;
+
+function getLocation() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve(false); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        userLat = pos.coords.latitude;
+        userLon = pos.coords.longitude;
+        usingLiveLocation = true;
+        resolve(true);
+      },
+      () => {
+        userLat = BR6_LAT;
+        userLon = BR6_LON;
+        usingLiveLocation = false;
+        resolve(false);
+      },
+      { timeout: 5000, maximumAge: 300000 }
+    );
+  });
+}
+
+const WMO_CODES = {
+  0:'Clear', 1:'Mainly Clear', 2:'Partly Cloudy', 3:'Overcast',
+  45:'Fog', 48:'Icy Fog', 51:'Light Drizzle', 53:'Drizzle', 55:'Heavy Drizzle',
+  61:'Light Rain', 63:'Rain', 65:'Heavy Rain', 71:'Light Snow', 73:'Snow', 75:'Heavy Snow',
+  77:'Snow Grains', 80:'Light Showers', 81:'Showers', 82:'Heavy Showers',
+  85:'Snow Showers', 86:'Heavy Snow Showers', 95:'Thunderstorm', 96:'Thunderstorm + Hail', 99:'Severe Thunderstorm'
+};
+
+const WMO_ICONS = {
+  0:'☀️', 1:'🌤', 2:'⛅', 3:'☁️',
+  45:'🌫', 48:'🌫', 51:'🌦', 53:'🌦', 55:'🌧',
+  61:'🌦', 63:'🌧', 65:'⛈', 71:'🌨', 73:'❄️', 75:'❄️',
+  77:'🌨', 80:'🌦', 81:'🌧', 82:'⛈',
+  85:'🌨', 86:'❄️', 95:'⛈', 96:'⛈', 99:'⛈'
+};
+
+function getRunSuitability(temp, rain, wind, wmo) {
+  if (rain > 70 || wmo >= 95) return ['Poor','#ef4444'];
+  if (rain > 40 || temp < 0 || temp > 28 || wind > 50) return ['Tricky','#f59e0b'];
+  if (temp >= 5 && temp <= 20 && rain < 20 && wind < 30) return ['Good','#22c55e'];
+  return ['OK','#3b82f6'];
+}
+
+
+
+function isToday(date) {
+  const today = new Date();
+  return date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate();
+}
+
+function isFuture(date) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return date > today;
+}
+
+function isPast(date) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return date < today;
+}
+
+async function fetchWeather(date) {
+  const d = date.toISOString().slice(0,10);
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=auto&start_date=${d}&end_date=${d}&models=ecmwf_seamless`;
+  const r = await fetch(url);
+  return r.json();
+}
+
+function buildHourlyStrip(data, date) {
+  const hours = data.hourly;
+  const now = new Date();
+  const todayFlag = isToday(date);
+
+  let strip = '';
+  for (let h = 0; h < 24; h++) {
+    const temp = Math.round(hours.temperature_2m[h]);
+    const rain = Math.round(hours.precipitation_probability[h]);
+    const wmo = hours.weathercode[h];
+    const icon = WMO_ICONS[wmo] || '🌡';
+    const isNow = todayFlag && now.getHours() === h;
+    const isSelected = selectedHour === h;
+
+    strip += `<div class="hour-chip ${isNow ? 'now-chip' : ''} ${isSelected ? 'active' : ''}" onclick="selectHour(${h})">
+      <div class="hc-time">${String(h).padStart(2,'0')}:00</div>
+      <div class="hc-icon">${icon}</div>
+      <div class="hc-temp">${temp}°</div>
+      <div class="hc-rain" style="color:${rain>50?'#3b82f6':rain>20?'#6366f1':'var(--text3)'}">${rain}%</div>
+    </div>`;
+  }
+  return strip;
+}
+
+
+
+function selectHour(h) {
+  selectedHour = h;
+  if (weatherData) {
+    document.getElementById('hourlyStrip').innerHTML = buildHourlyStrip(weatherData, currentDate);
+    rerenderCurrentConditions(h);
+  }
+}
+
+function showWeatherLoading() {
+  const cc = document.getElementById('currentConditions');
+  cc.style.display = 'grid';
+  document.getElementById('curTemp').innerHTML = '<div class="spinner"></div>';
+  document.getElementById('curCondition').textContent = 'Fetching weather…';
+  document.getElementById('curMeta').innerHTML = '';
+  document.getElementById('suitVal').textContent = '—';
+  document.getElementById('suitVal').style.color = 'var(--text3)';
+  document.getElementById('hourlyLabel').style.display = 'none';
+  document.getElementById('hourlyStrip').style.display = 'none';
+}
+
+function showWeatherUnavailable(msg) {
+  const cc = document.getElementById('currentConditions');
+  cc.style.display = 'grid';
+  document.getElementById('curTemp').innerHTML = '📅';
+  document.getElementById('curCondition').textContent = msg;
+  document.getElementById('curMeta').innerHTML = '';
+  document.getElementById('suitVal').textContent = '—';
+  document.getElementById('suitVal').style.color = 'var(--text3)';
+  document.getElementById('hourlyLabel').style.display = 'none';
+  document.getElementById('hourlyStrip').style.display = 'none';
+}
+
+async function loadWeather() {
+  const dateKey = currentDate.toISOString().slice(0,10);
+
+  // Past dates — no weather
+  if (isPast(currentDate)) {
+    showWeatherUnavailable('No historical forecast needed for past dates');
+    document.getElementById('weatherTimeLabel').textContent = 'Past date';
+    return;
+  }
+
+  // Check if within forecast range (14 days)
+  const daysOut = daysBetween(new Date(), currentDate);
+  if (daysOut > 14) {
+    showWeatherUnavailable('Weather forecast not available this far ahead — check closer to the date');
+    document.getElementById('weatherTimeLabel').textContent = 'Too far ahead';
+    return;
+  }
+
+  // Try to get live location (reuse if same date already loaded with same location)
+  await getLocation();
+  const locationKey = `${userLat.toFixed(3)},${userLon.toFixed(3)}`;
+  const cacheKey = `${dateKey}|${locationKey}`;
+
+  if (weatherForDate === cacheKey && weatherData) {
+    rerenderWeather();
+    return;
+  }
+
+  showWeatherLoading();
+
+  try {
+    const data = await fetchWeather(currentDate);
+    weatherData = data;
+    weatherForDate = cacheKey;
+
+    const locLabel = usingLiveLocation ? 'Current Location' : 'BR6';
+    document.getElementById('weatherTitle').textContent = `🌤 Weather — ${locLabel}`;
+
+    if (isToday(currentDate)) {
+      selectedHour = new Date().getHours();
+      document.getElementById('weatherTimeLabel').textContent = `Live · ${locLabel}`;
+    } else {
+      selectedHour = 5;
+      document.getElementById('weatherTimeLabel').textContent = `Forecast 05:00 · ${locLabel}`;
+    }
+
+    rerenderWeather();
+  } catch(e) {
+    showWeatherUnavailable('Could not load weather — check connection');
+  }
+}
+
+function rerenderCurrentConditions(h) {
+  const hours = weatherData.hourly;
+  const temp = Math.round(hours.temperature_2m[h]);
+  const feelsLike = Math.round(hours.apparent_temperature[h]);
+  const rain = Math.round(hours.precipitation_probability[h]);
+  const wind = Math.round(hours.windspeed_10m[h]);
+  const humidity = Math.round(hours.relativehumidity_2m[h]);
+  const wmo = hours.weathercode[h];
+  const icon = WMO_ICONS[wmo] || '🌡';
+  const cond = WMO_CODES[wmo] || 'Unknown';
+  const [suitLabel, suitCol] = getRunSuitability(temp, rain, wind, wmo);
+
+  const cc = document.getElementById('currentConditions');
+  cc.style.display = 'grid';
+  document.getElementById('curTemp').innerHTML = `${icon} ${temp}<span>°C</span>`;
+  document.getElementById('curCondition').textContent = cond;
+  document.getElementById('curMeta').innerHTML = `
+    <span>🌡 Feels ${feelsLike}°C</span>
+    <span>💧 ${humidity}% humidity</span>
+    <span>💨 ${wind} km/h</span>
+    <span>🌧 ${rain}% rain</span>
+  `;
+  document.getElementById('suitVal').textContent = suitLabel;
+  document.getElementById('suitVal').style.color = suitCol;
+}
+
+function rerenderWeather() {
+  if (!weatherData) return;
+
+  const h = selectedHour;
+  rerenderCurrentConditions(h);
+
+  // Hourly strip
+  const hourlyLabel = document.getElementById('hourlyLabel');
+  const hourlyStrip = document.getElementById('hourlyStrip');
+  hourlyLabel.style.display = 'block';
+  hourlyStrip.style.display = 'flex';
+  hourlyStrip.innerHTML = buildHourlyStrip(weatherData, currentDate);
+
+  // Scroll selected hour into view
+  setTimeout(() => {
+    const chips = hourlyStrip.querySelectorAll('.hour-chip');
+    if (chips[h]) chips[h].scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════
+// MAIN RENDER
+// ═══════════════════════════════════════════════
+function render() {
+  // Date display
+  document.getElementById('dayName').textContent = getDayOfWeekName(currentDate).toUpperCase();
+  document.getElementById('dateDisplay').textContent = formatDate(currentDate);
+
+  // Today / Tomorrow panel borders
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  const topStrip = document.getElementById('top-strip');
+  const sessionPanel = document.getElementById('session-panel');
+  const weatherPanel = document.getElementById('weather-panel');
+  if (currentDate.getTime() === today.getTime()) {
+    topStrip.style.borderColor = 'rgba(245,130,10,0.45)';
+    sessionPanel.style.borderColor = 'rgba(245,130,10,0.45)';
+    weatherPanel.style.borderColor = 'rgba(245,130,10,0.45)';
+  } else if (currentDate.getTime() === tomorrow.getTime()) {
+    topStrip.style.borderColor = 'rgba(20,184,166,0.45)';
+    sessionPanel.style.borderColor = 'rgba(20,184,166,0.45)';
+    weatherPanel.style.borderColor = 'rgba(20,184,166,0.45)';
+  } else {
+    topStrip.style.borderColor = 'var(--border)';
+    sessionPanel.style.borderColor = 'var(--border)';
+    weatherPanel.style.borderColor = 'var(--border)';
+  }
+  const todayBtn = document.getElementById('todayBtn');
+  if (currentDate.getTime() === today.getTime()) {
+    todayBtn.style.display = 'none';
+  } else {
+    todayBtn.style.display = '';
+    todayBtn.textContent = 'Today';
+    todayBtn.onclick = goToday;
+    todayBtn.classList.remove('tomorrow');
+  }
+  const ctx = document.getElementById('dayContext');
+  if (currentDate.getTime() === today.getTime()) {
+    ctx.textContent = 'Today';
+    ctx.style.color = 'var(--orange)';
+  } else if (currentDate.getTime() === tomorrow.getTime()) {
+    ctx.textContent = 'Tomorrow';
+    ctx.style.color = 'var(--teal)';
+  } else {
+    ctx.textContent = '';
+  }
+
+  // Plan day
+  const planDay = getPlanDay(currentDate);
+
+  if (!planDay) {
+    // Before plan or after race
+    const daysBefore = daysBetween(currentDate, PLAN_START);
+    const daysAfter = daysBetween(RACE_DATE, currentDate);
+
+    document.getElementById('phaseBadge').textContent = daysBefore > 0 ? 'Pre-Plan' : 'Post-Race';
+    document.getElementById('phaseBadge').className = 'phase-badge wt-default';
+    document.getElementById('weekTypeBadge').textContent = '—';
+    document.getElementById('weekAim').textContent = daysBefore > 0 ? `Plan starts ${formatDate(PLAN_START)} · ${daysBefore} days away` : 'Valencia Marathon completed!';
+    document.getElementById('weekLabel').textContent = '';
+    document.getElementById('sessionTypeLabel').textContent = daysBefore > 0 ? 'Pre-Plan' : 'Done';
+    document.getElementById('sessionTypeLabel').style.color = 'var(--text2)';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('sessionBody').innerHTML = `
+      <div class="rest-card">
+        <div class="rest-icon">${daysBefore > 0 ? '🗓️' : '🏅'}</div>
+        <div class="rest-title">${daysBefore > 0 ? 'Before Plan' : 'Post Race'}</div>
+        <div class="rest-sub">${daysBefore > 0 ? `Training begins ${formatDate(PLAN_START)}` : 'Sub-2:55. Trust the training.'}</div>
+      </div>`;
+    document.getElementById('progressFill').style.width = daysBefore > 0 ? '0%' : '100%';
+    document.getElementById('progressLabel').textContent = daysBefore > 0 ? 'Plan not started' : 'Plan complete';
+    loadWeather();
+    return;
+  }
+
+  renderProgress(planDay);
+  renderTopStrip(planDay);
+  renderSession(planDay);
+
+  // Hide log session button for future dates
+  const logBtnWrap = document.getElementById('log-btn-wrap');
+  if (currentDate > today) {
+    logBtnWrap.style.display = 'none';
+  } else {
+    logBtnWrap.style.display = '';
+    updateLogBtn();
+  }
+
+  // Reset weather cache if date changed
+  loadWeather();
+}
+
+// ═══════════════════════════════════════════════
+// SWIPE NAVIGATION
+// ═══════════════════════════════════════════════
+(function() {
+  let startX = 0, startY = 0, ignoreSwipe = false;
+  const el = document.getElementById('app');
+  const strip = document.getElementById('hourlyStrip');
+  el.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    ignoreSwipe = strip.contains(e.target);
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (ignoreSwipe) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      navigate(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+})();
+
+// ═══════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════
+let calYear = 0, calMonth = 0;
+
+function openCalendar() {
+  calYear = currentDate.getFullYear();
+  calMonth = currentDate.getMonth();
+  renderCalendar();
+  document.getElementById('calOverlay').classList.add('open');
+}
+
+function closeCalendar() {
+  document.getElementById('calOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('calOverlay')) closeCalendar();
+}
+
+function calNavigate(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent =
+    `${MONTHS[calMonth]} ${calYear}`;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const planStart = new Date(PLAN_START); planStart.setHours(0,0,0,0);
+  const planEnd = new Date(RACE_DATE); planEnd.setHours(0,0,0,0);
+
+  // First day of month, adjusted so Mon=0
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDow = firstDay.getDay(); // 0=Sun
+  startDow = (startDow === 0) ? 6 : startDow - 1; // Mon=0, Sun=6
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  let html = '';
+
+  // Empty cells before first day
+  for (let i = 0; i < startDow; i++) {
+    html += `<div class="cal-day cal-empty"></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    date.setHours(0,0,0,0);
+
+    const isToday = date.getTime() === today.getTime();
+    const isActive = date.getTime() === currentDate.getTime();
+    const inRange = date >= planStart && date <= planEnd;
+
+    let cls = 'cal-day';
+    if (!inRange) cls += ' cal-dim';
+    else if (isActive) cls += ' cal-active';
+    else if (isToday) cls += ' cal-today';
+
+    const onclick = inRange ? `calSelectDay(${calYear},${calMonth},${d})` : '';
+    html += `<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>${d}</div>`;
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function calSelectDay(y, m, d) {
+  currentDate = new Date(y, m, d);
+  currentDate.setHours(0,0,0,0);
+  closeCalendar();
+  render();
+}
+
+// ═══════════════════════════════════════════════
+// WEEK SUMMARY
+// ═══════════════════════════════════════════════
+let summaryWeekIdx = 0;
+
+function openWeekSummary() {
+  const planDay = getPlanDay(currentDate);
+  summaryWeekIdx = planDay ? planDay.weekIdx : 0;
+  renderWeekSummary();
+  document.getElementById('weekOverlay').classList.add('open');
+
+  // Swipe on modal
+  const modal = document.getElementById('weekModal');
+  let startX = 0, startY = 0;
+  modal.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  modal.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      summaryNavigate(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+}
+
+function closeWeekSummary() {
+  document.getElementById('weekOverlay').classList.remove('open');
+}
+
+function handleWeekOverlayClick(e) {
+  if (e.target === document.getElementById('weekOverlay')) closeWeekSummary();
+}
+
+function summaryNavigate(delta) {
+  summaryWeekIdx = Math.max(0, Math.min(38, summaryWeekIdx + delta));
+  renderWeekSummary();
+}
+
+function summaryGoToDay(weekIdx, dayIdx) {
+  const d = new Date(PLAN_START);
+  d.setDate(d.getDate() + weekIdx * 7 + dayIdx);
+  currentDate = new Date(d);
+  currentDate.setHours(0,0,0,0);
+  closeWeekSummary();
+  render();
+}
+
+function renderWeekSummary() {
+  const week = weeks[summaryWeekIdx];
+  const weekStart = new Date(PLAN_START);
+  weekStart.setDate(weekStart.getDate() + summaryWeekIdx * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  // Title with nav arrows
+  document.getElementById('weekModalTitle').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;flex:1">
+      <button class="cal-nav-btn" onclick="summaryNavigate(-1)" ${summaryWeekIdx === 0 ? 'disabled style="opacity:0.3"' : ''}>&#8592;</button>
+      <div style="flex:1;text-align:center;font-family:\'Barlow Condensed\',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase">
+        Week ${summaryWeekIdx + 1} &nbsp;·&nbsp; ${weekStart.getDate()} ${MONTHS[weekStart.getMonth()]} – ${weekEnd.getDate()} ${MONTHS[weekEnd.getMonth()]}
+      </div>
+      <button class="cal-nav-btn" onclick="summaryNavigate(1)" ${summaryWeekIdx === 38 ? 'disabled style="opacity:0.3"' : ''}>&#8594;</button>
+    </div>`;
+
+  // Badges
+  const phaseMap = {
+    'Base Build':'phase-base','Marathon Block':'phase-marathon',
+    'Peak':'phase-peak','Consolidation':'phase-consol',
+    'Taper':'phase-taper','Race Week':'phase-race'
+  };
+  const wtMap = {
+    'CUT-BACK':'wt-cutback','BUILD':'wt-build','BRIDGE':'wt-bridge',
+    'TRANSITION':'wt-bridge','RACE':'phase-race'
+  };
+  let wtClass = 'wt-default';
+  let wtText = week.weekA_B ? `Week ${week.weekA_B}` : '';
+  if (week.weekType) {
+    const key = Object.keys(wtMap).find(k => week.weekType.includes(k));
+    if (key) { wtClass = wtMap[key]; wtText = week.weekType; }
+    else if (week.weekA_B === 'A') { wtClass = 'wt-weeka'; wtText = 'Week A'; }
+    else if (week.weekA_B === 'B') { wtClass = 'wt-weekb'; wtText = 'Week B'; }
+  }
+
+  let badgesHtml = `<span class="phase-badge ${phaseMap[week.phase] || 'phase-base'}">${week.phase}</span>`;
+  if (wtText) badgesHtml += `<span class="week-type-badge ${wtClass}">${wtText}</span>`;
+  document.getElementById('weekModalBadges').innerHTML = badgesHtml;
+
+  // Effort accent colours
+  const accentMap = {
+    easy:'#22c55e', threshold:'#ef4444', vo2max:'#a855f7',
+    mp:'#3b82f6', progression:'#f59e0b'
+  };
+
+  // Col headers
+  let tableHtml = `
+    <div class="ws-col-headers">
+      <div class="ws-col-h">Day / Session</div>
+      <div class="ws-col-h right">Time</div>
+      <div class="ws-col-h right km">Distance</div>
+    </div>`;
+
+  const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+
+  DAY_COLS.forEach((dayKey, i) => {
+    const d = week.days[dayKey];
+    const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + i);
+    const isActiveDay = dayDate.getTime() === currentDate.getTime();
+    const isToday = dayDate.getTime() === todayMidnight.getTime();
+
+    const accent = accentMap[d.effort] || '#636b76';
+    const timeVal = d.time || '—';
+    const kmVal = d.km || (d.rest ? 'Rest' : d.holiday ? 'Holiday' : d.strengthOnly ? 'Strength' : '—');
+    const kmStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
+    const timeStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
+
+    let dayLabel = DAY_NAMES_FULL[i];
+    if (isToday) dayLabel += ' <span style="color:var(--orange);font-size:9px;font-weight:800">TODAY</span>';
+
+    tableHtml += `
+      <div class="ws-row ${isActiveDay ? 'ws-active' : ''}" 
+           onclick="summaryGoToDay(${summaryWeekIdx}, ${i})"
+           style="cursor:pointer">
+        <div class="ws-accent" style="background:${accent}"></div>
+        <div class="ws-day">
+          <div class="ws-day-name">${dayLabel}</div>
+          <div class="ws-session-type">${d.type}</div>
+        </div>
+        <div class="ws-time" style="${timeStyle}">${timeVal}</div>
+        <div class="ws-km" style="${kmStyle}">${kmVal}</div>
+      </div>`;
+  });
+
+  document.getElementById('weekModalTable').innerHTML = tableHtml;
+
+  // Totals
+  document.getElementById('weekModalTotals').innerHTML = `
+    <div class="ws-total-label">Week Total</div>
+    <div class="ws-total-time">${week.time}</div>
+    <div class="ws-total-km">${week.km}</div>`;
+}
+
+// ═══════════════════════════════════════════════
+// SESSION LOG
+// ═══════════════════════════════════════════════
+const EFFORT_LABELS  = { '-2':'Much easier','-1':'Easier','0':'As planned','1':'Harder','2':'Much harder' };
+const LEGS_LABELS    = { '-2':'Dead','-1':'Heavy','0':'Normal','1':'Good','2':'Springy' };
+const ENERGY_LABELS  = { '-2':'Drained','-1':'Low','0':'Normal','1':'Good','2':'Fired up' };
+
+function logKey(date) {
+  return 'log_' + date.toISOString().slice(0,10);
+}
+
+function openSessionLog() {
+  const planDay = getPlanDay(currentDate);
+  const dateStr = formatDate(currentDate);
+  const sessionType = planDay ? planDay.week.days[planDay.dayKey].type : 'Session';
+
+  document.getElementById('logModalTitle').textContent = `${dateStr} · ${sessionType}`;
+
+  // Load existing log if present
+  const existing = JSON.parse(localStorage.getItem(logKey(currentDate)) || 'null');
+  document.getElementById('effortSlider').value = existing ? existing.effort : 0;
+  document.getElementById('legsSlider').value   = existing ? existing.legs   : 0;
+  document.getElementById('energySlider').value = existing ? existing.energy : 0;
+  document.getElementById('logNotes').value      = existing ? existing.notes  : '';
+
+  updateSlider('effort');
+  updateSlider('legs');
+  updateSlider('energy');
+
+  document.getElementById('logOverlay').classList.add('open');
+}
+
+function closeSessionLog() {
+  document.getElementById('logOverlay').classList.remove('open');
+}
+
+function handleLogOverlayClick(e) {
+  if (e.target === document.getElementById('logOverlay')) closeSessionLog();
+}
+
+function updateSlider(type) {
+  const val = document.getElementById(type + 'Slider').value;
+  const labels = type === 'effort' ? EFFORT_LABELS : type === 'legs' ? LEGS_LABELS : ENERGY_LABELS;
+  document.getElementById(type + 'Desc').textContent = labels[val];
+}
+
+function saveSessionLog() {
+  const log = {
+    date: currentDate.toISOString().slice(0,10),
+    effort: parseInt(document.getElementById('effortSlider').value),
+    legs:   parseInt(document.getElementById('legsSlider').value),
+    energy: parseInt(document.getElementById('energySlider').value),
+    notes:  document.getElementById('logNotes').value.trim()
+  };
+  localStorage.setItem(logKey(currentDate), JSON.stringify(log));
+  updateLogBtn();
+  closeSessionLog();
+}
+
+function updateLogBtn() {
+  const existing = localStorage.getItem(logKey(currentDate));
+  const btn = document.getElementById('logSessionBtn');
+  if (existing) {
+    btn.classList.add('has-log');
+    btn.textContent = 'Session Logged ✓';
+  } else {
+    btn.classList.remove('has-log');
+    btn.textContent = 'Log Session';
+  }
+}
+
+function exportLog() {
+  const entries = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key.startsWith('log_')) continue;
+    try {
+      const entry = JSON.parse(localStorage.getItem(key));
+      const date = new Date(entry.date);
+      const planDay = getPlanDay(date);
+      const sessionType = planDay ? planDay.week.days[planDay.dayKey].type : '—';
+      const weekNum = planDay ? planDay.weekIdx + 1 : '—';
+      entries.push({
+        date: entry.date,
+        weekNum,
+        sessionType,
+        effort: entry.effort,
+        legs: entry.legs,
+        energy: entry.energy,
+        notes: entry.notes || ''
+      });
+    } catch(e) {}
+  }
+
+  entries.sort((a,b) => a.date.localeCompare(b.date));
+
+  let csv = 'Date,Week,Session Type,Effort (-2 to +2),Legs (-2 to +2),Energy (-2 to +2),Notes\n';
+  entries.forEach(e => {
+    csv += `${e.date},Week ${e.weekNum},${e.sessionType},${e.effort},${e.legs},${e.energy},"${e.notes.replace(/"/g,'""')}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `nats-training-log-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
