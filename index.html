@@ -2297,7 +2297,7 @@ function isPast(date) {
 
 async function fetchWeather(date) {
   const d = date.toISOString().slice(0,10);
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=auto&start_date=${d}&end_date=${d}`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=auto&start_date=${d}&end_date=${d}&models=ukmo_seamless`;
   const r = await fetch(url);
   return r.json();
 }
