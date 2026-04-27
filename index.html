@@ -2303,97 +2303,12 @@ function isPast(date) {
   return date < today;
 }
 
-const MET_OFFICE_KEY = 'eyJ4NXQjUzI1NiI6Ik5XVTVZakUxTkRjeVl6a3hZbUl4TkdSaFpqSmpOV1l6T1dGaE9XWXpNMk0yTWpRek5USm1OVEE0TXpOaU9EaG1NVFJqWVdNellXUm1ZalUyTTJJeVpBPT0iLCJraWQiOiJnYXRld2F5X2NlcnRpZmljYXRlX2FsaWFzIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ==.eyJzdWIiOiJuYXRmZWRkb25AZ21haWwuY29tQGNhcmJvbi5zdXBlciIsImFwcGxpY2F0aW9uIjp7Im93bmVyIjoibmF0ZmVkZG9uQGdtYWlsLmNvbSIsInRpZXJRdW90YVR5cGUiOm51bGwsInRpZXIiOiJVbmxpbWl0ZWQiLCJuYW1lIjoic2l0ZV9zcGVjaWZpYy1iY2MzYjc0NC1iZTVkLTQ2NDktYjhhOC01ODk5YWQ4MzJjMmUiLCJpZCI6NDY0OTAsInV1aWQiOiI5OGJjMzQ5Mi0zYWQ2LTQ2OTYtYjAyMC1jMWNhNmM1ZjgyYjgifSwiaXNzIjoiaHR0cHM6XC9cL2FwaS1tYW5hZ2VyLmFwaS1tYW5hZ2VtZW50Lm1ldG9mZmljZS5jbG91ZDo0NDNcL29hdXRoMlwvdG9rZW4iLCJ0aWVySW5mbyI6eyJ3ZGhfc2l0ZV9zcGVjaWZpY19mcmVlIjp7InRpZXJRdW90YVR5cGUiOiJyZXF1ZXN0Q291bnQiLCJncmFwaFFMTWF4Q29tcGxleGl0eSI6MCwiZ3JhcGhRTE1heERlcHRoIjowLCJzdG9wT25RdW90YVJlYWNoIjp0cnVlLCJzcGlrZUFycmVzdExpbWl0IjowLCJzcGlrZUFycmVzdFVuaXQiOiJzZWMifX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiU2l0ZVNwZWNpZmljRm9yZWNhc3QiLCJjb250ZXh0IjoiXC9zaXRlc3BlY2lmaWNcL3YwIiwicHVibGlzaGVyIjoiSmFndWFyX0NJIiwidmVyc2lvbiI6InYwIiwic3Vic2NyaXB0aW9uVGllciI6IndkaF9zaXRlX3NwZWNpZmljX2ZyZWUifV0sInRva2VuX3R5cGUiOiJhcGlLZXkiLCJpYXQiOjE3NzcyNzg3OTgsImp0aSI6ImM4NGEwNTAyLTI2OTgtNDQ3Ni1iOTJlLTlkNDUxYjlhMzU5MyJ9.MAS1L_GhZSbDO8TopwROnpUqb7_avfLciMTkw0mxvGXO7A4XHQkpeBesJBgBMHyMGORFAeCrQsz_ZVoDEiu35YhQ6HsJDB2xN1Dn7-sGZbvv6bkW4hzd_BHGAyenCtXD2s19J6EU_6jB7OPT8cDdg5txqrTSBAGYZkbWWf4iQBXrXtwkHm4jzPetMeiCGzmdXn--AIN56XTEVwnmhb4bMdMNKcp-ns4rvJOprUC-6AtmNqTF0d6Z4AA9qYo-NkBvATDdR4Bl1Gi7BhFfnwozHsVgLTYdj25BvlBLFPq4rsg-jv3-3krQ6a1JqBNejDMHclqxPf9PDxD9HtrB9_jBbg==';
-
 async function fetchWeather(date) {
-  const url = `https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/hourly?latitude=${userLat}&longitude=${userLon}&includeLocationName=false`;
-  const r = await fetch(url, {
-    headers: {
-      'apikey': MET_OFFICE_KEY,
-      'accept': 'application/json'
-    }
-  });
-  if (!r.ok) throw new Error(`Met Office API error: ${r.status}`);
-  const raw = await r.json();
-  return parseMETOffice(raw, date);
-}
-
-function parseMETOffice(raw, date) {
-  // Met Office returns timeSeries array with hourly data
   const d = date.toISOString().slice(0,10);
-  const timeSeries = raw.features[0].properties.timeSeries;
-
-  // Filter to the requested date and build hourly arrays (0-23)
-  const hourlyData = {
-    temperature_2m: new Array(24).fill(null),
-    apparent_temperature: new Array(24).fill(null),
-    precipitation_probability: new Array(24).fill(null),
-    precipitation: new Array(24).fill(null),
-    weathercode: new Array(24).fill(0),
-    windspeed_10m: new Array(24).fill(null),
-    relativehumidity_2m: new Array(24).fill(null),
-  };
-
-  timeSeries.forEach(entry => {
-    if (!entry.time.startsWith(d)) return;
-    const hour = parseInt(entry.time.slice(11, 13));
-    hourlyData.temperature_2m[hour]         = entry.screenTemperature ?? null;
-    hourlyData.apparent_temperature[hour]   = entry.feelsLikeTemperature ?? entry.screenTemperature ?? null;
-    hourlyData.precipitation_probability[hour] = entry.probOfPrecipitation ?? 0;
-    hourlyData.precipitation[hour]          = entry.totalPrecipAmount ?? 0;
-    hourlyData.windspeed_10m[hour]          = entry.windSpeed10m ? Math.round(entry.windSpeed10m * 3.6) : 0;
-    hourlyData.relativehumidity_2m[hour]    = entry.screenRelativeHumidity ?? null;
-    hourlyData.weathercode[hour]            = metOfficeSignificantWeatherCode(entry.significantWeatherCode ?? -1);
-  });
-
-  // Fill any nulls with nearest available value
-  for (const key of Object.keys(hourlyData)) {
-    let last = 0;
-    hourlyData[key] = hourlyData[key].map(v => {
-      if (v !== null) { last = v; return v; }
-      return last;
-    });
-  }
-
-  return { hourly: hourlyData };
-}
-
-function metOfficeSignificantWeatherCode(code) {
-  // Map Met Office significant weather codes to WMO-style codes used in our app
-  const map = {
-    '-1': 0,  // Trace rain -> clear
-    '0':  0,  // Clear night
-    '1':  0,  // Sunny day
-    '2':  1,  // Partly cloudy night
-    '3':  2,  // Partly cloudy day
-    '5':  45, // Mist
-    '6':  45, // Fog
-    '7':  51, // Light cloud
-    '8':  3,  // Thick cloud
-    '9':  80, // Light rain shower night
-    '10': 80, // Light rain shower day
-    '11': 51, // Drizzle
-    '12': 61, // Light rain
-    '13': 80, // Heavy rain shower night
-    '14': 80, // Heavy rain shower day
-    '15': 63, // Heavy rain
-    '16': 71, // Sleet shower night
-    '17': 71, // Sleet shower day
-    '18': 71, // Sleet
-    '19': 85, // Hail shower night
-    '20': 85, // Hail shower day
-    '21': 85, // Hail
-    '22': 71, // Light snow shower night
-    '23': 71, // Light snow shower day
-    '24': 71, // Light snow
-    '25': 73, // Heavy snow shower night
-    '26': 73, // Heavy snow shower day
-    '27': 73, // Heavy snow
-    '28': 95, // Thunder shower night
-    '29': 95, // Thunder shower day
-    '30': 95, // Thunder
-  };
-  return map[String(code)] ?? 0;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&hourly=temperature_2m,precipitation_probability,precipitation,weathercode,windspeed_10m,relativehumidity_2m,apparent_temperature&timezone=auto&start_date=${d}&end_date=${d}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Weather API error: ${r.status}`);
+  return r.json();
 }
 
 function buildHourlyStrip(data, date) {
@@ -2464,9 +2379,9 @@ async function loadWeather() {
     return;
   }
 
-  // Check if within forecast range (7 days for Met Office)
+  // Check if within forecast range (14 days)
   const daysOut = daysBetween(new Date(), currentDate);
-  if (daysOut > 7) {
+  if (daysOut > 14) {
     showWeatherUnavailable('Weather forecast not available this far ahead — check closer to the date');
     document.getElementById('weatherTimeLabel').textContent = 'Too far ahead';
     return;
