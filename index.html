@@ -1321,6 +1321,17 @@
           <span class="log-slider-max">+4</span>
         </div>
       </div>
+      <div class="log-slider-group">
+        <div class="log-slider-header">
+          <span class="log-slider-label">Sleep</span>
+          <span class="log-slider-desc" id="sleepDesc">Normal</span>
+        </div>
+        <div class="log-slider-track">
+          <span class="log-slider-min">−4</span>
+          <input type="range" min="-4" max="4" step="1" value="0" id="sleepSlider" oninput="updateSlider('sleep')">
+          <span class="log-slider-max">+4</span>
+        </div>
+      </div>
       <div class="log-notes-group">
         <div class="log-slider-label">Notes <span style="color:var(--text3);font-weight:400;font-size:10px">(optional)</span></div>
         <textarea id="logNotes" placeholder="Anything else? Niggles, conditions, cut short…"></textarea>
@@ -1350,7 +1361,7 @@ const weeks = [
     km:'16.2–21.5km', time:'2h05m–2h30m',
     aim:'3 run days · All easy HR 130–155 · Thu/Fri/Sun = rest · Building the aerobic base from scratch',
     days:{
-      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only — bodyweight', detail:'Bodyweight strength session only, no run this week.\n\nExercises: single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs.\n3×12–15 reps.', strength:true, strengthOnly:true },
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only — bodyweight', detail:'Bodyweight strength session only, no run this week.\n\nExercises: single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs, planks, side planks.\n3×12–15 reps.', strength:true, strengthOnly:true },
       Tue:{ type:'Easy Run', km:'4.3–5.7km', time:'25–30 min', session:'Easy run', detail:'25–30 min easy effort. Fully conversational pace throughout.', effort:'easy' },
       Wed:{ type:'Easy + Strides', km:'4.9–6.3km', time:'25–30 min + strides', session:'Easy run + strides', detail:'25–30 min easy followed by 4–6×100m strides (~0.6km). Strides: controlled acceleration over 100m, not a sprint.', effort:'easy', strides:true },
       Thu:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
@@ -1364,7 +1375,7 @@ const weeks = [
     km:'18.2–23.7km', time:'2h16m–2h41m',
     aim:'3 run days · Slight step up from week 1 · Still all easy',
     days:{
-      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs. 3×12–15.', strength:true, strengthOnly:true },
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs, planks. 3×12–15.', strength:true, strengthOnly:true },
       Tue:{ type:'Easy Run', km:'4.9–6.3km', time:'28–33 min', session:'Easy run', detail:'28–33 min easy. Conversational pace throughout.', effort:'easy' },
       Wed:{ type:'Easy + Strides', km:'5.5–6.9km', time:'28–33 min + strides', session:'Easy run + strides', detail:'28–33 min easy + strides (~0.6km). 4–6×100m controlled accelerations.', effort:'easy', strides:true },
       Thu:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
@@ -1397,14 +1408,14 @@ const weeks = [
       Wed:{ type:'Easy + Strides', km:'5.8–7.3km', time:'30–35 min + strides', session:'Easy run + strides', detail:'30–35 min easy + 4–6×100m strides.', effort:'easy', strides:true },
       Thu:{ type:'Easy Run', km:'4.3–5.7km', time:'25–30 min', session:'Easy run', detail:'25–30 min easy. First Thursday run.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long + Strides', km:'8.4–11.1km', time:'45–55 min + strides', session:'Easy long run + strides', detail:'45–55 min easy + 6×100m strides.', effort:'easy', strides:true },
-      Sun:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min very easy recovery. Z1–Z2 only (HR under 155). This is your first Sunday recovery run.', effort:'easy' },
+      Sat:{ type:'Easy Long + Strides', km:'8.4–11.1km', time:'45–55 min + strides', session:'Easy long run + strides', detail:'45–55 min easy + strides.', effort:'easy', strides:true },
+      Sun:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min very easy recovery. Z1–Z2 only (HR under 155). First Sunday recovery run.', effort:'easy' },
     }
   },
   // Week 5 — 6 Apr
   { phase:'Base Build', weekType:'', weekA_B:'',
     km:'31.6–40.2km', time:'3h30m–4h05m',
-    aim:'5 run days · Continued volume build · All easy',
+    aim:'5 run days · Continued volume build · All easy · Fri rest',
     days:{
       Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15.', strength:true, strengthOnly:true },
       Tue:{ type:'Easy Run', km:'6.1–7.6km', time:'35–40 min', session:'Easy run', detail:'35–40 min easy.', effort:'easy' },
@@ -1418,7 +1429,7 @@ const weeks = [
   // Week 6 — 13 Apr
   { phase:'Base Build', weekType:'', weekA_B:'',
     km:'34.6–43.4km', time:'3h47m–4h22m',
-    aim:'5 run days · Fuelling practice from 45 min on long runs starts this week',
+    aim:'5 run days · Fuelling practice from 45 min on long runs starts this week · Fri rest',
     days:{
       Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15.', strength:true, strengthOnly:true },
       Tue:{ type:'Easy Run', km:'6.6–8.2km', time:'38–43 min', session:'Easy run', detail:'38–43 min easy.', effort:'easy' },
@@ -1429,30 +1440,30 @@ const weeks = [
       Sun:{ type:'Recovery', km:'4.9–6.3km', time:'28–33 min', session:'Recovery run', detail:'28–33 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 7 — 20 Apr (CURRENT WEEK)
+  // Week 7 — 20 Apr
   { phase:'Base Build', weekType:'BUILD', weekA_B:'',
     km:'43.7–52.7km', time:'4h39m–5h14m',
     aim:'BUILD WEEK · Proper step up from wk 6 · Holiday week (wk 8) acts as natural cut-back · 5 run days · Fri rest',
     days:{
-      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs.', strength:true, strengthOnly:true },
+      Mon:{ type:'Strength', km:null, time:'30–45 min', session:'Strength only', detail:'Bodyweight strength. 3×12–15. Single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs, planks, side planks.', strength:true, strengthOnly:true },
       Tue:{ type:'Easy Run', km:'8.3–10.1km', time:'48–53 min', session:'Easy run', detail:'48–53 min easy. HR 130–155 throughout. Conversational pace.', effort:'easy' },
-      Wed:{ type:'Easy + Strides', km:'9.0–10.7km', time:'48–53 min + strides', session:'Easy run + strides', detail:'48–53 min easy + 4–6×100m strides (~0.6km). Strides at the end of the easy run — controlled acceleration, not a sprint. On trail routes, effort and HR matter more than pace.', effort:'easy', strides:true },
+      Wed:{ type:'Easy + Strides', km:'9.0–10.7km', time:'48–53 min + strides', session:'Easy run + strides', detail:'48–53 min easy + 4–6×100m strides (~0.6km). On trail routes, effort and HR matter more than pace.', effort:'easy', strides:true },
       Thu:{ type:'Easy Run', km:'7.5–9.1km', time:'43–48 min', session:'Easy run', detail:'43–48 min easy. Keep HR in Z2 (130–155).', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long + Strides', km:'12.8–15.2km', time:'70–80 min + strides', session:'Easy long run + strides', detail:'70–80 min easy + 6×100m strides at the end. Fuel every 45 min if running over 45 min. This is the biggest long run so far — HR 130–155 throughout.', effort:'easy', strides:true, fuel:true },
+      Sat:{ type:'Easy Long + Strides', km:'12.8–15.2km', time:'70–80 min + strides', session:'Easy long run + strides', detail:'70–80 min easy + 6×100m strides at the end. Fuel every 45 min if running over 45 min.', effort:'easy', strides:true, fuel:true },
       Sun:{ type:'Recovery', km:'6.1–7.6km', time:'35–40 min', session:'Recovery run', detail:'35–40 min Z1–Z2 easy recovery.', effort:'easy' },
     }
   },
   // Week 8 — 27 Apr (HOLIDAY CUTBACK)
   { phase:'Base Build', weekType:'CUT-BACK', weekA_B:'',
     km:'36.2–45.3km', time:'4h–4h35m',
-    aim:'CUT-BACK / HOLIDAY WK · Trimmed Mon–Thu sessions · Natural cut-back via Fri–Sun holiday',
+    aim:'CUT-BACK / HOLIDAY WK · Mon run+strength · Trimmed sessions · Natural cut-back via Fri–Sun holiday',
     days:{
       Mon:{ type:'Easy + Strength', km:'7.8–9.5km', time:'45–50 min run + 30–45 min strength', session:'Easy run + Strength', detail:'45–50 min easy run then 30–45 min strength session.', effort:'easy', strength:true },
       Tue:{ type:'Easy Run', km:'9.6–12.4km', time:'55–65 min', session:'Easy run', detail:'55–65 min easy.', effort:'easy' },
       Wed:{ type:'Easy + Strides', km:'11.0–13.9km', time:'60–70 min + strides', session:'Easy run + 6×100m strides', detail:'60–70 min easy + 6×100m strides.', effort:'easy', strides:true },
       Thu:{ type:'Easy Run', km:'7.8–9.5km', time:'45–50 min', session:'Easy run (last before holiday)', detail:'45–50 min easy. Last run before holiday departs.', effort:'easy' },
-      Fri:{ type:'Holiday', km:null, time:null, session:'Holiday — rest', holiday:true },
+      Fri:{ type:'Holiday', km:null, time:null, session:'Holiday — departs early, rest', holiday:true },
       Sat:{ type:'Holiday', km:null, time:null, session:'Holiday — driving, rest', holiday:true },
       Sun:{ type:'Holiday', km:null, time:null, session:'Holiday — back 8–9pm, rest', holiday:true },
     }
@@ -1474,144 +1485,144 @@ const weeks = [
   // Week 10 — 11 May
   { phase:'Base Build', weekType:'', weekA_B:'',
     km:'57.0–65.2km', time:'5h13m–5h54m',
-    aim:'Work half marathon Thursday 14 May (easy Z2) · Saturday shortened · Fri rest',
+    aim:'Work half marathon Thursday 14 May (easy Z2) · Saturday shortened · Mon run+strength · Fri rest',
     days:{
       Mon:{ type:'Easy + Strength', km:'6.6–8.0km', time:'38–42 min run + 30–45 min strength', session:'Easy run + Strength', detail:'38–42 min easy run then strength.', effort:'easy', strength:true },
       Tue:{ type:'Easy Run', km:'8.0–9.5km', time:'46–50 min', session:'Easy run', detail:'46–50 min easy.', effort:'easy' },
       Wed:{ type:'Easy + Strides', km:'8.6–10.1km', time:'46–50 min + strides', session:'Easy run + strides', detail:'46–50 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Work Half Marathon', km:'21.1km', time:'~2h00m (easy Z2)', session:'Work Half Marathon — easy Z2 effort throughout', detail:'Easy effort throughout — Z2, HR 130–150. This is NOT a race. Treat it as a long easy run in company. Do not get carried away by the event atmosphere. Run conservationally — it replaces the quality session this week.', effort:'easy' },
+      Thu:{ type:'Work Half Marathon', km:'21.1km', time:'~2h00m (easy Z2)', session:'Work Half Marathon — easy Z2 effort throughout', detail:'Easy effort throughout — Z2, HR 130–150. This is NOT a race. Treat it as a long easy run in company. Do not get carried away by the event atmosphere. Run conservatively.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
       Sat:{ type:'Easy Long', km:'7.0–9.5km', time:'40–50 min', session:'Easy run (shortened — legs may be heavy)', detail:'40–50 min easy. Go by feel — legs may be heavy after Thursday HM. Keep HR in Z1–Z2.', effort:'easy' },
       Sun:{ type:'Recovery', km:'5.7–7.0km', time:'33–37 min', session:'Recovery run', detail:'33–37 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 11 — 18 May
-  { phase:'Base Build', weekType:'', weekA_B:'',
-    km:'55.6–64.0km', time:'5h33m–6h00m',
-    aim:'Both quality days · 6-day week · Fri rest · First proper threshold work',
+  // Week 11 — 18 May (WEEK A · PURE BASE)
+  { phase:'Base Build', weekType:'', weekA_B:'A',
+    km:'65.0–77.0km', time:'5h48m–6h38m',
+    aim:'WEEK A · Pure base · 2× strength (Mon + Thu) · 6 run days · Long run 18–21km · All easy Z2',
     days:{
-      Mon:{ type:'Easy + Strength', km:'7.3–8.8km', time:'42–46 min run + 30–45 min strength', session:'Easy run + Strength', detail:'42–46 min easy then strength session.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 min warm-up easy → 4×5 min threshold (2 min easy recovery between each) → 15 min cool-down.\n\nThreshold effort: hard but controlled — single words only. HMP to 10k race feel. HR 165–178.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides', km:'9.3–11.1km', time:'50–55 min + strides', session:'Easy run + strides', detail:'50–55 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 min easy → 15 min steady → 15 min threshold effort. Clear three-step staircase — do not blur the transitions. Never go into Marathon Pace territory on a progression.', effort:'progression' },
+      Mon:{ type:'Easy + Strength', km:'9.5–11.2km', time:'55–62 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–62 min easy then strength session. All easy Z2.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'9.5–11.2km', time:'55–62 min', session:'Easy run', detail:'55–62 min easy. HR 130–155 throughout.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'10.1–11.8km', time:'55–62 min + strides', session:'Easy run + 6×100m strides', detail:'55–62 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'11.7–13.8km', time:'68–76 min run + 30–45 min strength', session:'Easy run + Strength', detail:'68–76 min easy then strength. Second strength session of the week.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'12.2–14.5km', time:'70–76 min', session:'Easy long run', detail:'70–76 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'6.3–7.6km', time:'36–40 min', session:'Recovery run', detail:'36–40 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'18.2–21.0km', time:'105–115 min', session:'Easy long run — relaxed Z2 throughout', detail:'105–115 min easy. Fully conversational. Fuel every 45 min. Pure aerobic base work — no pushing.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'6.6–8.2km', time:'38–43 min', session:'Recovery run', detail:'38–43 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 12 — 25 May
-  { phase:'Base Build', weekType:'', weekA_B:'',
-    km:'61.9–70.4km', time:'6h06m–6h33m',
-    aim:'Final base week · 6-day week · Both quality days',
+  // Week 12 — 25 May (WEEK B · PURE BASE)
+  { phase:'Base Build', weekType:'', weekA_B:'B',
+    km:'74.0–86.0km', time:'6h22m–7h14m',
+    aim:'WEEK B · Pure base · 2× strength · 6 run days · Long run 20–23km · All easy Z2',
     days:{
-      Mon:{ type:'Easy + Strength', km:'8.0–9.5km', time:'46–50 min run + 30–45 min strength', session:'Easy run + Strength', detail:'46–50 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'12.0–13.0km', time:'~57–60 min', session:'5×5 min threshold', detail:'15 min WU → 5×5 min threshold (90 sec recovery between reps) → 15 min CD.\n\nOne more rep than last week. Threshold: HR 165–178, single words only.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides', km:'10.2–12.0km', time:'55–60 min + strides', session:'Easy run + strides', detail:'55–60 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 min easy → 20 min steady → 20 min threshold. Three-step staircase. Never extend into Marathon Pace.', effort:'progression' },
+      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–68 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–68 min easy then strength session.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'10.4–12.4km', time:'60–68 min', session:'Easy run', detail:'60–68 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'11.0–13.0km', time:'60–68 min + strides', session:'Easy run + 6×100m strides', detail:'60–68 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'13.0–15.1km', time:'75–83 min run + 30–45 min strength', session:'Easy run + Strength', detail:'75–83 min easy then strength. Keep it all Z2.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'12.7–15.0km', time:'73–79 min', session:'Easy long run', detail:'73–79 min easy. Fuel from 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'7.0–8.4km', time:'40–44 min', session:'Recovery run', detail:'40–44 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'20.5–23.3km', time:'118–128 min', session:'Easy long run — relaxed Z2 throughout', detail:'118–128 min easy. Fuel every 45 min. Focus on keeping HR flat and conversational throughout.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'7.5–9.1km', time:'43–48 min', session:'Recovery run', detail:'43–48 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 13 — 1 Jun (TRANSITION)
-  { phase:'Marathon Block', weekType:'TRANSITION', weekA_B:'',
-    km:'55.5–64.8km', time:'4h58m–5h24m',
-    aim:'TRANSITION WK · Light threshold both days · 6 days · Entry into Marathon Block',
+  // Week 13 — 1 Jun (WEEK A · PURE BASE · 3RD BUILD)
+  { phase:'Base Build', weekType:'', weekA_B:'A',
+    km:'82.0–94.0km', time:'7h02m–7h56m',
+    aim:'WEEK A · Pure base · 2× strength · 6 run days · Long run 23–26km · ⚠️ 3rd build week — sleep and eat well',
     days:{
-      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength. Light load introduced.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 min threshold / 2 min rec → 15 CD. Back to 4 reps — first week of Marathon Block, keep it controlled.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides', km:'11.0–13.6km', time:'60–68 min + strides', session:'Easy run + strides', detail:'60–68 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold. Clear staircase.', effort:'progression' },
+      Mon:{ type:'Easy + Strength', km:'10.9–12.7km', time:'63–70 min run + 30–45 min strength', session:'Easy run + Strength', detail:'63–70 min easy then strength. Third consecutive build week — prioritise sleep and nutrition.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'11.3–13.3km', time:'65–73 min', session:'Easy run', detail:'65–73 min easy. Keep it Z2 — no creeping up.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'11.9–13.9km', time:'65–73 min + strides', session:'Easy run + 6×100m strides', detail:'65–73 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'14.4–16.5km', time:'83–91 min run + 30–45 min strength', session:'Easy run + Strength', detail:'83–91 min easy then strength. Longest Thursday yet — stay conversational throughout.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'15.3–18.7km', time:'88–98 min', session:'Easy long run', detail:'88–98 min easy. Fuel every 45 min. First long run in Marathon Block territory.', effort:'easy', fuel:true },
-      Sun:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-    }
-  },
-  // Week 14 — 8 Jun (WEEK B · VO2MAX WK 1)
-  { phase:'Marathon Block', weekType:'VO2MAX WK 1', weekA_B:'B',
-    km:'68.1–79.0km', time:'6h45m–7h23m',
-    aim:'WEEK B · VO2MAX WK 1 · 5k reps Tuesday · Sat easy · Sunday recovery returns',
-    days:{
-      Mon:{ type:'Easy + Strength', km:'9.0–10.9km', time:'52–57 min run + 30–45 min strength', session:'Easy run + Strength', detail:'52–57 min easy + strength with light load.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'12.0–13.0km', time:'~60–65 min', session:'5×1km at 5k effort', detail:'12 min WU → 5×1km at 5k effort (90 sec recovery between reps) → 10 min CD.\n\n5k effort: cannot speak, maximal breathing. HR 178–196. These are short hard bursts — effort is the point, not pace.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'11.4–13.9km', time:'62–70 min + strides', session:'Easy run + strides', detail:'62–70 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
-      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'16.0–19.4km', time:'92–102 min', session:'Easy long run', detail:'92–102 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'7.7–9.3km', time:'44–49 min', session:'Recovery run', detail:'44–49 min Z1–Z2 easy.', effort:'easy' },
-    }
-  },
-  // Week 15 — 15 Jun (WEEK A · VO2MAX WK 2)
-  { phase:'Marathon Block', weekType:'VO2MAX WK 2', weekA_B:'A',
-    km:'70.7–81.6km', time:'6h54m–7h32m',
-    aim:'WEEK A · VO2MAX WK 2 · First MP long run · Sat 20 min at Marathon Pace',
-    days:{
-      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'13.0–14.0km', time:'~65–70 min', session:'6×1km at 5k effort', detail:'12 WU → 6×1km at 5k effort / 90 sec rec → 10 CD.\n\nOne more rep than last week. Cannot speak effort. HR 178–196.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'11.9–14.5km', time:'65–73 min + strides', session:'Easy run + strides', detail:'65–73 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold.', effort:'progression' },
-      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Long Run + MP Finish', km:'19.2–22.5km', time:'103–113 min (last 20 min at MP)', session:'Long run with 20 min Marathon Pace finish', detail:'Long run — first ~80–90 min easy, then last 20 min at Marathon Pace.\n\nMarathon Pace: a few words at a time, controlled and sustainable. HR 158–165. Should feel almost too easy early on. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
+      Sat:{ type:'Easy Long', km:'23.1–26.0km', time:'133–143 min', session:'Easy long run — relaxed Z2 throughout', detail:'133–143 min easy. Fuel every 45 min. Biggest long run in the base block — protect it by arriving well rested and fuelled.', effort:'easy', fuel:true },
       Sun:{ type:'Recovery', km:'8.0–9.7km', time:'46–51 min', session:'Recovery run', detail:'46–51 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 16 — 22 Jun (WEEK B · VO2MAX WK 3)
-  { phase:'Marathon Block', weekType:'VO2MAX WK 3', weekA_B:'B',
-    km:'78.2–90.3km', time:'7h42m–8h20m',
-    aim:'WEEK B · VO2MAX WK 3 · 3-min reps Tuesday · Thu 45+45 MP · Fri rest',
+  // Week 14 — 8 Jun (CUT-BACK)
+  { phase:'Base Build', weekType:'CUT-BACK', weekA_B:'',
+    km:'62.0–73.0km', time:'5h19m–6h04m',
+    aim:'CUT-BACK · Volume down ~25% · Quality identical · Easy volume reduced · Absorb 3-week build',
     days:{
-      Mon:{ type:'Easy + Strength', km:'9.9–11.8km', time:'57–62 min run + 30–45 min strength', session:'Easy run + Strength', detail:'57–62 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'11.5–12.5km', time:'~57–62 min', session:'5×3 min at 5k effort', detail:'15 WU → 5×3 min at 5k effort (3 min jog recovery between reps) → 12 CD.\n\nShorter reps, longer format. Cannot speak. HR 178–196.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'12.4–15.1km', time:'68–76 min + strides', session:'Easy run + strides', detail:'68–76 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → then immediately 45 min at Marathon Pace. No break between sections.\n\nMP: HR 158–165, a few words at a time. This is the closest session to race conditions.', effort:'mp' },
+      Mon:{ type:'Easy + Strength', km:'8.7–10.4km', time:'50–57 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–57 min easy then strength. Shorter this week — absorb the build.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'8.7–10.4km', time:'50–57 min', session:'Easy run', detail:'50–57 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'9.3–11.0km', time:'50–57 min + strides', session:'Easy run + 6×100m strides', detail:'50–57 min easy + 6×100m strides. Shorter this week.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–68 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–68 min easy then strength. Cut-back week — no pushing.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'18.6–22.3km', time:'107–117 min', session:'Easy long run', detail:'107–117 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'17.4–20.0km', time:'100–110 min', session:'Easy long run — relaxed Z2 (shorter this week)', detail:'100–110 min easy. Fuel every 45 min. Shorter than last 3 weeks — let the body absorb the work.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'6.6–8.2km', time:'38–43 min', session:'Recovery run', detail:'38–43 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 17 — 29 Jun (CUT-BACK)
-  { phase:'Marathon Block', weekType:'CUT-BACK', weekA_B:'',
-    km:'61.7–71.8km', time:'6h08m–6h45m',
-    aim:'CUT-BACK · Quality identical · Only easy volume reduced · 4 hard weeks absorbed',
+  // Week 15 — 15 Jun (BRIDGE)
+  { phase:'Base Build', weekType:'BRIDGE', weekA_B:'',
+    km:'83.0–96.0km', time:'7h06m–8h02m',
+    aim:'BRIDGE · Stepped return after cut-back · Long run back to 23–26km · 2× strength',
     days:{
-      Mon:{ type:'Easy + Strength', km:'7.5–9.1km', time:'43–48 min run + 30–45 min strength', session:'Easy run + Strength', detail:'43–48 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'13.0–14.0km', time:'~65–70 min', session:'6×1km at 5k effort', detail:'12 WU → 6×1km / 90 sec rec → 10 CD. Quality stays identical in cut-back weeks.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'8.9–11.1km', time:'48–55 min + strides', session:'Easy run + strides', detail:'48–55 min easy + strides (~0.6km). Shorter this week.', effort:'easy', strides:true },
-      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
+      Mon:{ type:'Easy + Strength', km:'10.9–12.7km', time:'63–70 min run + 30–45 min strength', session:'Easy run + Strength', detail:'63–70 min easy then strength. Stepped return — bridge week.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'11.3–13.3km', time:'65–73 min', session:'Easy run', detail:'65–73 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'11.9–13.9km', time:'65–73 min + strides', session:'Easy run + 6×100m strides', detail:'65–73 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'14.7–16.9km', time:'85–93 min run + 30–45 min strength', session:'Easy run + Strength', detail:'85–93 min easy then strength. Bridge week — build back steadily.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'14.4–17.7km', time:'83–93 min', session:'Easy long run (shorter this week)', detail:'83–93 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'5.9–7.4km', time:'34–39 min', session:'Recovery run', detail:'34–39 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'23.5–26.4km', time:'135–145 min', session:'Easy long run — relaxed Z2 throughout', detail:'135–145 min easy. Fuel every 45 min. Back to long run territory after cut-back.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.3–10.0km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 18 — 6 Jul (WEEK A · VO2MAX WK 5)
-  { phase:'Marathon Block', weekType:'VO2MAX WK 5', weekA_B:'A',
-    km:'73.0–83.9km', time:'6h58m–7h39m',
-    aim:'WEEK A · VO2MAX WK 5 · Stepped return · Long run with 30 min MP · Thu threshold',
+  // Week 16 — 22 Jun (WEEK B · FIRST 100KM POSSIBLE)
+  { phase:'Base Build', weekType:'', weekA_B:'B',
+    km:'90.0–103.0km', time:'7h40m–8h38m',
+    aim:'WEEK B · First 100km week possible · 2× strength · Long run 25–28km · ⚠️ Monitor fatigue closely',
     days:{
-      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–67 min', session:'6×3 min at 5k effort', detail:'15 WU → 6×3 min at 5k effort / 3 min jog rec → 12 CD.\n\nHR 178–196, cannot speak.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'10.5–12.8km', time:'57–64 min + strides', session:'Easy run + strides', detail:'57–64 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Threshold', km:'12.5–13.5km', time:'~60–64 min', session:'3×8 min threshold', detail:'15 WU → 3×8 min threshold (2 min recovery between reps) → 12 CD.\n\nLonger threshold reps — HR 165–178. Hard but controlled.', effort:'threshold' },
+      Mon:{ type:'Easy + Strength', km:'11.8–13.6km', time:'68–75 min run + 30–45 min strength', session:'Easy run + Strength', detail:'68–75 min easy then strength. First potential 100km week — monitor fatigue closely.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'12.1–14.2km', time:'70–78 min', session:'Easy run', detail:'70–78 min easy. HR 130–155 strictly.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'12.7–14.8km', time:'70–78 min + strides', session:'Easy run + 6×100m strides', detail:'70–78 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'15.6–17.8km', time:'90–98 min run + 30–45 min strength', session:'Easy run + Strength', detail:'90–98 min easy then strength. Longest Thursday in the plan — stay Z2 throughout.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Long Run + MP Finish', km:'21.1–24.3km', time:'110–120 min (last 30 min at MP)', session:'Long run with 30 min Marathon Pace finish', detail:'110–120 min total — first portion easy, last 30 min at Marathon Pace.\n\nMP: HR 158–165. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
-      Sun:{ type:'Recovery', km:'7.7–9.3km', time:'44–49 min', session:'Recovery run', detail:'44–49 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'24.8–27.8km', time:'143–153 min', session:'Easy long run — relaxed Z2 throughout', detail:'143–153 min easy. Fuel every 45 min. Big day — arrive rested, eat well beforehand, hydrate from the start.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'8.7–10.5km', time:'50–55 min', session:'Recovery run', detail:'50–55 min Z1–Z2 easy.', effort:'easy' },
     }
   },
-  // Week 19 — 13 Jul (WEEK B · VO2MAX WK 6 FINAL)
-  { phase:'Marathon Block', weekType:'VO2MAX WK 6 FINAL', weekA_B:'B',
-    km:'77.2–89.0km', time:'7h35m–8h17m',
-    aim:'WEEK B · VO2MAX WK 6 FINAL · Thu 3×15 MP · End of VO2max block',
+  // Week 17 — 29 Jun (WEEK A · FIRST 100KM WEEK)
+  { phase:'Base Build', weekType:'FIRST 100KM WEEK', weekA_B:'A',
+    km:'95.0–107.0km', time:'7h58m–9h00m',
+    aim:'WEEK A · FIRST 100KM WEEK · Long run 27–30km · ⚠️ Prioritise sleep, nutrition, soft tissue work',
     days:{
-      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'13.5–14.5km', time:'~68–73 min', session:'7×1km at 5k effort', detail:'12 WU → 7×1km / 90 sec rec → 10 CD.\n\nFinal VO2max Tuesday. 7 reps. Cannot speak. HR 178–196.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'11.9–14.5km', time:'65–73 min + strides', session:'Easy run + strides', detail:'65–73 min easy + strides.', effort:'easy', strides:true },
-      Thu:{ type:'Marathon Pace', km:'14.5–15.5km', time:'~73–77 min', session:'3×15 min at Marathon Pace', detail:'12 WU → 3×15 min at Marathon Pace (3 min jog recovery between reps) → 10 CD.\n\nMP: HR 158–165. A few words at a time. Controlled cruise intervals.', effort:'mp' },
+      Mon:{ type:'Easy + Strength', km:'12.5–14.5km', time:'72–80 min run + 30–45 min strength', session:'Easy run + Strength', detail:'72–80 min easy then strength. First 100km week — prioritise sleep and nutrition all week.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'13.3–15.5km', time:'77–85 min', session:'Easy run', detail:'77–85 min easy. Strictly Z2 — no heroics.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'13.9–16.1km', time:'77–85 min + strides', session:'Easy run + 6×100m strides', detail:'77–85 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'17.0–19.6km', time:'98–108 min run + 30–45 min strength', session:'Easy run + Strength', detail:'98–108 min easy then strength. Nearly 2 hours easy — keep HR flat and conversational throughout.', effort:'easy', strength:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'19.7–23.4km', time:'113–123 min', session:'Easy long run', detail:'113–123 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'8.0–9.7km', time:'46–51 min', session:'Recovery run', detail:'46–51 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'26.9–30.0km', time:'155–165 min', session:'Easy long run — relaxed Z2 throughout (capped 2:45)', detail:'155–165 min easy, capped at 2h45. Fuel every 45 min. Biggest long run yet — respect it. Z2 only, no matter how good you feel.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km regardless of how you feel.', effort:'easy' },
     }
   },
-  // Week 20 — 20 Jul (WEEK A · MP BLOCK BEGINS)
+  // Week 18 — 6 Jul (WEEK B · SECOND 100KM WEEK)
+  { phase:'Base Build', weekType:'SECOND 100KM WEEK', weekA_B:'B',
+    km:'95.0–107.0km', time:'7h58m–9h00m',
+    aim:'WEEK B · SECOND 100KM WEEK · Same load as wk 17 · Consolidate — trust the adaptation',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'12.5–14.5km', time:'72–80 min run + 30–45 min strength', session:'Easy run + Strength', detail:'72–80 min easy then strength. Same load as last week — consolidation is the goal.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'13.5–15.7km', time:'78–86 min', session:'Easy run', detail:'78–86 min easy.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'14.1–16.3km', time:'78–86 min + strides', session:'Easy run + 6×100m strides', detail:'78–86 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'17.0–19.6km', time:'98–108 min run + 30–45 min strength', session:'Easy run + Strength', detail:'98–108 min easy then strength. Identical to last week — trust the process.', effort:'easy', strength:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'26.9–30.0km', time:'155–165 min', session:'Easy long run — relaxed Z2 throughout (capped 2:45)', detail:'155–165 min easy, capped at 2h45. Fuel every 45 min. Second week at this distance — the adaptation is happening. Trust it.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km.', effort:'easy' },
+    }
+  },
+  // Week 19 — 13 Jul (WEEK A · THIRD 100KM WEEK)
+  { phase:'Base Build', weekType:'THIRD 100KM WEEK', weekA_B:'A',
+    km:'95.0–107.0km', time:'7h58m–9h00m',
+    aim:'WEEK A · THIRD 100KM WEEK · Volume banked · Ready for marathon block quality work',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'12.5–14.5km', time:'72–80 min run + 30–45 min strength', session:'Easy run + Strength', detail:'72–80 min easy then strength. Third 100km week — volume is banked. Quality work begins next block.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'13.5–15.7km', time:'78–86 min', session:'Easy run', detail:'78–86 min easy. Final big Tuesday of the base block.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'14.1–16.3km', time:'78–86 min + strides', session:'Easy run + 6×100m strides', detail:'78–86 min easy + 6×100m strides.', effort:'easy', strides:true },
+      Thu:{ type:'Easy + Strength', km:'17.0–19.6km', time:'98–108 min run + 30–45 min strength', session:'Easy run + Strength', detail:'98–108 min easy then strength. Last big Thursday before the marathon block begins.', effort:'easy', strength:true },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Easy Long', km:'26.9–30.0km', time:'155–165 min', session:'Easy long run — relaxed Z2 throughout (capped 2:45)', detail:'155–165 min easy, capped at 2h45. Fuel every 45 min. Final long easy run before the marathon block introduces quality work. Run it proud.', effort:'easy', fuel:true },
+      Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km.', effort:'easy' },
+    }
+  },
+    // Week 20 — 20 Jul (WEEK A · MP BLOCK BEGINS)
   { phase:'Marathon Block', weekType:'MP BLOCK BEGINS', weekA_B:'A',
     km:'81.6–93.9km', time:'7h41m–8h23m',
     aim:'WEEK A · MP BLOCK BEGINS · Odds & Evens Tuesday · Thu 3×8 threshold · Sat 40 min MP',
@@ -2810,6 +2821,7 @@ function renderWeekSummary() {
 const EFFORT_LABELS  = { '-4':'Effortless','-3':'Far easier','-2':'Easier','-1':'Slightly easier','0':'As planned','1':'Slightly harder','2':'Harder','3':'Far harder','4':'Maximal effort' };
 const LEGS_LABELS    = { '-4':'Dead','-3':'Very heavy','-2':'Heavy','-1':'Sluggish','0':'Normal','1':'Decent','2':'Good','3':'Great','4':'Springy' };
 const ENERGY_LABELS  = { '-4':'Completely empty','-3':'Very low','-2':'Low','-1':'Slightly low','0':'Normal','1':'Decent','2':'Good','3':'High','4':'Fired up' };
+const SLEEP_LABELS   = { '-4':'None','-3':'Very poor','-2':'Poor','-1':'Disrupted','0':'Normal','1':'Decent','2':'Good','3':'Very good','4':'Perfect' };
 
 function logKey(date) {
   return 'log_' + date.toISOString().slice(0,10);
@@ -2827,11 +2839,13 @@ function openSessionLog() {
   document.getElementById('effortSlider').value = existing ? existing.effort : 0;
   document.getElementById('legsSlider').value   = existing ? existing.legs   : 0;
   document.getElementById('energySlider').value = existing ? existing.energy : 0;
+  document.getElementById('sleepSlider').value  = existing ? existing.sleep  : 0;
   document.getElementById('logNotes').value      = existing ? existing.notes  : '';
 
   updateSlider('effort');
   updateSlider('legs');
   updateSlider('energy');
+  updateSlider('sleep');
 
   document.getElementById('logOverlay').classList.add('open');
 }
@@ -2846,7 +2860,7 @@ function handleLogOverlayClick(e) {
 
 function updateSlider(type) {
   const val = document.getElementById(type + 'Slider').value;
-  const labels = type === 'effort' ? EFFORT_LABELS : type === 'legs' ? LEGS_LABELS : ENERGY_LABELS;
+  const labels = type === 'effort' ? EFFORT_LABELS : type === 'legs' ? LEGS_LABELS : type === 'sleep' ? SLEEP_LABELS : ENERGY_LABELS;
   document.getElementById(type + 'Desc').textContent = labels[val];
 }
 
@@ -2856,6 +2870,7 @@ function saveSessionLog() {
     effort: parseInt(document.getElementById('effortSlider').value),
     legs:   parseInt(document.getElementById('legsSlider').value),
     energy: parseInt(document.getElementById('energySlider').value),
+    sleep:  parseInt(document.getElementById('sleepSlider').value),
     notes:  document.getElementById('logNotes').value.trim()
   };
   localStorage.setItem(logKey(currentDate), JSON.stringify(log));
@@ -2893,6 +2908,7 @@ function exportLog() {
         effort: entry.effort,
         legs: entry.legs,
         energy: entry.energy,
+        sleep: entry.sleep ?? 0,
         notes: entry.notes || ''
       });
     } catch(e) {}
@@ -2900,9 +2916,9 @@ function exportLog() {
 
   entries.sort((a,b) => a.date.localeCompare(b.date));
 
-  let csv = 'Date,Week,Session Type,Effort (-2 to +2),Legs (-2 to +2),Energy (-2 to +2),Notes\n';
+  let csv = 'Date,Week,Session Type,Effort (-4 to +4),Legs (-4 to +4),Energy (-4 to +4),Sleep (-4 to +4),Notes\n';
   entries.forEach(e => {
-    csv += `${e.date},Week ${e.weekNum},${e.sessionType},${e.effort},${e.legs},${e.energy},"${e.notes.replace(/"/g,'""')}"\n`;
+    csv += `${e.date},Week ${e.weekNum},${e.sessionType},${e.effort},${e.legs},${e.energy},${e.sleep},"${e.notes.replace(/"/g,'""')}"\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv' });
