@@ -395,6 +395,130 @@
     text-transform: uppercase;
     color: var(--purple);
     margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .strength-clickable {
+    display: block;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .strength-clickable:hover { background: var(--surface3); border-color: var(--purple); }
+  .strength-tap {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--text3);
+    font-weight: 600;
+  }
+
+  /* ── EXERCISE MODAL OVERLAY ── */
+  #exerciseOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #exerciseOverlay.open { display: flex; }
+
+  #exerciseModal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(380px, 94vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #exerciseModalHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  #exerciseModalTitleWrap { flex: 1; }
+  #exerciseModalTitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--purple);
+  }
+  #exerciseModalSub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+  #exerciseModalClose {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #exerciseModalClose:hover { color: var(--text); background: var(--surface3); }
+
+  #exerciseModalBody {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 14px;
+  }
+  #exerciseModalBody::-webkit-scrollbar { width: 3px; }
+  #exerciseModalBody::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .ex-superset-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 10px 0 4px;
+  }
+  .ex-superset-label:first-child { margin-top: 6px; }
+
+  .ex-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ex-row:last-child { border-bottom: none; }
+  .ex-name { font-size: 13px; color: var(--text); }
+  .ex-sets {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--purple);
+    white-space: nowrap;
+  }
+
+  #exerciseModalFooter {
+    border-top: 1px solid var(--border2);
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.4;
+    flex-shrink: 0;
   }
 
   .rest-card {
@@ -1280,6 +1404,21 @@
   </div>
 </div>
 
+<!-- EXERCISE MODAL OVERLAY -->
+<div id="exerciseOverlay" onclick="handleExerciseOverlayClick(event)">
+  <div id="exerciseModal">
+    <div id="exerciseModalHeader">
+      <div id="exerciseModalTitleWrap">
+        <div id="exerciseModalTitle"></div>
+        <div id="exerciseModalSub"></div>
+      </div>
+      <button id="exerciseModalClose" onclick="closeExerciseModal()">&#10005;</button>
+    </div>
+    <div id="exerciseModalBody"></div>
+    <div id="exerciseModalFooter"></div>
+  </div>
+</div>
+
 <!-- SESSION LOG OVERLAY -->
 <div id="logOverlay" onclick="handleLogOverlayClick(event)">
   <div id="logModal">
@@ -1594,60 +1733,60 @@ const weeks = [
       Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km regardless of how you feel.', effort:'easy' },
     }
   },
-  // Week 18 — 6 Jul (WEEK B · SECOND 100KM WEEK)
-  { phase:'Base Build', weekType:'SECOND 100KM WEEK', weekA_B:'B',
-    km:'95.0–107.0km', time:'7h58m–9h00m',
-    aim:'WEEK B · SECOND 100KM WEEK · Same load as wk 17 · Consolidate — trust the adaptation',
+  // Week 18 — 6 Jul (NEW COACH · W1 · 77km)
+  { phase:'Base Build', weekType:'NEW COACH PLAN', weekA_B:'',
+    km:'77km', time:'7h15m–7h25m',
+    aim:'New coach plan begins · 77km · Wed session, then Sat/Sun easy volume',
     days:{
-      Mon:{ type:'Easy + Strength', km:'12.5–14.5km', time:'72–80 min run + 30–45 min strength', session:'Easy run + Strength', detail:'72–80 min easy then strength. Same load as last week — consolidation is the goal.', effort:'easy', strength:true },
-      Tue:{ type:'Easy Run', km:'13.5–15.7km', time:'78–86 min', session:'Easy run', detail:'78–86 min easy.', effort:'easy' },
-      Wed:{ type:'Easy + Strides', km:'14.1–16.3km', time:'78–86 min + strides', session:'Easy run + 6×100m strides', detail:'78–86 min easy + 6×100m strides.', effort:'easy', strides:true },
-      Thu:{ type:'Easy + Strength', km:'17.0–19.6km', time:'98–108 min run + 30–45 min strength', session:'Easy run + Strength', detail:'98–108 min easy then strength. Identical to last week — trust the process.', effort:'easy', strength:true },
+      Mon:{ type:'Easy + Strength', km:'11km', time:'~63 min run + 30–35 min strength', session:'Easy run + Strength', detail:'11km easy.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'13km', time:'~75 min', session:'Easy run', detail:'13km easy.', effort:'easy' },
+      Wed:{ type:'Tempo', km:'11km', time:'~58 min', session:'2km easy, 4×2km @ 4:40/km (60 sec rec), 1km easy', detail:'2km easy → 4×2km @ 4:40/km with 60 sec recovery between reps → 1km easy.' },
+      Thu:{ type:'Easy Run', km:'11km', time:'~64 min incl strides', session:'Easy run incl 6×20 sec strides', detail:'11km easy incl 6×20 sec strides @ 4:00/km, at least 30 sec easy between each.', effort:'easy', strides:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'26.9–30.0km', time:'155–165 min', session:'Easy long run — relaxed Z2 throughout (capped 2:45)', detail:'155–165 min easy, capped at 2h45. Fuel every 45 min. Second week at this distance — the adaptation is happening. Trust it.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km.', effort:'easy' },
+      Sat:{ type:'Easy Long', km:'22km', time:'~127 min', session:'Easy long run', detail:'22km easy.', effort:'easy' },
+      Sun:{ type:'Recovery', km:'9km', time:'~52 min', session:'Easy run', detail:'9km easy.', effort:'easy' },
     }
   },
-  // Week 19 — 13 Jul (WEEK A · THIRD 100KM WEEK)
-  { phase:'Base Build', weekType:'THIRD 100KM WEEK', weekA_B:'A',
-    km:'95.0–107.0km', time:'7h58m–9h00m',
-    aim:'WEEK A · THIRD 100KM WEEK · Volume banked · Ready for marathon block quality work',
+  // Week 19 — 13 Jul (NEW COACH · W2 · 79km)
+  { phase:'Base Build', weekType:'NEW COACH PLAN', weekA_B:'',
+    km:'79km', time:'7h10m–7h20m',
+    aim:'79km · Sat 23km split into thirds, progressively quicker',
     days:{
-      Mon:{ type:'Easy + Strength', km:'12.5–14.5km', time:'72–80 min run + 30–45 min strength', session:'Easy run + Strength', detail:'72–80 min easy then strength. Third 100km week — volume is banked. Quality work begins next block.', effort:'easy', strength:true },
-      Tue:{ type:'Easy Run', km:'13.5–15.7km', time:'78–86 min', session:'Easy run', detail:'78–86 min easy. Final big Tuesday of the base block.', effort:'easy' },
-      Wed:{ type:'Easy + Strides', km:'14.1–16.3km', time:'78–86 min + strides', session:'Easy run + 6×100m strides', detail:'78–86 min easy + 6×100m strides.', effort:'easy', strides:true },
-      Thu:{ type:'Easy + Strength', km:'17.0–19.6km', time:'98–108 min run + 30–45 min strength', session:'Easy run + Strength', detail:'98–108 min easy then strength. Last big Thursday before the marathon block begins.', effort:'easy', strength:true },
+      Mon:{ type:'Easy + Strength', km:'11km', time:'~63 min run + 30–35 min strength', session:'Easy run + Strength', detail:'11km easy.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'13km', time:'~75 min incl strides', session:'Easy run incl 8×20 sec strides', detail:'13km easy incl 8×20 sec strides @ 4:10/km.', effort:'easy', strides:true },
+      Wed:{ type:'Tempo', km:'12km', time:'~61 min', session:'4km easy then 8km @ 4:45–4:50/km', detail:'4km easy → 8km @ 4:45–4:50/km.' },
+      Thu:{ type:'Easy Run', km:'11km', time:'~63 min', session:'Easy run', detail:'11km easy.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'26.9–30.0km', time:'155–165 min', session:'Easy long run — relaxed Z2 throughout (capped 2:45)', detail:'155–165 min easy, capped at 2h45. Fuel every 45 min. Final long easy run before the marathon block introduces quality work. Run it proud.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'9.5–10.0km', time:'55–60 min', session:'Recovery run (cap at 10km)', detail:'55–60 min Z1–Z2 easy. Cap at 10km.', effort:'easy' },
+      Sat:{ type:'Progressive Long', km:'23km', time:'~119–120 min', session:'23km split into thirds @ 5:25 / 5:10 / 5:00 per km', detail:'23km split into thirds, each roughly 7.7km: first third @ 5:25/km, middle third @ 5:10/km, final third @ 5:00/km.' },
+      Sun:{ type:'Recovery', km:'9km', time:'~52 min', session:'Easy run', detail:'9km very easy.', effort:'easy' },
     }
   },
-    // Week 20 — 20 Jul (WEEK A · MP BLOCK BEGINS)
-  { phase:'Marathon Block', weekType:'MP BLOCK BEGINS', weekA_B:'A',
-    km:'81.6–93.9km', time:'7h41m–8h23m',
-    aim:'WEEK A · MP BLOCK BEGINS · Odds & Evens Tuesday · Thu 3×8 threshold · Sat 40 min MP',
+  // Week 20 — 20 Jul (NEW COACH · W3 · 63km, cut-back)
+  { phase:'Base Build', weekType:'NEW COACH PLAN · CUT-BACK', weekA_B:'',
+    km:'63km', time:'5h35m–5h45m',
+    aim:'CUT-BACK · 63km · Tue and Sat w/u & w/d distances estimated pending coach confirmation',
     days:{
-      Mon:{ type:'Easy + Strength', km:'10.1–12.0km', time:'58–63 min run + 30–45 min strength', session:'Easy run + Strength', detail:'58–63 min easy + strength with load.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'13.0–14.5km', time:'~62–67 min', session:'Odds & Evens threshold', detail:'12 WU → Odds & Evens format (odd reps at threshold effort, even reps at steady effort) → 10 CD.\n\nOdd reps: HR 165–178 threshold. Even reps: HR 155–163 steady. Alternating intensity.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides', km:'12.8–15.5km', time:'70–78 min + strides', session:'Easy run + strides', detail:'70–78 min easy + strides.', effort:'easy', strides:true },
-      Thu:{ type:'Threshold', km:'12.5–13.5km', time:'~60–64 min', session:'3×8 min threshold', detail:'15 WU → 3×8 min threshold / 2 min rec → 12 CD.\n\nHR 165–178. Hard but controlled.', effort:'threshold' },
+      Mon:{ type:'Easy + Strength', km:'10km', time:'~58 min run + 30–35 min strength', session:'Easy run + Strength', detail:'10km easy.', effort:'easy', strength:true },
+      Tue:{ type:'Tempo', km:'~14km (est.)', time:'~69 min (est.)', session:'w/u, 8km @ 4:50/km, 4km @ 4:35/km', detail:'Warm up (~2km, estimated pending coach confirmation) → 8km @ 4:50/km → 4km @ 4:35/km.' },
+      Wed:{ type:'Easy Run', km:'12km', time:'~69 min', session:'Easy run', detail:'12km easy.', effort:'easy' },
+      Thu:{ type:'Easy Run', km:'8km', time:'~46 min incl strides', session:'Easy run incl 8×20 sec strides', detail:'8km easy incl 8×20 sec strides @ 4:10/km.', effort:'easy', strides:true },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Long Run + MP Finish', km:'24.9–28.3km', time:'128–138 min (last 40 min at MP)', session:'Long run with 40 min Marathon Pace finish', detail:'128–138 min total — first portion easy, last 40 min at Marathon Pace.\n\nBiggest MP block yet. HR 158–165 for MP section. Fuel every 45 min from the start.', effort:'mp', mpFinish:true, fuel:true },
-      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Time Trial', km:'~10km (est.)', time:'~45 min (est.)', session:'w/u, 2×4km full effort time trial (3 min inactive rec), w/d', detail:'Warm up (~1km, estimated) → 2×4km full effort time trial, 3 min inactive recovery between reps → warm down (~1km, estimated). W/u and w/d distances pending coach confirmation.' },
+      Sun:{ type:'Recovery', km:'9km', time:'~52 min', session:'Easy run', detail:'9km very easy.', effort:'easy' },
     }
   },
-  // Week 21 — 27 Jul (WEEK B · FRI RECOVERY ADDED)
-  { phase:'Marathon Block', weekType:'FRI RECOVERY ADDED', weekA_B:'B',
-    km:'87.9–101.7km', time:'8h37m–9h19m',
-    aim:'WEEK B · FRI RECOVERY ADDED (past 85km threshold) · Thu 45+45 MP · 7-day week begins',
+  // Week 21 — 27 Jul (NEW COACH · W4 · 83km, range 81–84km)
+  { phase:'Base Build', weekType:'NEW COACH PLAN', weekA_B:'',
+    km:'81–84km', time:'7h30m–7h48m',
+    aim:'81–84km · Tue HMP intervals · Sat 23km easy side of steady',
     days:{
-      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–66 min', session:'14×1 min on/off', detail:'12 WU → 14×1 min at 5k effort / 1 min easy → 12 CD.\n\nShort sharp reps. Cannot speak during on sections. HR 178–196 on reps.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides', km:'13.3–16.0km', time:'73–81 min + strides', session:'Easy run + strides', detail:'73–81 min easy + strides.', effort:'easy', strides:true },
-      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → 45 min at Marathon Pace.\n\nMP: HR 158–165. Closest session to race conditions.', effort:'mp' },
-      Fri:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run (first Friday run)', detail:'25–30 min very easy. First Friday recovery run — keep it gentle, Z1–Z2.', effort:'easy' },
-      Sat:{ type:'Easy Long', km:'21.2–25.1km', time:'122–132 min', session:'Easy long run', detail:'122–132 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'8.7–10.5km', time:'50–55 min', session:'Recovery run', detail:'50–55 min Z1–Z2 easy.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'12km', time:'~69 min incl strides', session:'Easy run + Strength incl 8×20 sec strides', detail:'12km easy incl 8×20 sec strides @ 4:10/km.', effort:'easy', strides:true, strength:true },
+      Tue:{ type:'HMP Intervals', km:'12–15km', time:'~74–79 min', session:'2km w/u, 7×7 min @ 4:30/km (70 sec rec @ 6:30/km), 1–2km cooldown', detail:'2km warm up → 7×7 min @ 4:30/km with 70 sec recovery @ 6:30/km between reps → 1–2km cooldown.\n\nWorks out to roughly 2km + 10.9km (reps) + 1.1km (recoveries) + 1–2km cooldown = 12–15km total.' },
+      Wed:{ type:'Easy Run', km:'12km', time:'~69 min', session:'Easy run', detail:'12km easy.', effort:'easy' },
+      Thu:{ type:'Tempo', km:'13km', time:'~63–64 min', session:'1km easy, 12km @ 4:45–4:50/km', detail:'1km easy → 12km @ 4:45–4:50/km.' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day (assumed, blank in coach sheet)', rest:true },
+      Sat:{ type:'Easy Long', km:'23km', time:'~127 min', session:'Easy long run, side of steady, HR high 150s', detail:'23km easy side of steady effort, HR high 150s.', effort:'easy' },
+      Sun:{ type:'Recovery', km:'9km', time:'~52 min', session:'Easy run', detail:'9km easy. Valencia 6 Dec minus 17 weeks.', effort:'easy' },
     }
   },
   // Week 22 — 3 Aug (WEEK A)
@@ -1906,6 +2045,24 @@ const weeks = [
 
 // Day column mapping
 const DAY_COLS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+// Fixed strength/core exercise lists — consistent every week, per coach brief.
+// Monday: 4 supersets, 3 sets of 10–12, ~30–35 min total.
+const MONDAY_STRENGTH = [
+  { superset:1, name:'RDL', sets:3, reps:'10–12' },
+  { superset:1, name:'Shoulder press', sets:3, reps:'10–12' },
+  { superset:2, name:'Squats', sets:3, reps:'10–12' },
+  { superset:2, name:'Pull ups', sets:3, reps:'10–12' },
+  { superset:3, name:'Pistol squats (box-assisted, full depth as able)', sets:3, reps:'10–12' },
+  { superset:3, name:'Press ups', sets:3, reps:'10–12' },
+  { superset:4, name:'Lunges', sets:3, reps:'10–12 each leg' },
+  { superset:4, name:'Calf raises', sets:3, reps:'10–12' },
+];
+// Wednesday: core, added after the run.
+const WEDNESDAY_CORE = [
+  { superset:1, name:'Plank', sets:3, reps:'40–60 sec' },
+  { superset:1, name:'Russian twist', sets:3, reps:'10–12 each side' },
+];
 const DAY_NAMES_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 // ═══════════════════════════════════════════════
@@ -2082,11 +2239,10 @@ function renderSession(planDay) {
   if (dayData.strengthOnly) {
     // Strength only
     html += `<span class="label">Monday Strength Session</span>`;
-    html += `<div class="strength-section">`;
-    html += `<div class="strength-header">💪 Strength — 30–45 min</div>`;
-    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">${dayData.detail}</div>`;
-    html += `</div>`;
-    html += renderCoachStrength(weekIdx);
+    html += `<button class="strength-section strength-clickable" onclick="openExerciseModal('monday')">`;
+    html += `<div class="strength-header">💪 Strength — 30–35 min <span class="strength-tap">tap for exercises &#8250;</span></div>`;
+    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">4 supersets · 3 sets of 10–12 · break between each set</div>`;
+    html += `</button>`;
     body.innerHTML = html;
     return;
   }
@@ -2132,11 +2288,19 @@ function renderSession(planDay) {
   // Strength block for combined Monday sessions
   if (hasStrength && hasRun) {
     html += `<span class="label">Strength Session (after run)</span>`;
-    html += `<div class="strength-section">`;
-    html += `<div class="strength-header">💪 Strength — 30–45 min</div>`;
-    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">`;
-    html += renderStrengthDetail(weekIdx);
-    html += `</div></div>`;
+    html += `<button class="strength-section strength-clickable" onclick="openExerciseModal('monday')">`;
+    html += `<div class="strength-header">💪 Strength — 30–35 min <span class="strength-tap">tap for exercises &#8250;</span></div>`;
+    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">4 supersets · 3 sets of 10–12 · break between each set</div>`;
+    html += `</button>`;
+  }
+
+  // Core block, Wednesday only
+  if (dayKey === 'Wed' && !dayData.rest && !dayData.holiday) {
+    html += `<span class="label">Core Session (after run)</span>`;
+    html += `<button class="strength-section strength-clickable" onclick="openExerciseModal('core')">`;
+    html += `<div class="strength-header">💪 Core <span class="strength-tap">tap for exercises &#8250;</span></div>`;
+    html += `<div class="session-text" style="font-size:11px;color:var(--text2)">2 exercises · 3 sets · break between each set</div>`;
+    html += `</button>`;
   }
 
   body.innerHTML = html;
@@ -2153,21 +2317,45 @@ function renderHRCue(effort) {
   return cues[effort] || '';
 }
 
-function renderCoachStrength(weekIdx) {
-  const phase = weekIdx < 7 ? 'early' : weekIdx < 12 ? 'mid-early' : weekIdx < 30 ? 'main' : 'late';
-  if (phase === 'early') {
-    return `<div class="coach-cue effort" style="margin-top:6px">Focus: single-leg glute bridges, lateral band walks, Copenhagen planks, clamshells — hip abductor and glute med priority given IT band history.</div>`;
-  }
-  if (phase === 'main') {
-    return `<div class="coach-cue effort" style="margin-top:6px">Add load: Bulgarian split squats, RDLs, single-leg calf raises, lateral band work. 3×10–12. Monitor for right-side asymmetry.</div>`;
-  }
-  return `<div class="coach-cue effort" style="margin-top:6px">Maintain load, reduce volume. Focus on quality over quantity.</div>`;
+function renderExerciseModal(type) {
+  const list = type === 'core' ? WEDNESDAY_CORE : MONDAY_STRENGTH;
+  document.getElementById('exerciseModalTitle').textContent = type === 'core' ? 'Core' : 'Strength';
+  document.getElementById('exerciseModalSub').textContent = type === 'core'
+    ? '2 exercises · 3 sets · rest between every set'
+    : '4 supersets · 3 sets of 10–12 · rest between every set · ~30–35 min';
+
+  let html = '';
+  let currentSuperset = null;
+  list.forEach((ex, i) => {
+    if (ex.superset !== currentSuperset) {
+      currentSuperset = ex.superset;
+      const label = type === 'core' ? 'Core' : `Superset ${currentSuperset}`;
+      html += `<div class="ex-superset-label">${label}</div>`;
+    }
+    html += `
+      <div class="ex-row">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-sets">${ex.sets} × ${ex.reps}</div>
+      </div>`;
+  });
+
+  document.getElementById('exerciseModalBody').innerHTML = html;
+  document.getElementById('exerciseModalFooter').textContent = type === 'core'
+    ? 'Rest 60–90 sec after each set before moving to the next exercise.'
+    : 'Alternate each pair (e.g. RDL set → Shoulder press set), rest 60–90 sec after each set before the next round.';
 }
 
-function renderStrengthDetail(weekIdx) {
-  if (weekIdx < 7) return 'Bodyweight: single-leg squats, hip thrusts, calf raises, glute bridges, dead bugs. 3×12–15. Priority: hip abductors and glute med (IT band history).';
-  if (weekIdx < 12) return 'Light load introduced: add resistance bands and light dumbbells. Single-leg squats, hip thrusts, calf raises, lateral band walks. 3×12.';
-  return 'Load phase: Bulgarian split squats, RDLs, single-leg calf raises, lateral band work, Copenhagen planks. 3×10–12.';
+function openExerciseModal(type) {
+  renderExerciseModal(type);
+  document.getElementById('exerciseOverlay').classList.add('open');
+}
+
+function closeExerciseModal() {
+  document.getElementById('exerciseOverlay').classList.remove('open');
+}
+
+function handleExerciseOverlayClick(e) {
+  if (e.target === document.getElementById('exerciseOverlay')) closeExerciseModal();
 }
 
 // ═══════════════════════════════════════════════
