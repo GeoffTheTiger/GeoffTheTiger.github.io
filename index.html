@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <link rel="apple-touch-icon" href="assets/icon.png">
 <meta name="theme-color" content="#060708">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -87,26 +87,6 @@
     padding-right: 60px;
     padding-left: 60px;
   }
-
-  #weekSummaryBtn {
-    position: absolute;
-    left: 0;
-    background: rgba(20,184,166,0.15);
-    border: 1px solid rgba(20,184,166,0.35);
-    color: var(--teal);
-    padding: 4px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: all 0.15s;
-    width: auto;
-    height: auto;
-  }
-  #weekSummaryBtn:hover { background: rgba(20,184,166,0.25); }
 
   .today-btn {
     background: var(--orange-dim);
@@ -882,216 +862,6 @@
     padding-right: 4px;
   }
 
-  /* ── LOG SESSION BUTTON ── */
-  #log-btn-wrap {
-    padding: 4px 0 2px;
-    display: flex;
-    justify-content: center;
-  }
-  #logSessionBtn {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    padding: 7px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: all 0.15s;
-    width: 100%;
-  }
-  #logSessionBtn:hover { background: var(--surface3); border-color: var(--orange-border); color: var(--orange); }
-  #logSessionBtn.has-log { border-color: var(--orange-border); color: var(--orange); background: var(--orange-dim); }
-
-  /* ── SESSION LOG OVERLAY ── */
-  #logOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 1000;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 10vh;
-  }
-  #logOverlay.open { display: flex; }
-
-  #logModal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    width: min(380px, 94vw);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  #logModalHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px 10px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  #logModalTitle {
-    font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-
-  #logModalClose {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  #logModalClose:hover { color: var(--text); background: var(--surface3); }
-
-  #logModalBody {
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .log-slider-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .log-slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .log-slider-label {
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-
-  .log-slider-desc {
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--orange);
-    letter-spacing: 0.04em;
-  }
-
-  .log-slider-track {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .log-slider-min, .log-slider-max {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--text3);
-    flex-shrink: 0;
-  }
-
-  input[type="range"] {
-    flex: 1;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    background: var(--surface3);
-    border-radius: 2px;
-    outline: none;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--orange);
-    cursor: pointer;
-    border: 2px solid var(--surface);
-    box-shadow: 0 0 4px rgba(245,130,10,0.4);
-  }
-
-  .log-notes-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  #logNotes {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--font-text);
-    font-size: 12px;
-    padding: 8px 10px;
-    resize: none;
-    height: 70px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  #logNotes:focus { border-color: var(--orange-border); }
-  #logNotes::placeholder { color: var(--text3); }
-
-  #logModalFooter {
-    display: flex;
-    gap: 8px;
-    padding: 10px 14px 14px;
-    border-top: 1px solid var(--border);
-  }
-
-  #logExportBtn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 7px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  #logExportBtn:hover { background: var(--surface3); color: var(--text); }
-
-  #logSaveBtn {
-    flex: 1;
-    background: var(--orange-dim);
-    border: 1px solid var(--orange-border);
-    color: var(--orange);
-    padding: 7px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: all 0.15s;
-  }
-  #logSaveBtn:hover { background: rgba(245,130,10,0.25); }
-
-
   /* ══ LIQUID GLASS OVERHAUL ══ */
   body::before {
     content: '';
@@ -1112,18 +882,18 @@
     box-shadow: 0 8px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
   }
 
-  .nav-btn, .today-btn, #weekSummaryBtn, #logSessionBtn, #paceBtn, .cal-nav-btn,
-  #calClose, #weekModalClose, #exerciseModalClose, #logModalClose, .sheet-close, #paceUnitBtn {
+  .nav-btn, .today-btn, #paceBtn, .cal-nav-btn,
+  #calClose, #weekModalClose, #exerciseModalClose, .sheet-close, #paceUnitBtn {
     border-radius: 10px;
   }
 
-  #calOverlay, #weekOverlay, #exerciseOverlay, #logOverlay, #phaseOverlay, #paceOverlay {
+  #calOverlay, #weekOverlay, #exerciseOverlay, #phaseOverlay, #paceOverlay {
     background: rgba(4,5,7,0.45);
     backdrop-filter: blur(14px) saturate(1.2);
     -webkit-backdrop-filter: blur(14px) saturate(1.2);
   }
 
-  #calModal, #weekModal, #exerciseModal, #logModal, #phaseModal, #paceModal {
+  #calModal, #weekModal, #exerciseModal, #phaseModal, #paceModal {
     background: rgba(26,29,34,0.72);
     border: 1px solid rgba(255,255,255,0.13);
     border-radius: 22px;
@@ -1136,11 +906,11 @@
   @keyframes overlayIn { from { opacity: 0; } }
   @keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(0.955); } }
   @keyframes contentIn { from { opacity: 0.25; transform: translateY(7px); } }
-  #calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #logOverlay.open, #phaseOverlay.open, #paceOverlay.open {
+  #calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #phaseOverlay.open, #paceOverlay.open {
     animation: overlayIn 0.18s ease-out;
   }
   #calOverlay.open #calModal, #weekOverlay.open #weekModal, #exerciseOverlay.open #exerciseModal,
-  #logOverlay.open #logModal, #phaseOverlay.open #phaseModal, #paceOverlay.open #paceModal {
+  #phaseOverlay.open #phaseModal, #paceOverlay.open #paceModal {
     animation: modalIn 0.26s cubic-bezier(0.3, 1.25, 0.5, 1);
   }
   #main.anim { animation: contentIn 0.22s ease-out; }
@@ -1167,9 +937,6 @@
   .coach-cue.open .cue-body { grid-template-rows: 1fr; }
   .coach-cue.open .cue-inner { padding-top: 5px; }
 
-  /* ── Log + pace button row ── */
-  #log-btn-wrap { gap: 8px; }
-  #logSessionBtn { width: auto; flex: 1; }
   #paceBtn {
     background: rgba(20,184,166,0.12);
     border: 1px solid rgba(20,184,166,0.35);
@@ -1211,7 +978,7 @@
   /* ══ SHARP REVISION ══ */
   /* Header: static flex, no absolute overlap */
   .nav-controls { padding-left: 0; padding-right: 0; gap: 6px; }
-  #weekSummaryBtn, .today-btn {
+  .today-btn {
     position: static;
     min-width: 58px;
     height: 36px;
@@ -1229,12 +996,11 @@
   /* Squarer geometry */
   #top-strip, #session-panel { border-radius: 5px; }
   #calModal, #weekModal, #exerciseModal, #logModal, #phaseModal, #paceModal { border-radius: 8px; }
-  .nav-btn, .today-btn, #weekSummaryBtn, #logSessionBtn, #paceBtn, .cal-nav-btn,
-  #calClose, #weekModalClose, #exerciseModalClose, #logModalClose, .sheet-close, #paceUnitBtn,
-  #logExportBtn, #logSaveBtn { border-radius: 4px; }
+  .nav-btn, .today-btn, #paceBtn, .cal-nav-btn,
+  #calClose, #weekModalClose, #exerciseModalClose, .sheet-close, #paceUnitBtn { border-radius: 4px; }
   .phase-badge, .week-type-badge, .day-badge, .effort-chip { border-radius: 2px; }
   .coach-cue { border-radius: 0 2px 2px 0; }
-  .strength-section, .stat-block, .cal-day, #logNotes { border-radius: 3px; }
+  .strength-section, .stat-block, .cal-day { border-radius: 3px; }
   .progress-bar-full, .progress-fill { border-radius: 1px; }
   .hc-none { border-radius: 0; }
 
@@ -1247,15 +1013,6 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
     pointer-events: none;
-  }
-  .session-type-label { display: flex; align-items: center; }
-  .session-type-label::before {
-    content: '';
-    display: inline-block;
-    width: 9px; height: 9px;
-    background: currentColor;
-    margin-right: 8px;
-    flex-shrink: 0;
   }
   .stat-value { font-family: var(--font-mono); font-weight: 700; letter-spacing: -0.02em; }
   .panel-header { background: rgba(255,255,255,0.025); }
@@ -1286,6 +1043,121 @@
 
   /* Pace card highlight */
   .pace-hl { background: rgba(255,255,255,0.06); margin: 0 -8px; padding: 9px 8px; border-radius: 3px; }
+
+  /* ══ MOBILE V2 — full-height phone layout ══ */
+  html, body { height: 100%; }
+  #app {
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding: calc(10px + env(safe-area-inset-top)) 12px 0;
+    gap: 0;
+  }
+  #header { flex-shrink: 0; }
+  .logo { margin-bottom: 20px; }
+
+  #swipe-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    margin-top: 12px;
+  }
+  #main {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    will-change: transform;
+  }
+  .swipe-ghost {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    will-change: transform;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  #phase-row { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 2px; }
+  #phase-row .phase-badge { font-size: 13px; padding: 4px 12px; }
+  #phase-row .week-type-badge { font-size: 11px; padding: 3px 10px; }
+
+  #volume-row {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    backdrop-filter: saturate(1.5) blur(20px);
+    -webkit-backdrop-filter: saturate(1.5) blur(20px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  #volume-row:active { background: var(--surface2); }
+  #volume-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+    pointer-events: none;
+  }
+  .vol-block { flex: 1; padding: 11px 8px 12px; text-align: center; min-width: 0; }
+  .vol-label { font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); font-weight: 700; margin-bottom: 3px; }
+  .vol-value { font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--orange); letter-spacing: -0.02em; line-height: 1.1; }
+  .vol-time { color: var(--teal); font-size: 19px; padding-top: 4px; }
+  .vol-value.sv-small { font-size: 16px; padding-top: 5px; }
+  .vol-divider { width: 1px; background: var(--border); margin: 10px 0; flex-shrink: 0; }
+  .vol-chevron { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 16px; }
+
+  #session-panel { flex: 1; display: flex; flex-direction: column; }
+  .panel-header { justify-content: center; padding: 14px 12px 10px; }
+  .session-type-label {
+    font-size: clamp(19px, 5.8vw, 24px);
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
+  }
+  .stat-block { text-align: center; }
+  .stat-value { font-size: 24px; line-height: 1.2; }
+  .stat-value.sv-small { font-size: 13px; line-height: 1.35; font-weight: 600; }
+  .session-body { flex: 1; display: flex; flex-direction: column; }
+  .rest-card { margin: auto 0; }
+
+  #footer {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  }
+  #paceBtn { align-self: center; min-width: 190px; text-align: center; }
+
+  #weekModalAim { font-size: 11px; color: var(--text2); line-height: 1.45; padding: 0 14px 10px; }
+
+  /* ══ CENTRING PASS ══ */
+  .today-btn, .today-spacer { width: 68px; min-width: 0; flex-shrink: 0; }
+  .today-spacer { height: 36px; visibility: hidden; }
+
+  .session-body { text-align: center; }
+  .session-body .label { text-align: center; }
+  .session-body .session-text { text-align: center; }
+  .session-body .effort-chip { display: inline-block; }
+
+  .cue-head { position: relative; justify-content: flex-end; min-height: 16px; padding-right: 8px; }
+  .cue-head .cue-title, .wtd .cue-head .label { position: absolute; left: 22px; right: 22px; text-align: center; top: 50%; transform: translateY(-50%); margin: 0; }
+  .cue-inner { text-align: center; }
 </style>
 </head>
 <body>
@@ -1293,7 +1165,7 @@
   <div id="header">
     <div class="logo">Nat's <span>Training Plan</span></div>
     <div class="nav-controls">
-      <button id="weekSummaryBtn" onclick="openWeekSummary()">Week</button>
+      <div class="today-spacer" aria-hidden="true"></div>
       <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
       <div class="date-display" id="dateDisplayWrap" onclick="openCalendar()" style="cursor:pointer">
         <div class="day-context" id="dayContext"></div>
@@ -1305,45 +1177,53 @@
     </div>
   </div>
 
-  <div id="main">
-    <div id="top-strip">
-      <span class="phase-badge" id="phaseBadge" onclick="openPhaseInfo('phase')">—</span>
-      <span class="week-type-badge" id="weekTypeBadge" onclick="openPhaseInfo('week')">—</span>
-      <span class="sep">|</span>
-      <span class="week-aim" id="weekAim">—</span>
-      <span class="week-label" id="weekLabel">—</span>
-    </div>
+  <div id="swipe-wrap">
+    <div id="main">
+      <div id="phase-row">
+        <span class="phase-badge" id="phaseBadge" onclick="openPhaseInfo('phase')">—</span>
+        <span class="week-type-badge" id="weekTypeBadge" onclick="openPhaseInfo('week')">—</span>
+      </div>
 
-    <div id="session-panel">
-      <div class="panel-header">
-        <div class="session-type-label" id="sessionTypeLabel">—</div>
-        <div class="day-badge" id="dayColLabel">—</div>
-      </div>
-      <div class="stats-row" id="statsRow">
-        <div class="stat-block" onclick="toggleDistanceUnit()">
-          <div class="stat-label" id="statKmLabel">Distance</div>
-          <div class="stat-value km" id="statKm">—</div>
+      <div id="volume-row" onclick="openWeekSummary()">
+        <div class="vol-block">
+          <div class="vol-label">Weekly Volume</div>
+          <div class="vol-value" id="volKm">—</div>
         </div>
-        <div class="stat-block" onclick="toggleTimePace()">
-          <div class="stat-label" id="statTimeLabel">Duration</div>
-          <div class="stat-value time" id="statTime">—</div>
+        <div class="vol-divider"></div>
+        <div class="vol-block">
+          <div class="vol-label">Hours</div>
+          <div class="vol-value vol-time" id="volTime">—</div>
         </div>
+        <span class="vol-chevron">&#8250;</span>
       </div>
-      <div class="session-body" id="sessionBody">
-        <div class="session-text"><p>Loading...</p></div>
+
+      <div id="session-panel">
+        <div class="panel-header">
+          <div class="session-type-label" id="sessionTypeLabel">—</div>
+        </div>
+        <div class="stats-row" id="statsRow">
+          <div class="stat-block" onclick="toggleDistanceUnit()">
+            <div class="stat-label" id="statKmLabel">Distance</div>
+            <div class="stat-value km" id="statKm">—</div>
+          </div>
+          <div class="stat-block" onclick="toggleTimePace()">
+            <div class="stat-label" id="statTimeLabel">Duration</div>
+            <div class="stat-value time" id="statTime">—</div>
+          </div>
+        </div>
+        <div class="session-body" id="sessionBody">
+          <div class="session-text"><p>Loading...</p></div>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <div id="log-btn-wrap">
-    <button id="logSessionBtn" onclick="openSessionLog()">Log Session</button>
+  <div id="footer">
     <button id="paceBtn" onclick="openPaceCard()">Paces</button>
-  </div>
-
-  <div id="progress-bottom">
-    <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
-    <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div id="progress-bottom">
+      <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
+      <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
   </div>
 </div>
 
@@ -1371,6 +1251,7 @@
       <button id="weekModalClose" onclick="closeWeekSummary()">&#10005;</button>
     </div>
     <div id="weekModalBadges"></div>
+    <div id="weekModalAim"></div>
     <div id="weekModalTable"></div>
     <div id="weekModalTotals"></div>
   </div>
@@ -1388,70 +1269,6 @@
     </div>
     <div id="exerciseModalBody"></div>
     <div id="exerciseModalFooter"></div>
-  </div>
-</div>
-
-<!-- SESSION LOG OVERLAY -->
-<div id="logOverlay" onclick="handleLogOverlayClick(event)">
-  <div id="logModal">
-    <div id="logModalHeader">
-      <div id="logModalTitle"></div>
-      <button id="logModalClose" onclick="closeSessionLog()">&#10005;</button>
-    </div>
-    <div id="logModalBody">
-      <div class="log-slider-group">
-        <div class="log-slider-header">
-          <span class="log-slider-label">Effort</span>
-          <span class="log-slider-desc" id="effortDesc">As planned</span>
-        </div>
-        <div class="log-slider-track">
-          <span class="log-slider-min">−4</span>
-          <input type="range" min="-4" max="4" step="1" value="0" id="effortSlider" oninput="updateSlider('effort')">
-          <span class="log-slider-max">+4</span>
-        </div>
-      </div>
-      <div class="log-slider-group">
-        <div class="log-slider-header">
-          <span class="log-slider-label">Legs</span>
-          <span class="log-slider-desc" id="legsDesc">Normal</span>
-        </div>
-        <div class="log-slider-track">
-          <span class="log-slider-min">−4</span>
-          <input type="range" min="-4" max="4" step="1" value="0" id="legsSlider" oninput="updateSlider('legs')">
-          <span class="log-slider-max">+4</span>
-        </div>
-      </div>
-      <div class="log-slider-group">
-        <div class="log-slider-header">
-          <span class="log-slider-label">Energy</span>
-          <span class="log-slider-desc" id="energyDesc">Normal</span>
-        </div>
-        <div class="log-slider-track">
-          <span class="log-slider-min">−4</span>
-          <input type="range" min="-4" max="4" step="1" value="0" id="energySlider" oninput="updateSlider('energy')">
-          <span class="log-slider-max">+4</span>
-        </div>
-      </div>
-      <div class="log-slider-group">
-        <div class="log-slider-header">
-          <span class="log-slider-label">Sleep</span>
-          <span class="log-slider-desc" id="sleepDesc">Normal</span>
-        </div>
-        <div class="log-slider-track">
-          <span class="log-slider-min">−4</span>
-          <input type="range" min="-4" max="4" step="1" value="0" id="sleepSlider" oninput="updateSlider('sleep')">
-          <span class="log-slider-max">+4</span>
-        </div>
-      </div>
-      <div class="log-notes-group">
-        <div class="log-slider-label">Notes <span style="color:var(--text3);font-weight:400;font-size:10px">(optional)</span></div>
-        <textarea id="logNotes" placeholder="Anything else? Niggles, conditions, cut short…"></textarea>
-      </div>
-    </div>
-    <div id="logModalFooter">
-      <button id="logExportBtn" onclick="exportLog()">Export Log</button>
-      <button id="logSaveBtn" onclick="saveSessionLog()">Save</button>
-    </div>
   </div>
 </div>
 
@@ -2236,26 +2053,32 @@ function renderStats(dayData) {
     statKm.innerHTML = distUnit === 'mi'
       ? '26.2<span style="font-size:12px;color:var(--text2)">mi</span>'
       : '42.2<span style="font-size:12px;color:var(--text2)">km</span>';
+    statKm.classList.remove('sv-small');
     if (showPace) {
       timeLabel.textContent = 'Target pace';
-      statTime.innerHTML = `<span style="font-size:18px">${estPace(dayData)} /${distUnit}</span>`;
+      setStat(statTime, `${estPace(dayData)} /${distUnit}`);
     } else {
       timeLabel.textContent = 'Duration';
-      statTime.innerHTML = 'Sub-2:55';
+      setStat(statTime, 'Sub-2:55');
     }
     return;
   }
 
-  statKm.innerHTML = dayData.km ? `<span style="font-size:18px">${fmtDist(dayData.km)}</span>` : '—';
+  setStat(statKm, dayData.km ? fmtDist(dayData.km) : '—');
 
   const pace = showPace ? estPace(dayData) : null;
   if (pace) {
     timeLabel.textContent = 'Est. avg pace';
-    statTime.innerHTML = `<span style="font-size:18px">~${pace} /${distUnit}</span>`;
+    setStat(statTime, `~${pace} /${distUnit}`);
   } else {
     timeLabel.textContent = 'Duration';
-    statTime.innerHTML = dayData.time ? `<span style="font-size:18px">${dayData.time}</span>` : '—';
+    setStat(statTime, dayData.time || '—');
   }
+}
+
+function setStat(el, text) {
+  el.textContent = text;
+  el.classList.toggle('sv-small', text.length > 12);
 }
 
 function toggleDistanceUnit() {
@@ -2379,7 +2202,6 @@ function renderSession(planDay) {
   const dayFull = DAY_NAMES_FULL[DAY_COLS.indexOf(dayKey)];
 
   // Day badge
-  document.getElementById('dayColLabel').textContent = dayFull;
 
   // Session type label
   const stl = document.getElementById('sessionTypeLabel');
@@ -2606,10 +2428,13 @@ function renderTopStrip(planDay) {
 
   wb.className = `week-type-badge ${wtClass}`;
   wb.textContent = wtText;
+  wb.style.display = wtText === '—' ? 'none' : '';
 
-  // Week aim
-  document.getElementById('weekAim').innerHTML = week.aim;
-  document.getElementById('weekLabel').textContent = `Wk ${weekIdx+1} of 39 · ${week.km} · ${week.time}`;
+  // Volume row
+  const vk = document.getElementById('volKm');
+  vk.textContent = week.km;
+  vk.classList.toggle('sv-small', week.km.length > 7);
+  document.getElementById('volTime').textContent = week.time;
 }
 
 // ═══════════════════════════════════════════════
@@ -2643,10 +2468,12 @@ function renderCountdown() {
 // ═══════════════════════════════════════════════
 // MAIN RENDER
 // ═══════════════════════════════════════════════
-function render() {
+function render(skipAnim) {
   // Content transition
-  const mainEl = document.getElementById('main');
-  mainEl.classList.remove('anim'); void mainEl.offsetWidth; mainEl.classList.add('anim');
+  if (!skipAnim) {
+    const mainEl = document.getElementById('main');
+    mainEl.classList.remove('anim'); void mainEl.offsetWidth; mainEl.classList.add('anim');
+  }
 
   // Date display
   document.getElementById('dayName').textContent = getDayOfWeekName(currentDate).toUpperCase();
@@ -2655,16 +2482,16 @@ function render() {
   // Today / Tomorrow panel borders
   const today = new Date(); today.setHours(0,0,0,0);
   const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
-  const topStrip = document.getElementById('top-strip');
+  const volRow = document.getElementById('volume-row');
   const sessionPanel = document.getElementById('session-panel');
   if (currentDate.getTime() === today.getTime()) {
-    topStrip.style.borderColor = 'rgba(245,130,10,0.45)';
+    volRow.style.borderColor = 'rgba(245,130,10,0.45)';
     sessionPanel.style.borderColor = 'rgba(245,130,10,0.45)';
   } else if (currentDate.getTime() === tomorrow.getTime()) {
-    topStrip.style.borderColor = 'rgba(20,184,166,0.45)';
+    volRow.style.borderColor = 'rgba(20,184,166,0.45)';
     sessionPanel.style.borderColor = 'rgba(20,184,166,0.45)';
   } else {
-    topStrip.style.borderColor = 'var(--border)';
+    volRow.style.borderColor = 'var(--border)';
     sessionPanel.style.borderColor = 'var(--border)';
   }
   const todayBtn = document.getElementById('todayBtn');
@@ -2698,8 +2525,8 @@ function render() {
     document.getElementById('phaseBadge').textContent = daysBefore > 0 ? 'Pre-Plan' : 'Post-Race';
     document.getElementById('phaseBadge').className = 'phase-badge wt-default';
     document.getElementById('weekTypeBadge').textContent = '—';
-    document.getElementById('weekAim').textContent = daysBefore > 0 ? `Plan starts ${formatDate(PLAN_START)} · ${daysBefore} days away` : 'Valencia Marathon completed!';
-    document.getElementById('weekLabel').textContent = '';
+    document.getElementById('volKm').textContent = '—';
+    document.getElementById('volTime').textContent = '—';
     document.getElementById('sessionTypeLabel').textContent = daysBefore > 0 ? 'Pre-Plan' : 'Done';
     document.getElementById('sessionTypeLabel').style.color = 'var(--text2)';
     document.getElementById('statsRow').style.display = 'none';
@@ -2718,35 +2545,160 @@ function render() {
   renderTopStrip(planDay);
   renderSession(planDay);
 
-  // Hide log session button for future dates (Paces stays available)
-  const logBtn = document.getElementById('logSessionBtn');
-  if (currentDate > today) {
-    logBtn.style.display = 'none';
-  } else {
-    logBtn.style.display = '';
-    updateLogBtn();
-  }
-
 }
 
 // ═══════════════════════════════════════════════
-// SWIPE NAVIGATION
+// SWIPE NAVIGATION — full-screen, follows the finger
 // ═══════════════════════════════════════════════
 (function() {
-  let startX = 0, startY = 0;
-  const el = document.getElementById('app');
-  el.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
+  const wrap = document.getElementById('swipe-wrap');
+  const mainEl = document.getElementById('main');
+  const EASE = 'transform 0.28s cubic-bezier(0.22, 0.9, 0.3, 1)';
+  const $ = id => document.getElementById(id);
+  let sx = 0, sy = 0, dx = 0, axis = null, active = false, animating = false;
+  let gPrev = null, gNext = null, t0 = 0, doneTimer = null;
+
+  function overlayOpen() {
+    return !!document.querySelector('#calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #phaseOverlay.open, #paceOverlay.open');
+  }
+
+  // Capture/restore everything render() touches, so building the ghost pages
+  // leaves the live view byte-identical (expanded cues, scroll, borders intact).
+  function captureChrome() {
+    return {
+      main: mainEl.innerHTML,
+      dayName: $('dayName').textContent,
+      dateDisplay: $('dateDisplay').textContent,
+      ctxText: $('dayContext').textContent,
+      ctxColor: $('dayContext').style.color,
+      todayVis: $('todayBtn').style.visibility,
+      progW: $('progressFill').style.width,
+      progText: $('progressLabel').textContent,
+    };
+  }
+
+  function restoreChrome(s) {
+    mainEl.innerHTML = s.main;
+    $('dayName').textContent = s.dayName;
+    $('dateDisplay').textContent = s.dateDisplay;
+    $('dayContext').textContent = s.ctxText;
+    $('dayContext').style.color = s.ctxColor;
+    $('todayBtn').style.visibility = s.todayVis;
+    $('progressFill').style.width = s.progW;
+    $('progressLabel').textContent = s.progText;
+  }
+
+  function makeGhost(html, side) {
+    const g = document.createElement('div');
+    g.className = 'swipe-ghost';
+    g.innerHTML = html;
+    g.style.left = side < 0 ? '-100%' : '100%';
+    g.style.top = wrap.scrollTop + 'px';
+    g.style.minHeight = wrap.clientHeight + 'px';
+    wrap.appendChild(g);
+    return g;
+  }
+
+  function buildGhosts() {
+    const saved = new Date(currentDate);
+    const keep = captureChrome();
+    const html = {};
+    [-1, 1].forEach(off => {
+      const d = new Date(saved);
+      d.setDate(d.getDate() + off);
+      currentDate = d;
+      render(true);
+      html[off] = mainEl.innerHTML;
+    });
+    currentDate = saved;
+    restoreChrome(keep);
+    gPrev = makeGhost(html[-1], -1);
+    gNext = makeGhost(html[1], 1);
+  }
+
+  function setX(x, animate) {
+    [mainEl, gPrev, gNext].forEach(el => {
+      if (!el) return;
+      el.style.transition = animate ? EASE : 'none';
+      el.style.transform = `translateX(${x}px)`;
+    });
+  }
+
+  function cleanup() {
+    if (doneTimer) { clearTimeout(doneTimer); doneTimer = null; }
+    if (gPrev) gPrev.remove();
+    if (gNext) gNext.remove();
+    gPrev = gNext = null;
+    mainEl.style.transition = 'none';
+    mainEl.style.transform = '';
+    animating = false;
+  }
+
+  function afterSlide(fn) {
+    let fired = false;
+    const run = () => {
+      if (fired) return;
+      fired = true;
+      mainEl.removeEventListener('transitionend', run);
+      fn();
+    };
+    mainEl.addEventListener('transitionend', run);
+    doneTimer = setTimeout(run, 380); // fallback if transitionend is missed
+  }
+
+  wrap.addEventListener('touchstart', e => {
+    if (animating || overlayOpen() || e.touches.length !== 1) { axis = 'skip'; active = false; return; }
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    axis = null; dx = 0; active = true; t0 = Date.now();
   }, { passive: true });
-  el.addEventListener('touchend', e => {
-    if (document.getElementById('weekOverlay').classList.contains('open')) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      navigate(dx < 0 ? 1 : -1);
+
+  wrap.addEventListener('touchmove', e => {
+    if (!active || axis === 'skip' || axis === 'y') return;
+    const mx = e.touches[0].clientX - sx;
+    const my = e.touches[0].clientY - sy;
+    if (!axis) {
+      if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+      if (Math.abs(mx) > Math.abs(my)) {
+        axis = 'x';
+        buildGhosts();
+      } else {
+        axis = 'y';
+        return;
+      }
     }
-  }, { passive: true });
+    e.preventDefault();
+    dx = mx;
+    setX(dx, false);
+  }, { passive: false });
+
+  function finish() {
+    if (!active) return;
+    active = false;
+    if (axis !== 'x') { axis = null; return; }
+    axis = null;
+    const w = wrap.clientWidth;
+    const vel = dx / Math.max(1, Date.now() - t0);
+    const commit = Math.abs(dx) > w * 0.3 || Math.abs(vel) > 0.45;
+    animating = true;
+    if (commit) {
+      const dir = dx < 0 ? 1 : -1;
+      setX(dir === 1 ? -w : w, true);
+      afterSlide(() => {
+        const nd = new Date(currentDate);
+        nd.setDate(nd.getDate() + dir);
+        currentDate = nd;
+        render(true);
+        cleanup();
+      });
+    } else {
+      setX(0, true);
+      afterSlide(cleanup);
+    }
+  }
+
+  wrap.addEventListener('touchend', finish, { passive: true });
+  wrap.addEventListener('touchcancel', finish, { passive: true });
 })();
 
 // ═══════════════════════════════════════════════
@@ -2891,6 +2843,8 @@ function renderWeekSummary() {
       <button class="cal-nav-btn" onclick="summaryNavigate(1)" ${summaryWeekIdx === 38 ? 'disabled style="opacity:0.3"' : ''}>&#8594;</button>
     </div>`;
 
+  document.getElementById('weekModalAim').innerHTML = week.aim || '';
+
   // Badges
   const phaseMap = {
     'Base Build':'phase-base','Marathon Block':'phase-marathon',
@@ -2970,120 +2924,13 @@ function renderWeekSummary() {
     <div class="ws-total-km">${week.km}</div>`;
 }
 
-// ═══════════════════════════════════════════════
-// SESSION LOG
-// ═══════════════════════════════════════════════
-const EFFORT_LABELS  = { '-4':'Effortless','-3':'Far easier','-2':'Easier','-1':'Slightly easier','0':'As planned','1':'Slightly harder','2':'Harder','3':'Far harder','4':'Maximal effort' };
-const LEGS_LABELS    = { '-4':'Dead','-3':'Very heavy','-2':'Heavy','-1':'Sluggish','0':'Normal','1':'Decent','2':'Good','3':'Great','4':'Springy' };
-const ENERGY_LABELS  = { '-4':'Completely empty','-3':'Very low','-2':'Low','-1':'Slightly low','0':'Normal','1':'Decent','2':'Good','3':'High','4':'Fired up' };
-const SLEEP_LABELS   = { '-4':'None','-3':'Very poor','-2':'Poor','-1':'Disrupted','0':'Normal','1':'Decent','2':'Good','3':'Very good','4':'Perfect' };
-
-function logKey(date) {
-  return 'log_' + date.toISOString().slice(0,10);
-}
-
-function openSessionLog() {
-  const planDay = getPlanDay(currentDate);
-  const dateStr = formatDate(currentDate);
-  const sessionType = planDay ? planDay.week.days[planDay.dayKey].type : 'Session';
-
-  document.getElementById('logModalTitle').textContent = `${dateStr} · ${sessionType}`;
-
-  // Load existing log if present
-  const existing = JSON.parse(localStorage.getItem(logKey(currentDate)) || 'null');
-  document.getElementById('effortSlider').value = existing ? existing.effort : 0;
-  document.getElementById('legsSlider').value   = existing ? existing.legs   : 0;
-  document.getElementById('energySlider').value = existing ? existing.energy : 0;
-  document.getElementById('sleepSlider').value  = existing ? existing.sleep  : 0;
-  document.getElementById('logNotes').value      = existing ? existing.notes  : '';
-
-  updateSlider('effort');
-  updateSlider('legs');
-  updateSlider('energy');
-  updateSlider('sleep');
-
-  document.getElementById('logOverlay').classList.add('open');
-}
-
-function closeSessionLog() {
-  document.getElementById('logOverlay').classList.remove('open');
-}
-
-function handleLogOverlayClick(e) {
-  if (e.target === document.getElementById('logOverlay')) closeSessionLog();
-}
-
-function updateSlider(type) {
-  const val = document.getElementById(type + 'Slider').value;
-  const labels = type === 'effort' ? EFFORT_LABELS : type === 'legs' ? LEGS_LABELS : type === 'sleep' ? SLEEP_LABELS : ENERGY_LABELS;
-  document.getElementById(type + 'Desc').textContent = labels[val];
-}
-
-function saveSessionLog() {
-  const log = {
-    date: currentDate.toISOString().slice(0,10),
-    effort: parseInt(document.getElementById('effortSlider').value),
-    legs:   parseInt(document.getElementById('legsSlider').value),
-    energy: parseInt(document.getElementById('energySlider').value),
-    sleep:  parseInt(document.getElementById('sleepSlider').value),
-    notes:  document.getElementById('logNotes').value.trim()
-  };
-  localStorage.setItem(logKey(currentDate), JSON.stringify(log));
-  updateLogBtn();
-  closeSessionLog();
-}
-
-function updateLogBtn() {
-  const existing = localStorage.getItem(logKey(currentDate));
-  const btn = document.getElementById('logSessionBtn');
-  if (existing) {
-    btn.classList.add('has-log');
-    btn.textContent = 'Session Logged ✓';
-  } else {
-    btn.classList.remove('has-log');
-    btn.textContent = 'Log Session';
+// One-time cleanup: session logging feature removed
+try {
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('log_')) localStorage.removeItem(k);
   }
-}
-
-function exportLog() {
-  const entries = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (!key.startsWith('log_')) continue;
-    try {
-      const entry = JSON.parse(localStorage.getItem(key));
-      const date = new Date(entry.date);
-      const planDay = getPlanDay(date);
-      const sessionType = planDay ? planDay.week.days[planDay.dayKey].type : '—';
-      const weekNum = planDay ? planDay.weekIdx + 1 : '—';
-      entries.push({
-        date: entry.date,
-        weekNum,
-        sessionType,
-        effort: entry.effort,
-        legs: entry.legs,
-        energy: entry.energy,
-        sleep: entry.sleep ?? 0,
-        notes: entry.notes || ''
-      });
-    } catch(e) {}
-  }
-
-  entries.sort((a,b) => a.date.localeCompare(b.date));
-
-  let csv = 'Date,Week,Session Type,Effort (-4 to +4),Legs (-4 to +4),Energy (-4 to +4),Sleep (-4 to +4),Notes\n';
-  entries.forEach(e => {
-    csv += `${e.date},Week ${e.weekNum},${e.sessionType},${e.effort},${e.legs},${e.energy},${e.sleep},"${e.notes.replace(/"/g,'""')}"\n`;
-  });
-
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `nats-training-log-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+} catch (e) {}
 
 // ═══════════════════════════════════════════════
 // OFFLINE — service worker
