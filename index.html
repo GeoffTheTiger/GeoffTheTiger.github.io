@@ -1065,6 +1065,17 @@
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
     margin-top: 12px;
+    contain: paint;
+    clip-path: inset(0);
+  }
+  #buildTag {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text3);
+    opacity: 0.55;
+    padding-top: 4px;
+    letter-spacing: 0.1em;
   }
   #main {
     flex: 1 0 auto;
@@ -1223,6 +1234,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="buildTag">build 9</div>
     </div>
   </div>
 </div>
@@ -2471,6 +2483,7 @@ function renderCountdown() {
 function render(skipAnim) {
   // Content transition
   if (!skipAnim) {
+    if (window.__swipeSweep) window.__swipeSweep();
     const mainEl = document.getElementById('main');
     mainEl.classList.remove('anim'); void mainEl.offsetWidth; mainEl.classList.add('anim');
   }
@@ -2556,7 +2569,8 @@ function render(skipAnim) {
   const EASE = 'transform 0.28s cubic-bezier(0.22, 0.9, 0.3, 1)';
   const $ = id => document.getElementById(id);
   let sx = 0, sy = 0, dx = 0, axis = null, active = false, animating = false;
-  let gPrev = null, gNext = null, t0 = 0, doneTimer = null;
+  let gPrev = null, gNext = null, t0 = 0, doneTimer = null, pendingDone = null;
+  let suppressClickUntil = 0;
 
   function overlayOpen() {
     return !!document.querySelector('#calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #phaseOverlay.open, #paceOverlay.open');
@@ -2626,57 +2640,99 @@ function render(skipAnim) {
 
   function cleanup() {
     if (doneTimer) { clearTimeout(doneTimer); doneTimer = null; }
-    if (gPrev) gPrev.remove();
-    if (gNext) gNext.remove();
+    wrap.querySelectorAll('.swipe-ghost').forEach(g => g.remove());
     gPrev = gNext = null;
     mainEl.style.transition = 'none';
     mainEl.style.transform = '';
     animating = false;
   }
 
+  // Recover from any interrupted gesture (multi-touch, iOS system gestures,
+  // missed events): if ghosts or a transform linger outside an animation,
+  // sweep them before anything else happens.
+  function sweepIfDirty() {
+    if (animating) return;
+    if (wrap.querySelector('.swipe-ghost') || mainEl.style.transform) {
+      active = false; axis = null; dx = 0;
+      cleanup();
+    }
+  }
+  window.__swipeSweep = sweepIfDirty;
+
   function afterSlide(fn) {
     let fired = false;
-    const run = () => {
+    const run = (ev) => {
+      // transitionend bubbles from children (button colour fades etc.) —
+      // only the main element's own transform transition counts.
+      if (ev && (ev.target !== mainEl || (ev.propertyName !== 'transform' && ev.propertyName !== '-webkit-transform'))) return;
       if (fired) return;
       fired = true;
+      pendingDone = null;
       mainEl.removeEventListener('transitionend', run);
       fn();
     };
+    pendingDone = () => run();
     mainEl.addEventListener('transitionend', run);
     doneTimer = setTimeout(run, 380); // fallback if transitionend is missed
   }
 
-  wrap.addEventListener('touchstart', e => {
-    if (animating || overlayOpen() || e.touches.length !== 1) { axis = 'skip'; active = false; return; }
-    sx = e.touches[0].clientX;
-    sy = e.touches[0].clientY;
-    axis = null; dx = 0; active = true; t0 = Date.now();
-  }, { passive: true });
+  let pid = null;
 
-  wrap.addEventListener('touchmove', e => {
-    if (!active || axis === 'skip' || axis === 'y') return;
-    const mx = e.touches[0].clientX - sx;
-    const my = e.touches[0].clientY - sy;
+  function settleDrag() {
+    // Snap an in-progress drag back to rest cleanly.
+    active = false; axis = null;
+    animating = true;
+    setX(0, true);
+    afterSlide(cleanup);
+  }
+
+  wrap.addEventListener('pointerdown', e => {
+    if (!e.isPrimary) {
+      // Second pointer mid-drag: settle the current drag.
+      if (active && axis === 'x') settleDrag();
+      return;
+    }
+    if (animating) {
+      // Don't ignore a new gesture mid-animation: complete the pending
+      // slide instantly and let this gesture begin fresh.
+      if (pendingDone) pendingDone();
+      if (animating) { axis = 'skip'; active = false; return; }
+    }
+    sweepIfDirty();
+    if (overlayOpen()) { axis = 'skip'; active = false; return; }
+    pid = e.pointerId;
+    sx = e.clientX;
+    sy = e.clientY;
+    axis = null; dx = 0; active = true; t0 = Date.now();
+  });
+
+  wrap.addEventListener('pointermove', e => {
+    if (!active || e.pointerId !== pid || axis === 'skip' || axis === 'y') return;
+    const mx = e.clientX - sx;
+    const my = e.clientY - sy;
     if (!axis) {
       if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
       if (Math.abs(mx) > Math.abs(my)) {
         axis = 'x';
+        // Pointer capture: the browser keeps delivering moves to us for the
+        // whole gesture instead of applying its own gesture heuristics.
+        try { wrap.setPointerCapture(pid); } catch (err) {}
         buildGhosts();
       } else {
         axis = 'y';
         return;
       }
     }
-    e.preventDefault();
     dx = mx;
     setX(dx, false);
-  }, { passive: false });
+  });
 
   function finish() {
     if (!active) return;
     active = false;
     if (axis !== 'x') { axis = null; return; }
     axis = null;
+    suppressClickUntil = Date.now() + 500;
     const w = wrap.clientWidth;
     const vel = dx / Math.max(1, Date.now() - t0);
     const commit = Math.abs(dx) > w * 0.3 || Math.abs(vel) > 0.45;
@@ -2697,8 +2753,23 @@ function render(skipAnim) {
     }
   }
 
-  wrap.addEventListener('touchend', finish, { passive: true });
-  wrap.addEventListener('touchcancel', finish, { passive: true });
+  function finishPointer(e) {
+    if (pid !== null && e.pointerId !== pid) return;
+    try { wrap.releasePointerCapture(pid); } catch (err) {}
+    pid = null;
+    finish();
+  }
+  wrap.addEventListener('pointerup', finishPointer);
+  wrap.addEventListener('pointercancel', finishPointer);
+
+  // iOS can synthesize a click on the element under the finger after a drag —
+  // that click would toggle units, open modals, or collapse cues at random.
+  document.addEventListener('click', e => {
+    if (Date.now() < suppressClickUntil) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, true);
 })();
 
 // ═══════════════════════════════════════════════
