@@ -35,6 +35,7 @@
     --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, 'SF Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+    --font-headline: ui-serif, 'New York', 'Iowan Old Style', 'Palatino', Georgia, serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1169,12 +1170,265 @@
   .cue-head { position: relative; justify-content: flex-end; min-height: 16px; padding-right: 8px; }
   .cue-head .cue-title, .wtd .cue-head .label { position: absolute; left: 22px; right: 22px; text-align: center; top: 50%; transform: translateY(-50%); margin: 0; }
   .cue-inner { text-align: center; }
+
+  /* ══ IDENTITY PASS — logo, headline type, week view controls, export ══ */
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 22px;
+  }
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 6px 14px rgba(245,130,10,0.35));
+  }
+  .logo-text { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+  .logo .logo-top {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 5px;
+    padding-left: 0.34em;  /* offsets tracking so the kicker sits visually centred */
+  }
+  .logo .logo-main {
+    font-family: var(--font-headline);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 23px;
+    letter-spacing: -0.012em;
+    background: linear-gradient(92deg, #ffc27a 0%, var(--orange) 55%, #ff7a12 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    padding: 0 4px 2px;
+  }
+
+  #dateDisplay {
+    font-family: var(--font-headline);
+    font-size: 17.5px;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.012em;
+    line-height: 1.1;
+    margin-top: 1px;
+    white-space: nowrap;
+  }
+  .today-btn, .today-spacer { width: 60px; }
+  .today-btn { font-size: 10px; padding: 0 4px; }
+
+  .session-type-label {
+    font-family: var(--font-headline);
+    font-style: italic;
+    font-weight: 800;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    font-size: clamp(24px, 7.2vw, 30px);
+  }
+  .rest-title {
+    font-family: var(--font-headline);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .sheet-title {
+    font-family: var(--font-headline);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 19px;
+  }
+
+  #weekModalHeader { align-items: flex-start; }
+  .wm-title {
+    font-family: var(--font-headline);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 19px;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.1;
+  }
+  .wm-range { font-weight: 600; font-size: 15px; color: var(--text2); }
+  .wm-nav { display: flex; align-items: center; gap: 6px; }
+  .wm-btn {
+    height: 28px;
+    padding: 0 11px;
+    border-radius: 4px;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wm-current { color: var(--orange); border: 1px solid rgba(245,130,10,0.4); background: rgba(245,130,10,0.12); }
+  .wm-export { color: var(--teal); border: 1px solid rgba(20,184,166,0.4); background: rgba(20,184,166,0.12); }
+
+  #exportOverlay { display: none; position: fixed; inset: 0; z-index: 1001; align-items: center; justify-content: center;
+    background: rgba(4,5,7,0.45); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); }
+  #exportOverlay.open { display: flex; animation: overlayIn 0.18s ease-out; }
+  #exportModal {
+    width: min(380px, 94vw);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(26,29,34,0.78);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 8px;
+    backdrop-filter: saturate(1.7) blur(30px);
+    -webkit-backdrop-filter: saturate(1.7) blur(30px);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  #exportOverlay.open #exportModal { animation: modalIn 0.26s cubic-bezier(0.3, 1.25, 0.5, 1); }
+  #exportText {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+    text-align: left;
+  }
+  #exportCopyBtn {
+    background: rgba(20,184,166,0.12);
+    border: 1px solid rgba(20,184,166,0.4);
+    color: var(--teal);
+    padding: 4px 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  /* ══ CALENDAR — zone colours + weekly volume column ══ */
+  #calDayHeaders { grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(0, 1.8fr); }
+  #calGrid { grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(0, 1.8fr); }
+  .cal-day { min-width: 0; }
+  .cal-day { font-family: var(--font-mono); font-weight: 700; font-size: 13px; }
+  .cal-day.cal-today { color: inherit; }
+  .cal-day.cal-active { color: inherit; }
+  .cal-week {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 2px 3px;
+    border-radius: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+    min-width: 0;
+  }
+  .cal-week:active { background: var(--surface2); }
+  .cw-km { font-family: var(--font-mono); font-size: 9px; font-weight: 700; color: var(--orange); text-align: center; line-height: 1.15; white-space: nowrap; letter-spacing: -0.03em; }
+  .cw-time { font-family: var(--font-mono); font-size: 7.5px; color: var(--teal); text-align: center; line-height: 1.15; white-space: nowrap; letter-spacing: -0.03em; }
+  .cal-week { overflow: hidden; }
+  .cal-week-empty { color: var(--text3); font-size: 10px; cursor: default; background: none; border-color: transparent; }
+
+  /* ══ BUILD 12 — tighter header, locked page, full-screen week view ══ */
+  .logo { margin-bottom: 0; }
+  .nav-controls { margin-bottom: 4px; }
+
+  /* The page itself never scrolls; only the swipe viewport does, and only when it must */
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; width: 100%; }
+  #app { height: 100dvh; min-height: 0; }
+  #swipe-wrap { overscroll-behavior: contain; }
+
+  /* Week view: full screen sheet */
+  #weekOverlay { align-items: stretch; justify-content: stretch; }
+  #weekModal {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: rgba(9,10,12,0.9);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: calc(8px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+  @keyframes weekIn { from { opacity: 0; transform: translateY(28px); } }
+  #weekOverlay.open #weekModal { animation: weekIn 0.28s cubic-bezier(0.22, 0.9, 0.3, 1); }
+
+  #weekModalTop { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 12px; flex-shrink: 0; }
+  .wm-kicker {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  #weekModalClose { width: 32px; height: 32px; }
+
+  #weekModalHeader { border-bottom: none; padding: 0 0 10px; align-items: center; flex-shrink: 0; }
+  #weekModalTitle { display: block; }
+  .wm-nav { display: flex; align-items: center; gap: 6px; }
+  .wm-btn { width: 64px; height: 36px; padding: 0; text-align: center; flex-shrink: 0; }
+  .wm-titlebox { flex: 1; min-width: 0; text-align: center; }
+  .wm-title { font-size: 22px; line-height: 1; }
+  .wm-range { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--text2); margin-top: 4px; letter-spacing: 0.02em; }
+
+  #weekSwipe {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+    contain: paint;
+    clip-path: inset(0);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+  #weekPage { will-change: transform; min-height: 100%; }
+  #weekSwipe .swipe-ghost { position: absolute; width: 100%; pointer-events: none; will-change: transform; overflow: hidden; }
+
+  /* Roomier table now that there's space */
+  #weekModalBadges { padding: 12px 14px 6px; }
+  #weekModalAim { padding: 0 14px 12px; font-size: 12px; }
+  .ws-row { padding: 12px 12px; }
+  .ws-day-name { font-size: 14px; }
+  .ws-session-type { font-size: 11.5px; }
+  .ws-time, .ws-km { font-size: 14px; }
+  #weekModalTotals { padding: 14px 14px calc(14px + env(safe-area-inset-bottom)); }
 </style>
 </head>
 <body>
 <div id="app">
   <div id="header">
-    <div class="logo">Nat's <span>Training Plan</span></div>
+    <div class="logo">
+      <div class="logo-text">
+        <span class="logo-top">Nat's</span>
+        <span class="logo-main">Training Plan</span>
+      </div>
+    </div>
     <div class="nav-controls">
       <div class="today-spacer" aria-hidden="true"></div>
       <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
@@ -1234,7 +1488,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 9</div>
+      <div id="buildTag">build 12</div>
     </div>
   </div>
 </div>
@@ -1249,7 +1503,7 @@
       <button id="calClose" onclick="closeCalendar()">&#10005;</button>
     </div>
     <div id="calDayHeaders">
-      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Week</span>
     </div>
     <div id="calGrid"></div>
   </div>
@@ -1258,14 +1512,16 @@
 <!-- WEEK SUMMARY OVERLAY -->
 <div id="weekOverlay" onclick="handleWeekOverlayClick(event)">
   <div id="weekModal">
-    <div id="weekModalHeader">
-      <div id="weekModalTitle"></div>
+    <div id="weekModalTop">
+      <span class="wm-kicker">Week view</span>
       <button id="weekModalClose" onclick="closeWeekSummary()">&#10005;</button>
     </div>
-    <div id="weekModalBadges"></div>
-    <div id="weekModalAim"></div>
-    <div id="weekModalTable"></div>
-    <div id="weekModalTotals"></div>
+    <div id="weekModalHeader">
+      <div id="weekModalTitle"></div>
+    </div>
+    <div id="weekSwipe">
+      <div id="weekPage"></div>
+    </div>
   </div>
 </div>
 
@@ -1292,6 +1548,19 @@
       <button class="sheet-close" onclick="closePhaseInfo()">&#10005;</button>
     </div>
     <div class="sheet-body" id="phaseModalBody"></div>
+  </div>
+</div>
+
+<!-- WEEK EXPORT OVERLAY -->
+<div id="exportOverlay" onclick="if(event.target===this)closeWeekExport()">
+  <div id="exportModal">
+    <div class="sheet-header">
+      <div class="sheet-title">Week Export</div>
+      <button id="exportCopyBtn" onclick="copyWeekExport()">Copy</button>
+      <button class="sheet-close" onclick="closeWeekExport()">&#10005;</button>
+    </div>
+    <div class="sheet-body"><pre id="exportText"></pre></div>
+    <div class="sheet-footer">Quality sessions only. Tap Copy (or screenshot), paste into Claude, and ask it to schedule the week on your watch.</div>
   </div>
 </div>
 
@@ -2573,7 +2842,7 @@ function render(skipAnim) {
   let suppressClickUntil = 0;
 
   function overlayOpen() {
-    return !!document.querySelector('#calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #phaseOverlay.open, #paceOverlay.open');
+    return !!document.querySelector('#calOverlay.open, #weekOverlay.open, #exerciseOverlay.open, #phaseOverlay.open, #paceOverlay.open, #exportOverlay.open');
   }
 
   // Capture/restore everything render() touches, so building the ghost pages
@@ -2814,11 +3083,11 @@ function renderCalendar() {
 
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
 
-  let html = '';
+  const cells = [];
 
   // Empty cells before first day
   for (let i = 0; i < startDow; i++) {
-    html += `<div class="cal-day cal-empty"></div>`;
+    cells.push(`<div class="cal-day cal-empty"></div>`);
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -2834,11 +3103,55 @@ function renderCalendar() {
     else if (isActive) cls += ' cal-active';
     else if (isToday) cls += ' cal-today';
 
+    // Day number takes the colour of its session's pace zone
+    let col = '';
+    if (inRange) {
+      const pd = getPlanDay(date);
+      const dd = pd && pd.week.days[pd.dayKey];
+      if (dd) {
+        if (dd.raceDay) col = 'var(--orange)';
+        else if (dd.rest || dd.holiday) col = 'var(--text3)';
+        else if (dd.strengthOnly) col = 'var(--text2)';
+        else if (dd.effort) col = effortColour(dd.effort);
+      }
+    }
+
     const onclick = inRange ? `calSelectDay(${calYear},${calMonth},${d})` : '';
-    html += `<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>${d}</div>`;
+    cells.push(`<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}${col ? ` style="color:${col}"` : ''}>${d}</div>`);
+  }
+
+  // Pad the final row
+  while (cells.length % 7 !== 0) cells.push(`<div class="cal-day cal-empty"></div>`);
+
+  // Rows of 7 days + weekly volume cell
+  let html = '';
+  const rows = cells.length / 7;
+  for (let r = 0; r < rows; r++) {
+    html += cells.slice(r * 7, r * 7 + 7).join('');
+    const monday = new Date(calYear, calMonth, 1 - startDow + r * 7);
+    monday.setHours(0,0,0,0);
+    const pd = getPlanDay(monday);
+    if (pd) {
+      // Compact forms: '97.3–114.9km' -> '97–115km', '7h25m–7h55m' -> '7:25–7:55'
+      const cKm = String(pd.week.km).replace(/(\d+)\.(\d+)/g, (m, a, b) => String(Math.round(Number(`${a}.${b}`))));
+      const cTime = String(pd.week.time).replace(/(\d+)h(\d+)m/g, '$1:$2').replace(/~/g, '');
+      html += `<div class="cal-week" onclick="calOpenWeek(${pd.weekIdx})">
+        <span class="cw-km">${cKm}</span>
+        <span class="cw-time">${cTime}</span>
+      </div>`;
+    } else {
+      html += `<div class="cal-week cal-week-empty">—</div>`;
+    }
   }
 
   document.getElementById('calGrid').innerHTML = html;
+}
+
+function calOpenWeek(weekIdx) {
+  closeCalendar();
+  summaryWeekIdx = weekIdx;
+  renderWeekSummary();
+  document.getElementById('weekOverlay').classList.add('open');
 }
 
 function calSelectDay(y, m, d) {
@@ -2858,22 +3171,163 @@ function openWeekSummary() {
   summaryWeekIdx = planDay ? planDay.weekIdx : 0;
   renderWeekSummary();
   document.getElementById('weekOverlay').classList.add('open');
-
-  // Swipe on modal
-  const modal = document.getElementById('weekModal');
-  let startX = 0, startY = 0;
-  modal.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  modal.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      summaryNavigate(dx < 0 ? 1 : -1);
-    }
-  }, { passive: true });
 }
+
+// ═══════════════════════════════════════════════
+// GENERIC SWIPER — finger-follow paging for a container
+// ═══════════════════════════════════════════════
+function createSwiper(opts) {
+  const wrap = opts.wrap, page = opts.page;
+  const EASE = 'transform 0.28s cubic-bezier(0.22, 0.9, 0.3, 1)';
+  let sx = 0, sy = 0, dx = 0, axis = null, active = false, animating = false;
+  let gPrev = null, gNext = null, t0 = 0, doneTimer = null, pendingDone = null, pid = null;
+  let suppressClickUntil = 0;
+
+  function makeGhost(html, side) {
+    const g = document.createElement('div');
+    g.className = 'swipe-ghost';
+    g.innerHTML = html;
+    g.style.left = side < 0 ? '-100%' : '100%';
+    g.style.top = wrap.scrollTop + 'px';
+    g.style.minHeight = wrap.clientHeight + 'px';
+    wrap.appendChild(g);
+    return g;
+  }
+
+  function buildGhosts() {
+    const hp = opts.buildHtml(-1), hn = opts.buildHtml(1);
+    if (hp) gPrev = makeGhost(hp, -1);
+    if (hn) gNext = makeGhost(hn, 1);
+  }
+
+  function setX(x, animate) {
+    // Rubber-band when there is no page in that direction
+    if ((x > 0 && !gPrev) || (x < 0 && !gNext)) x *= 0.3;
+    [page, gPrev, gNext].forEach(el => {
+      if (!el) return;
+      el.style.transition = animate ? EASE : 'none';
+      el.style.transform = `translateX(${x}px)`;
+    });
+  }
+
+  function cleanup() {
+    if (doneTimer) { clearTimeout(doneTimer); doneTimer = null; }
+    wrap.querySelectorAll('.swipe-ghost').forEach(g => g.remove());
+    gPrev = gNext = null;
+    page.style.transition = 'none';
+    page.style.transform = '';
+    animating = false;
+  }
+
+  function sweepIfDirty() {
+    if (animating) return;
+    if (wrap.querySelector('.swipe-ghost') || page.style.transform) {
+      active = false; axis = null; dx = 0;
+      cleanup();
+    }
+  }
+
+  function afterSlide(fn) {
+    let fired = false;
+    const run = (ev) => {
+      if (ev && (ev.target !== page || (ev.propertyName !== 'transform' && ev.propertyName !== '-webkit-transform'))) return;
+      if (fired) return;
+      fired = true;
+      pendingDone = null;
+      page.removeEventListener('transitionend', run);
+      fn();
+    };
+    pendingDone = () => run();
+    page.addEventListener('transitionend', run);
+    doneTimer = setTimeout(run, 380);
+  }
+
+  function settleDrag() {
+    active = false; axis = null;
+    animating = true;
+    setX(0, true);
+    afterSlide(cleanup);
+  }
+
+  wrap.addEventListener('pointerdown', e => {
+    if (!e.isPrimary) { if (active && axis === 'x') settleDrag(); return; }
+    if (animating) {
+      if (pendingDone) pendingDone();
+      if (animating) { axis = 'skip'; active = false; return; }
+    }
+    sweepIfDirty();
+    if (opts.isBlocked && opts.isBlocked()) { axis = 'skip'; active = false; return; }
+    pid = e.pointerId;
+    sx = e.clientX; sy = e.clientY;
+    axis = null; dx = 0; active = true; t0 = Date.now();
+  });
+
+  wrap.addEventListener('pointermove', e => {
+    if (!active || e.pointerId !== pid || axis === 'skip' || axis === 'y') return;
+    const mx = e.clientX - sx, my = e.clientY - sy;
+    if (!axis) {
+      if (Math.abs(mx) < 8 && Math.abs(my) < 8) return;
+      if (Math.abs(mx) > Math.abs(my)) {
+        axis = 'x';
+        try { wrap.setPointerCapture(pid); } catch (err) {}
+        buildGhosts();
+      } else { axis = 'y'; return; }
+    }
+    dx = mx;
+    setX(dx, false);
+  });
+
+  function finish() {
+    if (!active) return;
+    active = false;
+    if (axis !== 'x') { axis = null; return; }
+    axis = null;
+    suppressClickUntil = Date.now() + 500;
+    const w = wrap.clientWidth;
+    const vel = dx / Math.max(1, Date.now() - t0);
+    const dir = dx < 0 ? 1 : -1;
+    const hasPage = dir === 1 ? !!gNext : !!gPrev;
+    const commit = hasPage && (Math.abs(dx) > w * 0.3 || Math.abs(vel) > 0.45);
+    animating = true;
+    if (commit) {
+      setX(dir === 1 ? -w : w, true);
+      afterSlide(() => { opts.commit(dir); cleanup(); });
+    } else {
+      setX(0, true);
+      afterSlide(cleanup);
+    }
+  }
+
+  function finishPointer(e) {
+    if (pid !== null && e.pointerId !== pid) return;
+    try { wrap.releasePointerCapture(pid); } catch (err) {}
+    pid = null;
+    finish();
+  }
+  wrap.addEventListener('pointerup', finishPointer);
+  wrap.addEventListener('pointercancel', finishPointer);
+
+  document.addEventListener('click', e => {
+    if (Date.now() < suppressClickUntil) { e.stopPropagation(); e.preventDefault(); }
+  }, true);
+
+  return { sweep: sweepIfDirty };
+}
+
+// Week view swiper: slides whole weeks left/right, same feel as the home screen
+const weekSwiper = createSwiper({
+  wrap: document.getElementById('weekSwipe'),
+  page: document.getElementById('weekPage'),
+  buildHtml: off => {
+    const i = summaryWeekIdx + off;
+    return (i >= 0 && i <= 38) ? weekBodyHTML(i) : null;
+  },
+  commit: dir => {
+    summaryWeekIdx = Math.max(0, Math.min(38, summaryWeekIdx + dir));
+    renderWeekSummary();
+  },
+  isBlocked: () => document.getElementById('exportOverlay').classList.contains('open')
+});
 
 function closeWeekSummary() {
   document.getElementById('weekOverlay').classList.remove('open');
@@ -2883,7 +3337,100 @@ function handleWeekOverlayClick(e) {
   if (e.target === document.getElementById('weekOverlay')) closeWeekSummary();
 }
 
+function currentWeekIdx() {
+  const t = new Date(); t.setHours(0,0,0,0);
+  const pd = getPlanDay(t);
+  return pd ? pd.weekIdx : 0;
+}
+
+function summaryGoCurrent() {
+  summaryWeekIdx = currentWeekIdx();
+  renderWeekSummary();
+}
+
+// ═══════════════════════════════════════════════
+// WEEK EXPORT — plain text for scheduling watch workouts via Claude
+// ═══════════════════════════════════════════════
+function decodeEntities(s) {
+  return String(s).replace(/&#8322;/g, '₂').replace(/&#8776;/g, '≈').replace(/&amp;/g, '&');
+}
+
+function fmtKm(sec) {
+  const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function buildWeekExport(idx) {
+  const week = weeks[idx];
+  const start = new Date(PLAN_START);
+  start.setDate(start.getDate() + idx * 7);
+  const L = [];
+  L.push(`NAT — WEEK ${idx + 1} OF 39 · w/c ${start.getDate()} ${MONTHS[start.getMonth()]} ${start.getFullYear()}`);
+  L.push(`${week.km} · ${week.time} · ${week.phase}${week.weekType ? ' · ' + week.weekType : ''}`);
+  L.push('');
+  L.push('For Claude: build a Garmin structured workout for each QUALITY session below and push it to my watch on its date via athletedata. Use the paces given. Recoveries are v easy jog or walk unless stated. Easy runs and rest days are not listed and need nothing on the watch.');
+  L.push('');
+  let count = 0;
+  DAY_COLS.forEach((k, i) => {
+    const d = week.days[k];
+    if (!d || d.rest || d.holiday || d.strengthOnly) return;
+    const quality = d.raceDay || (d.effort && d.effort !== 'easy');
+    if (!quality) return;
+    count++;
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
+    const label = `${k.toUpperCase()} ${date.getDate()} ${MONTHS[date.getMonth()].slice(0,3)}`;
+    const meta = [d.km, d.time].filter(Boolean).join(' · ');
+    L.push(`${label} — ${d.type}${meta ? ' · ' + meta : ''}`);
+    if (d.session) L.push(`  ${d.session}`);
+    if (d.detail) d.detail.split(/\n+/).forEach(p => { const t = p.trim(); if (t) L.push(`  ${t}`); });
+    if (d.strides) L.push('  Strides: 100m controlled accelerations, full recovery');
+    if (d.pmDouble) L.push('  PM: very easy Z1 shakeout');
+    if (d.fuel) L.push('  Fuel: gel every 45 min');
+    L.push('');
+  });
+  if (count === 0) { L.push('No quality sessions this week — nothing to schedule.'); L.push(''); }
+  L.push('PACES (min/km): ' + PACES.map(p => {
+    const v = p.open ? `${fmtKm(p.lo)}+` : (p.lo === p.hi ? fmtKm(p.lo) : `${fmtKm(p.lo)}–${fmtKm(p.hi)}`);
+    return `${decodeEntities(p.zone)} ${v}`;
+  }).join(' · '));
+  return L.join('\n');
+}
+
+function openWeekExport() {
+  document.getElementById('exportText').textContent = buildWeekExport(summaryWeekIdx);
+  const btn = document.getElementById('exportCopyBtn');
+  btn.textContent = 'Copy';
+  document.getElementById('exportOverlay').classList.add('open');
+}
+
+function closeWeekExport() {
+  document.getElementById('exportOverlay').classList.remove('open');
+}
+
+function copyWeekExport() {
+  const text = document.getElementById('exportText').textContent;
+  const btn = document.getElementById('exportCopyBtn');
+  const done = () => { btn.textContent = 'Copied ✓'; setTimeout(() => { btn.textContent = 'Copy'; }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) {}
+  ta.remove();
+}
+
 function summaryNavigate(delta) {
+  weekSwiper.sweep();
   summaryWeekIdx = Math.max(0, Math.min(38, summaryWeekIdx + delta));
   renderWeekSummary();
 }
@@ -2904,17 +3451,30 @@ function renderWeekSummary() {
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekEnd.getDate() + 6);
 
-  // Title with nav arrows
+  // Nav row mirrors the home header: Export | ← | Week n / range | → | Current
+  const isCurrentWeek = summaryWeekIdx === currentWeekIdx();
   document.getElementById('weekModalTitle').innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;flex:1">
+    <div class="wm-nav">
+      <button class="wm-btn wm-export" onclick="openWeekExport()">Export</button>
       <button class="cal-nav-btn" onclick="summaryNavigate(-1)" ${summaryWeekIdx === 0 ? 'disabled style="opacity:0.3"' : ''}>&#8592;</button>
-      <div style="flex:1;text-align:center;font-family:var(--font-display);font-size:15px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase">
-        Week ${summaryWeekIdx + 1} &nbsp;·&nbsp; ${weekStart.getDate()} ${MONTHS[weekStart.getMonth()]} – ${weekEnd.getDate()} ${MONTHS[weekEnd.getMonth()]}
+      <div class="wm-titlebox">
+        <div class="wm-title">Week ${summaryWeekIdx + 1}</div>
+        <div class="wm-range">${weekStart.getDate()} ${MONTHS[weekStart.getMonth()].slice(0,3)} – ${weekEnd.getDate()} ${MONTHS[weekEnd.getMonth()].slice(0,3)}</div>
       </div>
       <button class="cal-nav-btn" onclick="summaryNavigate(1)" ${summaryWeekIdx === 38 ? 'disabled style="opacity:0.3"' : ''}>&#8594;</button>
+      <button class="wm-btn wm-current" onclick="summaryGoCurrent()" style="visibility:${isCurrentWeek ? 'hidden' : 'visible'}">Current</button>
     </div>`;
 
-  document.getElementById('weekModalAim').innerHTML = week.aim || '';
+  document.getElementById('weekPage').innerHTML = weekBodyHTML(summaryWeekIdx);
+  document.getElementById('weekSwipe').scrollTop = 0;
+}
+
+// Body of the week view (badges, aim, table, totals) as HTML for a given week index
+function weekBodyHTML(idx) {
+  const week = weeks[idx];
+  const weekStart = new Date(PLAN_START);
+  weekStart.setDate(weekStart.getDate() + idx * 7);
+  let out = `<div id="weekModalAim">${week.aim || ''}</div>`;
 
   // Badges
   const phaseMap = {
@@ -2937,7 +3497,7 @@ function renderWeekSummary() {
 
   let badgesHtml = `<span class="phase-badge ${phaseMap[week.phase] || 'phase-base'}">${week.phase}</span>`;
   if (wtText) badgesHtml += `<span class="week-type-badge ${wtClass}">${wtText}</span>`;
-  document.getElementById('weekModalBadges').innerHTML = badgesHtml;
+  out = `<div id="weekModalBadges">${badgesHtml}</div>` + out;
 
   // Effort accent colours
   const accentMap = {
@@ -2974,7 +3534,7 @@ function renderWeekSummary() {
 
     tableHtml += `
       <div class="ws-row ${isActiveDay ? 'ws-active' : ''}" 
-           onclick="summaryGoToDay(${summaryWeekIdx}, ${i})"
+           onclick="summaryGoToDay(${idx}, ${i})"
            style="cursor:pointer">
         <div class="ws-accent" style="background:${accent}"></div>
         <div class="ws-day">
@@ -2986,13 +3546,13 @@ function renderWeekSummary() {
       </div>`;
   });
 
-  document.getElementById('weekModalTable').innerHTML = tableHtml;
-
-  // Totals
-  document.getElementById('weekModalTotals').innerHTML = `
+  out += `<div id="weekModalTable">${tableHtml}</div>`;
+  out += `<div id="weekModalTotals">
     <div class="ws-total-label">Week Total</div>
     <div class="ws-total-time">${week.time}</div>
-    <div class="ws-total-km">${week.km}</div>`;
+    <div class="ws-total-km">${week.km}</div>
+  </div>`;
+  return out;
 }
 
 // One-time cleanup: session logging feature removed
