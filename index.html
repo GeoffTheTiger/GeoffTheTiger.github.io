@@ -1418,6 +1418,49 @@
   .ws-session-type { font-size: 11.5px; }
   .ws-time, .ws-km { font-size: 14px; }
   #weekModalTotals { padding: 14px 14px calc(14px + env(safe-area-inset-bottom)); }
+
+  /* ══ BUILD 13 — compact week rows, distance-first, morph transition ══ */
+  /* Nothing in the week view scrolls: the 7 rows, totals and header all fit */
+  #weekSwipe { overflow: hidden; touch-action: none; }
+  #weekPage { height: 100%; display: flex; flex-direction: column; }
+  #weekModalTable { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding: 0 12px; }
+  #weekModalTable .ws-row { flex: 1; min-height: 0; }
+
+  #weekModalBadges { padding: 9px 12px 5px; }
+  #weekModalAim { padding: 0 12px 8px; font-size: 11px; line-height: 1.4; }
+  .ws-col-headers { padding: 3px 4px 3px 12px; margin-bottom: 0; }
+
+  .ws-row { padding: 0; align-items: center; }
+  .ws-day { padding: 5px 6px 5px 12px; }
+  .ws-day-name { font-size: 12.5px; }
+  .ws-session-type { font-size: 10px; line-height: 1.2; }
+  .ws-time, .ws-km { padding: 5px 6px; font-size: 13px; }
+
+  #weekModalTotals { padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); }
+
+  /* Column order: Distance then Time, matching the volume bar you tapped */
+  .ws-col-headers, .ws-row { grid-template-columns: 1fr auto auto; }
+  .ws-col-h.right { min-width: 78px; }
+  .ws-col-h.right.km { min-width: 74px; padding-right: 6px; }
+  .ws-km { min-width: 74px; padding-right: 6px; }
+  .ws-time { min-width: 78px; padding-right: 4px; }
+  #weekModalTotals { grid-template-columns: 1fr auto auto; }
+  .ws-total-km { min-width: 74px; padding-right: 6px; }
+  .ws-total-time { min-width: 78px; padding-right: 4px; }
+
+  /* Morph: the sheet grows out of the volume bar and shrinks back into it */
+  @keyframes weekMorphIn {
+    from { opacity: 0; transform: scaleY(var(--morph-scale-y, 0.1)) scaleX(0.9); }
+    to   { opacity: 1; transform: scaleY(1) scaleX(1); }
+  }
+  @keyframes weekMorphOut {
+    from { opacity: 1; transform: scaleY(1) scaleX(1); }
+    to   { opacity: 0; transform: scaleY(var(--morph-scale-y, 0.1)) scaleX(0.9); }
+  }
+  #weekOverlay.open #weekModal { animation: weekMorphIn 0.3s cubic-bezier(0.22, 0.9, 0.3, 1); }
+  #weekOverlay.closing #weekModal { animation: weekMorphOut 0.24s cubic-bezier(0.4, 0, 0.7, 0.3) forwards; }
+  #weekOverlay.closing { animation: none; opacity: 0; transition: opacity 0.24s ease; }
+  #weekModal > * { position: relative; z-index: 1; }
 </style>
 </head>
 <body>
@@ -1488,7 +1531,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 12</div>
+      <div id="buildTag">build 13</div>
     </div>
   </div>
 </div>
@@ -3170,7 +3213,22 @@ function openWeekSummary() {
   const planDay = getPlanDay(currentDate);
   summaryWeekIdx = planDay ? planDay.weekIdx : 0;
   renderWeekSummary();
+  weekMorph('open');
   document.getElementById('weekOverlay').classList.add('open');
+}
+
+// Grow the sheet out of the volume bar (and shrink back into it on close),
+// so the week view reads as an expansion of the thing you tapped.
+function weekMorph(dir) {
+  const modal = document.getElementById('weekModal');
+  const bar = document.getElementById('volume-row');
+  if (!modal || !bar) return;
+  const r = bar.getBoundingClientRect();
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  if (!r.height || r.bottom < 0 || r.top > vh) { modal.style.transformOrigin = ''; return; }
+  const originY = ((r.top + r.height / 2) / vh) * 100;
+  modal.style.transformOrigin = `50% ${originY}%`;
+  modal.style.setProperty('--morph-scale-y', String(Math.max(0.06, r.height / vh)));
 }
 
 // ═══════════════════════════════════════════════
@@ -3330,7 +3388,16 @@ const weekSwiper = createSwiper({
 });
 
 function closeWeekSummary() {
-  document.getElementById('weekOverlay').classList.remove('open');
+  const overlay = document.getElementById('weekOverlay');
+  const modal = document.getElementById('weekModal');
+  weekMorph('close');
+  overlay.classList.add('closing');
+  const done = () => {
+    overlay.classList.remove('open', 'closing');
+    modal.removeEventListener('animationend', done);
+  };
+  modal.addEventListener('animationend', done);
+  setTimeout(done, 300);
 }
 
 function handleWeekOverlayClick(e) {
@@ -3511,8 +3578,8 @@ function weekBodyHTML(idx) {
   let tableHtml = `
     <div class="ws-col-headers">
       <div class="ws-col-h">Day / Session</div>
-      <div class="ws-col-h right">Time</div>
       <div class="ws-col-h right km">Distance</div>
+      <div class="ws-col-h right">Time</div>
     </div>`;
 
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
@@ -3541,16 +3608,16 @@ function weekBodyHTML(idx) {
           <div class="ws-day-name">${dayLabel}</div>
           <div class="ws-session-type">${d.type}</div>
         </div>
-        <div class="ws-time" style="${timeStyle}">${timeVal}</div>
         <div class="ws-km" style="${kmStyle}">${kmVal}</div>
+        <div class="ws-time" style="${timeStyle}">${timeVal}</div>
       </div>`;
   });
 
   out += `<div id="weekModalTable">${tableHtml}</div>`;
   out += `<div id="weekModalTotals">
     <div class="ws-total-label">Week Total</div>
-    <div class="ws-total-time">${week.time}</div>
     <div class="ws-total-km">${week.km}</div>
+    <div class="ws-total-time">${week.time}</div>
   </div>`;
   return out;
 }
