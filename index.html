@@ -36,6 +36,7 @@
     --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, 'SF Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
     --font-headline: ui-serif, 'New York', 'Iowan Old Style', 'Palatino', Georgia, serif;
+    --race: #ff2d55;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1461,6 +1462,149 @@
   #weekOverlay.closing #weekModal { animation: weekMorphOut 0.24s cubic-bezier(0.4, 0, 0.7, 0.3) forwards; }
   #weekOverlay.closing { animation: none; opacity: 0; transition: opacity 0.24s ease; }
   #weekModal > * { position: relative; z-index: 1; }
+
+  /* ══ BUILD 14 — locked columns, totals mirror the volume bar ══ */
+  /* Fixed column widths: distance and time stay aligned down every row,
+     regardless of how long a value is (long ones shrink instead of pushing). */
+  .ws-col-headers, .ws-row { grid-template-columns: minmax(0, 1fr) 82px 96px; }
+  .ws-col-h.right, .ws-col-h.right.km { min-width: 0; padding-right: 0; }
+  .ws-col-h.right.km { text-align: right; }
+  .ws-km, .ws-time {
+    min-width: 0;
+    padding: 5px 0 5px 6px;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+  .ws-col-headers { padding-right: 0; }
+  .ws-row { padding-right: 0; }
+  #weekModalTable { padding: 0 14px 0 12px; }
+  .ws-shrink { font-size: 10.5px !important; letter-spacing: -0.02em; }
+
+  /* Week total styled exactly like the volume bar on the home screen */
+  #weekModalTotals {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface);
+    padding: 0;
+    margin: 8px 0 0;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  #weekModalTotals::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+    pointer-events: none;
+  }
+  #weekModalTotals .vol-block { padding: 9px 8px 10px; }
+  #weekModalTotals .vol-value { font-size: 22px; }
+  #weekModalTotals .vol-time { font-size: 17px; }
+  #weekModalTotals .vol-value.sv-small { font-size: 14px; padding-top: 4px; }
+
+  /* ══ BUILD 15 — full-screen month view ══ */
+  #calOverlay { align-items: stretch; justify-content: stretch; }
+  #calModal {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    border-radius: 0;
+    border: none;
+    background: rgba(9,10,12,0.9);
+    backdrop-filter: saturate(1.7) blur(30px);
+    -webkit-backdrop-filter: saturate(1.7) blur(30px);
+    box-sizing: border-box;
+    padding: calc(8px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));
+    gap: 0;
+    overflow: hidden;
+  }
+  #calOverlay.open #calModal { animation: weekMorphIn 0.3s cubic-bezier(0.22, 0.9, 0.3, 1); }
+  #calOverlay.closing #calModal { animation: weekMorphOut 0.24s cubic-bezier(0.4, 0, 0.7, 0.3) forwards; }
+  #calOverlay.closing { animation: none; opacity: 0; transition: opacity 0.24s ease; }
+
+  #calModalTop { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 12px; flex-shrink: 0; }
+  #calHeader { display: block; }
+  #calClose { width: 32px; height: 32px; }
+  #calHeader { padding: 0 0 12px; flex-shrink: 0; }
+  #calMonthLabel {
+    font-family: var(--font-headline);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1;
+    color: var(--text);
+  }
+  .cal-nav-spacer { width: 64px; flex-shrink: 0; }
+  #calPrev, #calNext { width: 36px; height: 36px; }
+
+  #calBody {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  #calDayHeaders { flex-shrink: 0; gap: 3px; padding-bottom: 4px; }
+  #calDayHeaders span { font-size: 9.5px; }
+  #calGrid {
+    flex: 1;
+    min-height: 0;
+    grid-auto-rows: minmax(0, 92px);
+    align-content: space-evenly;
+    gap: 3px;
+  }
+
+  .cal-day {
+    aspect-ratio: auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 4px;
+    padding: 2px;
+    min-height: 0;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .cal-day.cal-empty, .cal-day.cal-dim { background: none; border-color: transparent; }
+  .cd-num { font-family: var(--font-mono); font-size: 19px; font-weight: 700; line-height: 1; }
+  .cd-km.cd-km-long { font-size: 9.5px; letter-spacing: -0.05em; }
+  .cd-km {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    opacity: 0.7;
+    letter-spacing: -0.03em;
+  }
+  .cal-day.cal-empty .cd-num, .cal-day.cal-empty .cd-km { display: none; }
+  .cal-day.cal-dim .cd-km { display: none; }
+
+  .cal-week { gap: 5px; padding: 3px; border-radius: 4px; }
+  .cw-km { font-size: 14px; }
+  .cw-time { font-size: 10.5px; }
+
+  /* ══ BUILD 16 — race days in red, km on calendar distances ══ */
+  .cd-km { white-space: nowrap; }
+  .cd-km i { font-style: normal; opacity: 0.72; font-size: 0.82em; letter-spacing: 0; }
+  .cd-km-long { font-size: 10.5px; letter-spacing: -0.04em; }
+  .cd-km-xs { font-size: 8.5px; letter-spacing: -0.05em; }
+
+  .cal-day.cal-race {
+    background: rgba(255,45,85,0.14);
+    border-color: rgba(255,45,85,0.5);
+  }
+  .cal-day.cal-race .cd-num { font-weight: 800; }
+  .cal-day.cal-race.cal-active { background: rgba(255,45,85,0.24); border-color: var(--race); }
 </style>
 </head>
 <body>
@@ -1531,7 +1675,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 13</div>
+      <div id="buildTag">build 16</div>
     </div>
   </div>
 </div>
@@ -1539,16 +1683,25 @@
 <!-- CALENDAR OVERLAY -->
 <div id="calOverlay" onclick="handleOverlayClick(event)">
   <div id="calModal">
-    <div id="calHeader">
-      <button class="cal-nav-btn" id="calPrev" onclick="calNavigate(-1)">&#8592;</button>
-      <div id="calMonthLabel"></div>
-      <button class="cal-nav-btn" id="calNext" onclick="calNavigate(1)">&#8594;</button>
+    <div id="calModalTop">
+      <span class="wm-kicker">Month view</span>
       <button id="calClose" onclick="closeCalendar()">&#10005;</button>
     </div>
-    <div id="calDayHeaders">
-      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Week</span>
+    <div id="calHeader">
+      <div class="wm-nav">
+        <span class="cal-nav-spacer" aria-hidden="true"></span>
+        <button class="cal-nav-btn" id="calPrev" onclick="calNavigate(-1)">&#8592;</button>
+        <div class="wm-titlebox"><div id="calMonthLabel"></div></div>
+        <button class="cal-nav-btn" id="calNext" onclick="calNavigate(1)">&#8594;</button>
+        <button class="wm-btn wm-current" id="calCurrentBtn" onclick="calGoCurrent()">Current</button>
+      </div>
     </div>
-    <div id="calGrid"></div>
+    <div id="calBody">
+      <div id="calDayHeaders">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Week</span>
+      </div>
+      <div id="calGrid"></div>
+    </div>
   </div>
 </div>
 
@@ -2063,7 +2216,7 @@ const weeks = [
       Wed:{ type:'Easy Run', km:'10km', time:'53–58 min', session:'10k easy', detail:'10k easy.\n\nCoach\'s alternative: 37k charity walk, Surrey Downs — if the walk is on, it replaces the run.', effort:'easy' },
       Thu:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — keep it genuinely easy two days out from the race.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Half Marathon Race', km:'21.1km', time:'~1h35m', session:'Battersea Half Marathon', detail:'Race day — Battersea Half Marathon.\n\nAt Half Marathon Pace (4:30/km) that\'s roughly 1h35. Coach hasn\'t specified the target effort on the sheet — confirm whether it\'s a full race or a controlled tune-up before the gun.\n\nFuel and pacing as race rehearsal for Valencia.', effort:'hmp', fuel:true },
+      Sat:{ type:'Half Marathon Race', km:'21.1km', time:'~1h35m', session:'Battersea Half Marathon', detail:'Race day — Battersea Half Marathon.\n\nAt Half Marathon Pace (4:30/km) that\'s roughly 1h35. Coach hasn\'t specified the target effort on the sheet — confirm whether it\'s a full race or a controlled tune-up before the gun.\n\nFuel and pacing as race rehearsal for Valencia.', effort:'hmp', fuel:true, race:true },
       Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy post-race shakeout.\n\n10 weeks to Valencia (6 Dec).', effort:'easy' },
     }
   },
@@ -2534,7 +2687,7 @@ function renderSession(planDay) {
   // Colour session type
   let typeColour = 'var(--text)';
   if (dayData.rest || dayData.holiday) typeColour = 'var(--text3)';
-  else if (dayData.raceDay) typeColour = 'var(--orange)';
+  else if (dayData.raceDay || dayData.race) typeColour = 'var(--race)';
   else if (dayData.effort) typeColour = effortColour(dayData.effort);
   stl.style.color = typeColour;
 
@@ -3090,6 +3243,7 @@ function render(skipAnim) {
 let calYear = 0, calMonth = 0;
 
 function openCalendar() {
+  calMorph();
   calYear = currentDate.getFullYear();
   calMonth = currentDate.getMonth();
   renderCalendar();
@@ -3097,7 +3251,16 @@ function openCalendar() {
 }
 
 function closeCalendar() {
-  document.getElementById('calOverlay').classList.remove('open');
+  const overlay = document.getElementById('calOverlay');
+  const modal = document.getElementById('calModal');
+  calMorph();
+  overlay.classList.add('closing');
+  const done = () => {
+    overlay.classList.remove('open', 'closing');
+    modal.removeEventListener('animationend', done);
+  };
+  modal.addEventListener('animationend', done);
+  setTimeout(done, 300);
 }
 
 function handleOverlayClick(e) {
@@ -3146,21 +3309,34 @@ function renderCalendar() {
     else if (isActive) cls += ' cal-active';
     else if (isToday) cls += ' cal-today';
 
-    // Day number takes the colour of its session's pace zone
-    let col = '';
+    // Day number takes the colour of its session's pace zone; distance sits under it
+    let col = '', km = '';
     if (inRange) {
       const pd = getPlanDay(date);
       const dd = pd && pd.week.days[pd.dayKey];
       if (dd) {
-        if (dd.raceDay) col = 'var(--orange)';
+        if (dd.raceDay || dd.race) { col = 'var(--race)'; cls += ' cal-race'; }
         else if (dd.rest || dd.holiday) col = 'var(--text3)';
         else if (dd.strengthOnly) col = 'var(--text2)';
         else if (dd.effort) col = effortColour(dd.effort);
+        if (dd.km) {
+          // '11km' -> '11', '~12km' -> '12', '97.3–114.9km' -> '97–115'
+          km = String(dd.km).replace(/km/gi, '').replace(/[~\s]/g, '')
+                 .replace(/(\d+)\.(\d+)/g, (m, a, bb) => String(Math.round(Number(`${a}.${bb}`))));
+        }
       }
     }
 
+    // Tier the label size so 'km' always fits, even on ranges
+    let kmCls = 'cd-km';
+    if (km.length > 5) kmCls += ' cd-km-xs';
+    else if (km.length > 2) kmCls += ' cd-km-long';
+
     const onclick = inRange ? `calSelectDay(${calYear},${calMonth},${d})` : '';
-    cells.push(`<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}${col ? ` style="color:${col}"` : ''}>${d}</div>`);
+    cells.push(`<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}${col ? ` style="color:${col}"` : ''}>
+      <span class="cd-num">${d}</span>
+      <span class="${kmCls}">${km ? km + '<i>km</i>' : (inRange ? '&middot;' : '')}</span>
+    </div>`);
   }
 
   // Pad the final row
@@ -3188,6 +3364,31 @@ function renderCalendar() {
   }
 
   document.getElementById('calGrid').innerHTML = html;
+
+  const cb = document.getElementById('calCurrentBtn');
+  if (cb) {
+    const t = new Date();
+    const onCurrent = calYear === t.getFullYear() && calMonth === t.getMonth();
+    cb.style.visibility = onCurrent ? 'hidden' : 'visible';
+  }
+}
+
+function calGoCurrent() {
+  const t = new Date();
+  calYear = t.getFullYear();
+  calMonth = t.getMonth();
+  renderCalendar();
+}
+
+function calMorph() {
+  const modal = document.getElementById('calModal');
+  const anchor = document.getElementById('dateDisplayWrap');
+  if (!modal || !anchor) return;
+  const r = anchor.getBoundingClientRect();
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  if (!r.height) { modal.style.transformOrigin = ''; return; }
+  modal.style.transformOrigin = `50% ${((r.top + r.height / 2) / vh) * 100}%`;
+  modal.style.setProperty('--morph-scale-y', String(Math.max(0.06, r.height / vh)));
 }
 
 function calOpenWeek(weekIdx) {
@@ -3567,6 +3768,7 @@ function weekBodyHTML(idx) {
   out = `<div id="weekModalBadges">${badgesHtml}</div>` + out;
 
   // Effort accent colours
+  const RACE_ACCENT = 'var(--race)';
   const accentMap = {
     easy: effortColour('easy'), threshold: effortColour('threshold'),
     vo2max: effortColour('vo2max'), mp: effortColour('mp'),
@@ -3603,21 +3805,27 @@ function weekBodyHTML(idx) {
       <div class="ws-row ${isActiveDay ? 'ws-active' : ''}" 
            onclick="summaryGoToDay(${idx}, ${i})"
            style="cursor:pointer">
-        <div class="ws-accent" style="background:${accent}"></div>
+        <div class="ws-accent" style="background:${(d.raceDay || d.race) ? RACE_ACCENT : accent}"></div>
         <div class="ws-day">
           <div class="ws-day-name">${dayLabel}</div>
           <div class="ws-session-type">${d.type}</div>
         </div>
-        <div class="ws-km" style="${kmStyle}">${kmVal}</div>
-        <div class="ws-time" style="${timeStyle}">${timeVal}</div>
+        <div class="ws-km${String(kmVal).length > 8 ? ' ws-shrink' : ''}" style="${kmStyle}">${kmVal}</div>
+        <div class="ws-time${String(timeVal).length > 10 ? ' ws-shrink' : ''}" style="${timeStyle}">${timeVal}</div>
       </div>`;
   });
 
   out += `<div id="weekModalTable">${tableHtml}</div>`;
   out += `<div id="weekModalTotals">
-    <div class="ws-total-label">Week Total</div>
-    <div class="ws-total-km">${week.km}</div>
-    <div class="ws-total-time">${week.time}</div>
+    <div class="vol-block">
+      <div class="vol-label">Weekly Volume</div>
+      <div class="vol-value${String(week.km).length > 7 ? ' sv-small' : ''}">${week.km}</div>
+    </div>
+    <div class="vol-divider"></div>
+    <div class="vol-block">
+      <div class="vol-label">Hours</div>
+      <div class="vol-value vol-time${String(week.time).length > 11 ? ' sv-small' : ''}">${week.time}</div>
+    </div>
   </div>`;
   return out;
 }
