@@ -1605,6 +1605,34 @@
   }
   .cal-day.cal-race .cd-num { font-weight: 800; }
   .cal-day.cal-race.cal-active { background: rgba(255,45,85,0.24); border-color: var(--race); }
+
+  /* ══ BUILD 19 — volume bar at the top, expand-from-bar reveal ══ */
+  #weekModalTotals { margin: 8px 8px 10px; }
+  #weekModalBadges { padding: 0 12px 5px; }
+
+  /* Reveal outwards from the bar's band rather than scaling the whole sheet */
+  @keyframes weekExpandIn {
+    from { clip-path: inset(var(--clip-top, 42%) 0 var(--clip-bottom, 42%) 0); opacity: 0.75; }
+    to   { clip-path: inset(0 0 0 0); opacity: 1; }
+  }
+  @keyframes weekExpandOut {
+    from { clip-path: inset(0 0 0 0); opacity: 1; }
+    to   { clip-path: inset(var(--clip-top, 42%) 0 var(--clip-bottom, 42%) 0); opacity: 0; }
+  }
+  #weekOverlay.open #weekModal {
+    animation: weekExpandIn 0.42s cubic-bezier(0.16, 0.7, 0.3, 1);
+    transform: none;
+  }
+  #weekOverlay.closing #weekModal {
+    animation: weekExpandOut 0.28s cubic-bezier(0.5, 0, 0.75, 0.4) forwards;
+    transform: none;
+  }
+
+  /* Content settles in behind the reveal */
+  @keyframes weekContentIn { from { opacity: 0; } to { opacity: 1; } }
+  #weekOverlay.open #weekModalTop,
+  #weekOverlay.open #weekModalHeader,
+  #weekOverlay.open #weekModalTable { animation: weekContentIn 0.34s ease-out 0.06s backwards; }
 </style>
 </head>
 <body>
@@ -1675,7 +1703,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 16</div>
+      <div id="buildTag">build 19</div>
     </div>
   </div>
 </div>
@@ -3045,6 +3073,8 @@ function render(skipAnim) {
   // leaves the live view byte-identical (expanded cues, scroll, borders intact).
   function captureChrome() {
     return {
+      dayData: currentDayData,
+      showPace: showPace,
       main: mainEl.innerHTML,
       dayName: $('dayName').textContent,
       dateDisplay: $('dateDisplay').textContent,
@@ -3057,6 +3087,10 @@ function render(skipAnim) {
   }
 
   function restoreChrome(s) {
+    // Ghost building re-renders other days, which repoints the live-session
+    // state. Restore it, or the next tap acts on the wrong day's data.
+    currentDayData = s.dayData;
+    showPace = s.showPace;
     mainEl.innerHTML = s.main;
     $('dayName').textContent = s.dayName;
     $('dateDisplay').textContent = s.dateDisplay;
@@ -3197,7 +3231,7 @@ function render(skipAnim) {
     active = false;
     if (axis !== 'x') { axis = null; return; }
     axis = null;
-    suppressClickUntil = Date.now() + 500;
+    suppressClickUntil = Date.now() + 350;
     const w = wrap.clientWidth;
     const vel = dx / Math.max(1, Date.now() - t0);
     const commit = Math.abs(dx) > w * 0.3 || Math.abs(vel) > 0.45;
@@ -3209,6 +3243,7 @@ function render(skipAnim) {
         const nd = new Date(currentDate);
         nd.setDate(nd.getDate() + dir);
         currentDate = nd;
+        showPace = false;
         render(true);
         cleanup();
       });
@@ -3230,7 +3265,10 @@ function render(skipAnim) {
   // iOS can synthesize a click on the element under the finger after a drag —
   // that click would toggle units, open modals, or collapse cues at random.
   document.addEventListener('click', e => {
-    if (Date.now() < suppressClickUntil) {
+    // Only swallow the phantom click iOS fires on the surface that was dragged.
+    // Buttons outside it (Today, Paces, header) must stay tappable immediately.
+    if (Date.now() < suppressClickUntil && wrap.contains(e.target)) {
+      suppressClickUntil = 0;
       e.stopPropagation();
       e.preventDefault();
     }
@@ -3260,7 +3298,7 @@ function closeCalendar() {
     modal.removeEventListener('animationend', done);
   };
   modal.addEventListener('animationend', done);
-  setTimeout(done, 300);
+  setTimeout(done, 340);
 }
 
 function handleOverlayClick(e) {
@@ -3420,16 +3458,21 @@ function openWeekSummary() {
 
 // Grow the sheet out of the volume bar (and shrink back into it on close),
 // so the week view reads as an expansion of the thing you tapped.
+// The sheet opens by revealing outwards from the volume bar you tapped:
+// the bar's band stays put and the screen unfolds above and below it.
 function weekMorph(dir) {
   const modal = document.getElementById('weekModal');
   const bar = document.getElementById('volume-row');
   if (!modal || !bar) return;
   const r = bar.getBoundingClientRect();
   const vh = window.innerHeight || document.documentElement.clientHeight;
-  if (!r.height || r.bottom < 0 || r.top > vh) { modal.style.transformOrigin = ''; return; }
-  const originY = ((r.top + r.height / 2) / vh) * 100;
-  modal.style.transformOrigin = `50% ${originY}%`;
-  modal.style.setProperty('--morph-scale-y', String(Math.max(0.06, r.height / vh)));
+  if (!r.height || r.bottom < 0 || r.top > vh) {
+    modal.style.setProperty('--clip-top', '42%');
+    modal.style.setProperty('--clip-bottom', '42%');
+    return;
+  }
+  modal.style.setProperty('--clip-top', `${Math.max(0, (r.top / vh) * 100).toFixed(2)}%`);
+  modal.style.setProperty('--clip-bottom', `${Math.max(0, ((vh - r.bottom) / vh) * 100).toFixed(2)}%`);
 }
 
 // ═══════════════════════════════════════════════
@@ -3541,7 +3584,7 @@ function createSwiper(opts) {
     active = false;
     if (axis !== 'x') { axis = null; return; }
     axis = null;
-    suppressClickUntil = Date.now() + 500;
+    suppressClickUntil = Date.now() + 350;
     const w = wrap.clientWidth;
     const vel = dx / Math.max(1, Date.now() - t0);
     const dir = dx < 0 ? 1 : -1;
@@ -3567,7 +3610,11 @@ function createSwiper(opts) {
   wrap.addEventListener('pointercancel', finishPointer);
 
   document.addEventListener('click', e => {
-    if (Date.now() < suppressClickUntil) { e.stopPropagation(); e.preventDefault(); }
+    if (Date.now() < suppressClickUntil && wrap.contains(e.target)) {
+      suppressClickUntil = 0;
+      e.stopPropagation();
+      e.preventDefault();
+    }
   }, true);
 
   return { sweep: sweepIfDirty };
@@ -3598,7 +3645,7 @@ function closeWeekSummary() {
     modal.removeEventListener('animationend', done);
   };
   modal.addEventListener('animationend', done);
-  setTimeout(done, 300);
+  setTimeout(done, 340);
 }
 
 function handleWeekOverlayClick(e) {
@@ -3742,7 +3789,19 @@ function weekBodyHTML(idx) {
   const week = weeks[idx];
   const weekStart = new Date(PLAN_START);
   weekStart.setDate(weekStart.getDate() + idx * 7);
-  let out = `<div id="weekModalAim">${week.aim || ''}</div>`;
+  // Volume bar first — same position and styling as the home screen
+  let out = `<div id="weekModalTotals">
+    <div class="vol-block">
+      <div class="vol-label">Weekly Volume</div>
+      <div class="vol-value${String(week.km).length > 7 ? ' sv-small' : ''}">${week.km}</div>
+    </div>
+    <div class="vol-divider"></div>
+    <div class="vol-block">
+      <div class="vol-label">Hours</div>
+      <div class="vol-value vol-time${String(week.time).length > 11 ? ' sv-small' : ''}">${week.time}</div>
+    </div>
+  </div>`;
+  out += `<div id="weekModalAim">${week.aim || ''}</div>`;
 
   // Badges
   const phaseMap = {
@@ -3765,7 +3824,7 @@ function weekBodyHTML(idx) {
 
   let badgesHtml = `<span class="phase-badge ${phaseMap[week.phase] || 'phase-base'}">${week.phase}</span>`;
   if (wtText) badgesHtml += `<span class="week-type-badge ${wtClass}">${wtText}</span>`;
-  out = `<div id="weekModalBadges">${badgesHtml}</div>` + out;
+  out = out.replace('<div id="weekModalAim">', `<div id="weekModalBadges">${badgesHtml}</div><div id="weekModalAim">`);
 
   // Effort accent colours
   const RACE_ACCENT = 'var(--race)';
@@ -3816,17 +3875,6 @@ function weekBodyHTML(idx) {
   });
 
   out += `<div id="weekModalTable">${tableHtml}</div>`;
-  out += `<div id="weekModalTotals">
-    <div class="vol-block">
-      <div class="vol-label">Weekly Volume</div>
-      <div class="vol-value${String(week.km).length > 7 ? ' sv-small' : ''}">${week.km}</div>
-    </div>
-    <div class="vol-divider"></div>
-    <div class="vol-block">
-      <div class="vol-label">Hours</div>
-      <div class="vol-value vol-time${String(week.time).length > 11 ? ' sv-small' : ''}">${week.time}</div>
-    </div>
-  </div>`;
   return out;
 }
 
