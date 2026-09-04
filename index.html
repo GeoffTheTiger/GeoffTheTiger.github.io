@@ -106,7 +106,7 @@
     position: absolute;
     right: 0;
   }
-  .today-btn:hover { background: rgba(245,130,10,0.25); }
+
 
   .nav-btn {
     background: var(--surface2);
@@ -120,7 +120,7 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  .nav-btn:hover { background: var(--surface3); border-color: var(--border2); }
+
   .nav-btn:active { transform: scale(0.95); }
 
   .date-display {
@@ -390,7 +390,7 @@
     font-family: inherit;
     transition: background 0.15s, border-color 0.15s;
   }
-  .strength-clickable:hover { background: var(--surface3); border-color: var(--purple); }
+
   .strength-tap {
     font-size: 9px;
     letter-spacing: 0.04em;
@@ -456,7 +456,7 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  #exerciseModalClose:hover { color: var(--text); background: var(--surface3); }
+
 
   #exerciseModalBody {
     flex: 1;
@@ -613,7 +613,7 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  .cal-nav-btn:hover { background: var(--surface3); }
+
 
   #calClose {
     background: var(--surface2);
@@ -627,7 +627,7 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  #calClose:hover { color: var(--text); background: var(--surface3); }
+
 
   #calDayHeaders {
     display: grid;
@@ -645,7 +645,7 @@
     padding: 2px 0;
   }
 
-  #calGrid {
+  #calGrid, .cal-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 3px;
@@ -665,7 +665,7 @@
     transition: all 0.15s;
     border: 1px solid transparent;
   }
-  .cal-day:hover:not(.cal-dim) { background: var(--surface3); border-color: var(--border2); }
+
   .cal-day.cal-dim {
     color: var(--text3);
     cursor: default;
@@ -734,7 +734,7 @@
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  #weekModalClose:hover { color: var(--text); background: var(--surface3); }
+
 
   #weekModalBadges {
     display: flex;
@@ -760,7 +760,7 @@
     overflow: hidden;
     transition: background 0.12s;
   }
-  .ws-row:hover { background: var(--surface2); }
+
   .ws-row:last-child { border-bottom: none; }
   .ws-row.ws-active { background: rgba(245,130,10,0.06); }
 
@@ -952,7 +952,7 @@
     text-transform: uppercase;
     flex-shrink: 0;
   }
-  #paceBtn:hover { background: rgba(20,184,166,0.22); }
+
 
   /* ── Sheets (phase + pace modals) ── */
   #phaseOverlay, #paceOverlay { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; }
@@ -961,7 +961,7 @@
   .sheet-header { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .sheet-title { flex: 1; font-family: var(--font-display); font-size: 16px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); }
   .sheet-close { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); width: 28px; height: 28px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .sheet-close:hover { color: var(--text); background: var(--surface3); }
+
   .sheet-body { padding: 12px 14px; overflow-y: auto; font-size: 12.5px; line-height: 1.55; color: var(--text2); }
   .sheet-body::-webkit-scrollbar { width: 3px; }
   .sheet-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
@@ -1319,7 +1319,7 @@
 
   /* ══ CALENDAR — zone colours + weekly volume column ══ */
   #calDayHeaders { grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(0, 1.8fr); }
-  #calGrid { grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(0, 1.8fr); }
+  #calGrid, .cal-grid { grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(0, 1.8fr); }
   .cal-day { min-width: 0; }
   .cal-day { font-family: var(--font-mono); font-weight: 700; font-size: 13px; }
   .cal-day.cal-today { color: inherit; }
@@ -1556,7 +1556,7 @@
   }
   #calDayHeaders { flex-shrink: 0; gap: 3px; padding-bottom: 4px; }
   #calDayHeaders span { font-size: 9.5px; }
-  #calGrid {
+  #calGrid, .cal-grid {
     flex: 1;
     min-height: 0;
     grid-auto-rows: minmax(0, 92px);
@@ -1633,6 +1633,43 @@
   #weekOverlay.open #weekModalTop,
   #weekOverlay.open #weekModalHeader,
   #weekOverlay.open #weekModalTable { animation: weekContentIn 0.34s ease-out 0.06s backwards; }
+
+  /* ══ BUILD 20 — hover only where a real pointer exists ══ */
+  /* On touch screens a :hover rule causes the first tap to be swallowed
+     (it applies the hover state instead of activating). Gate them all. */
+  @media (hover: hover) and (pointer: fine) {
+    .today-btn:hover { background: rgba(245,130,10,0.25); }
+    .nav-btn:hover { background: var(--surface3); border-color: var(--border2); }
+    .strength-clickable:hover { background: var(--surface3); border-color: var(--purple); }
+    #exerciseModalClose:hover { color: var(--text); background: var(--surface3); }
+    .cal-nav-btn:hover { background: var(--surface3); }
+    #calClose:hover { color: var(--text); background: var(--surface3); }
+    .cal-day:hover:not(.cal-dim) { background: var(--surface3); border-color: var(--border2); }
+    #weekModalClose:hover { color: var(--text); background: var(--surface3); }
+    .ws-row:hover { background: var(--surface2); }
+    #paceBtn:hover { background: rgba(20,184,166,0.22); }
+    .sheet-close:hover { color: var(--text); background: var(--surface3); }
+    .wm-btn:hover { filter: brightness(1.25); }
+  }
+  /* Touch feedback that doesn't interfere with the first tap */
+  .today-btn:active, .nav-btn:active, .cal-nav-btn:active, .wm-btn:active,
+  #calClose:active, #weekModalClose:active, .sheet-close:active, #paceBtn:active { filter: brightness(1.3); }
+  .cal-day:active:not(.cal-dim):not(.cal-empty) { background: var(--surface3); }
+  .ws-row:active { background: var(--surface2); }
+
+  /* ══ Month view swipe ══ */
+  #calSwipe {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+    contain: paint;
+    clip-path: inset(0);
+  }
+  #calPage { height: 100%; display: flex; flex-direction: column; will-change: transform; }
+  #calSwipe .swipe-ghost { position: absolute; width: 100%; height: 100%; pointer-events: none; will-change: transform; overflow: hidden; }
+  #calSwipe .swipe-ghost #calPage, #calSwipe .swipe-ghost .cal-page { height: 100%; display: flex; flex-direction: column; }
 </style>
 </head>
 <body>
@@ -1703,7 +1740,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 19</div>
+      <div id="buildTag">build 20</div>
     </div>
   </div>
 </div>
@@ -1728,7 +1765,7 @@
       <div id="calDayHeaders">
         <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span><span>Week</span>
       </div>
-      <div id="calGrid"></div>
+      <div id="calSwipe"><div id="calPage"></div></div>
     </div>
   </div>
 </div>
@@ -3306,6 +3343,7 @@ function handleOverlayClick(e) {
 }
 
 function calNavigate(delta) {
+  if (window.calSwiper) calSwiper.sweep();
   calMonth += delta;
   if (calMonth < 0) { calMonth = 11; calYear--; }
   if (calMonth > 11) { calMonth = 0; calYear++; }
@@ -3315,7 +3353,17 @@ function calNavigate(delta) {
 function renderCalendar() {
   document.getElementById('calMonthLabel').textContent =
     `${MONTHS[calMonth]} ${calYear}`;
+  document.getElementById('calPage').innerHTML = calGridHTML(calYear, calMonth);
 
+  const cb = document.getElementById('calCurrentBtn');
+  if (cb) {
+    const t = new Date();
+    cb.style.visibility = (calYear === t.getFullYear() && calMonth === t.getMonth()) ? 'hidden' : 'visible';
+  }
+}
+
+// Grid for any month, so the swipe can build the months either side
+function calGridHTML(calYear, calMonth) {
   const today = new Date(); today.setHours(0,0,0,0);
   const planStart = new Date(PLAN_START); planStart.setHours(0,0,0,0);
   const planEnd = new Date(RACE_DATE); planEnd.setHours(0,0,0,0);
@@ -3401,14 +3449,7 @@ function renderCalendar() {
     }
   }
 
-  document.getElementById('calGrid').innerHTML = html;
-
-  const cb = document.getElementById('calCurrentBtn');
-  if (cb) {
-    const t = new Date();
-    const onCurrent = calYear === t.getFullYear() && calMonth === t.getMonth();
-    cb.style.visibility = onCurrent ? 'hidden' : 'visible';
-  }
+  return `<div class="cal-grid">${html}</div>`;
 }
 
 function calGoCurrent() {
@@ -3619,6 +3660,22 @@ function createSwiper(opts) {
 
   return { sweep: sweepIfDirty };
 }
+
+// Month view swiper: slides whole months, same feel as the day and week views
+const calSwiper = createSwiper({
+  wrap: document.getElementById('calSwipe'),
+  page: document.getElementById('calPage'),
+  buildHtml: off => {
+    const d = new Date(calYear, calMonth + off, 1);
+    return calGridHTML(d.getFullYear(), d.getMonth());
+  },
+  commit: dir => {
+    const d = new Date(calYear, calMonth + dir, 1);
+    calYear = d.getFullYear();
+    calMonth = d.getMonth();
+    renderCalendar();
+  }
+});
 
 // Week view swiper: slides whole weeks left/right, same feel as the home screen
 const weekSwiper = createSwiper({
