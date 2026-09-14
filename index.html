@@ -1670,6 +1670,23 @@
   #calPage { height: 100%; display: flex; flex-direction: column; will-change: transform; }
   #calSwipe .swipe-ghost { position: absolute; width: 100%; height: 100%; pointer-events: none; will-change: transform; overflow: hidden; }
   #calSwipe .swipe-ghost #calPage, #calSwipe .swipe-ghost .cal-page { height: 100%; display: flex; flex-direction: column; }
+
+
+
+
+  /* ══ BUILD 22 — context cue above the title, mirroring the day view ══ */
+  .wm-btn-spacer { width: 64px; flex-shrink: 0; }
+  .view-context {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    min-height: 13px;
+    line-height: 1.3;
+    text-align: center;
+  }
+  #calHeader .wm-titlebox .view-context { margin-bottom: 1px; }
 </style>
 </head>
 <body>
@@ -1740,7 +1757,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 20</div>
+      <div id="buildTag">build 22</div>
     </div>
   </div>
 </div>
@@ -1756,9 +1773,12 @@
       <div class="wm-nav">
         <span class="cal-nav-spacer" aria-hidden="true"></span>
         <button class="cal-nav-btn" id="calPrev" onclick="calNavigate(-1)">&#8592;</button>
-        <div class="wm-titlebox"><div id="calMonthLabel"></div></div>
+        <div class="wm-titlebox">
+          <div class="view-context" id="calContext"></div>
+          <div id="calMonthLabel"></div>
+        </div>
         <button class="cal-nav-btn" id="calNext" onclick="calNavigate(1)">&#8594;</button>
-        <button class="wm-btn wm-current" id="calCurrentBtn" onclick="calGoCurrent()">Current</button>
+        <span class="cal-nav-spacer" aria-hidden="true"></span>
       </div>
     </div>
     <div id="calBody">
@@ -1855,9 +1875,9 @@ const PACES = [
   { id:'5k',     zone:'5k',            lo:240, hi:245, colour:'#8b5cf6', note:'5k race pace' },
   { id:'10k',    zone:'10k',           lo:255, hi:255, colour:'#f59e0b', note:'10k race pace' },
   { id:'at',     zone:'AT',            lo:260, hi:260, colour:'#ef4444', note:'Anaerobic threshold · &#8776;4:20' },
-  { id:'hmp',    zone:'Half',          lo:270, hi:270, colour:'#06b6d4', note:'Half marathon pace' },
-  { id:'mp',     zone:'Marathon',      lo:290, hi:295, colour:'#3b82f6', note:'Notional marathon pace' },
-  { id:'steady', zone:'Steady',        lo:300, hi:310, colour:'#14b8a6', note:'Comfortable but purposeful' },
+  { id:'hmp',    zone:'Half',          lo:255, hi:255, colour:'#06b6d4', note:'Half marathon pace · race test at Battersea' },
+  { id:'mp',     zone:'Marathon',      lo:270, hi:275, colour:'#3b82f6', note:'Notional marathon pace' },
+  { id:'steady', zone:'Steady',        lo:290, hi:295, colour:'#14b8a6', note:'Comfortable but purposeful · c. 4:50/55' },
   { id:'easy',   zone:'Easy',          lo:320, hi:320, open:true, colour:'#22c55e', note:'And easier · fully conversational' },
 ];
 
@@ -2235,11 +2255,11 @@ const weeks = [
     aim:'85km · Sat 28k: 3×(7k solid steady + 2k MP) · Wed 10k/5k pace intervals · Rest Friday',
     days:{
       Mon:{ type:'Easy Run', km:'11km', time:'58–63 min', session:'11k easy', detail:'11k easy — 5:20/km or slower, fully conversational.', effort:'easy' },
-      Tue:{ type:'Solid Steady', km:'13km', time:'64–68 min', session:'13k solid steady', detail:'13k solid steady — HR high 160s/low 170s.\n\nTop of the steady band, around 5:00/km. Comfortably hard, but this is not threshold — stay controlled.', effort:'steady' },
+      Tue:{ type:'Solid Steady', km:'13km', time:'64–68 min', session:'13k solid steady', detail:'13k solid steady — HR high 160s/low 170s.\n\nTop of the steady band, around 4:50/km. Comfortably hard, but this is not threshold — stay controlled.', effort:'steady' },
       Wed:{ type:'10k/5k Intervals', km:'~12km', time:'65–72 min', session:'5×5 min 10k pace + 5×2 min 5k pace', detail:'WU → 5×5 min at 10k pace (4:15/km), 60 sec recovery → 5×2 min at 5k pace (4:00–4:05/km), 60 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'tenk' },
       Thu:{ type:'V Easy Run', km:'12km', time:'66–72 min', session:'12k very easy', detail:'12k very easy — slower than normal easy, 5:30/km or slower. Recovery emphasis before Saturday.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Long Run — Steady/MP', km:'28km', time:'~2h20m–2h25m', session:'28k: 1k easy then 3×(7k solid steady + 2k MP)', detail:'1k easy, then straight into 3×(7k solid steady at HR mid–high 160s + 2k at Marathon Pace 4:50–4:55/km).\n\nContinuous — no recoveries between blocks. 21k of steady and 6k of MP inside a 28k run.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
+      Sat:{ type:'Long Run — Steady/MP', km:'28km', time:'~2h20m–2h25m', session:'28k: 1k easy then 3×(7k solid steady + 2k MP)', detail:'1k easy, then straight into 3×(7k solid steady at HR mid–high 160s + 2k at Marathon Pace 4:30–4:35/km).\n\nContinuous — no recoveries between blocks. 21k of steady and 6k of MP inside a 28k run.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
       Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy shakeout. 5:30/km or slower.', effort:'easy' },
     }
   },
@@ -2250,7 +2270,7 @@ const weeks = [
     days:{
       Mon:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy — 5:20/km or slower.', effort:'easy' },
       Tue:{ type:'Easy + Strides', km:'10km', time:'53–58 min + strides', session:'10k easy incl 8×20 sec strides', detail:'10k easy with 8×20 sec strides worked in.\n\nStrides: controlled accelerations, full recovery between each.', effort:'easy', strides:true },
-      Wed:{ type:'HMP/5k Intervals', km:'~11km', time:'58–65 min', session:'3×8 min HMP + 3×4 min 5k pace', detail:'WU → 3×8 min at Half Marathon Pace (4:30/km), 75 sec recovery → 3×4 min at 5k pace (4:00–4:05/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'hmp' },
+      Wed:{ type:'HMP/5k Intervals', km:'~11km', time:'58–65 min', session:'3×8 min HMP + 3×4 min 5k pace', detail:'WU → 3×8 min at Half Marathon Pace (4:15/km), 75 sec recovery → 3×4 min at 5k pace (4:00–4:05/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'hmp' },
       Thu:{ type:'Easy Run', km:'10km', time:'53–58 min', session:'10k easy', detail:'10k easy — 5:20/km or slower.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
       Sat:{ type:'Long Run — Easy/Steady', km:'21km', time:'~1h48m–1h52m', session:'21k easy side of steady', detail:'21k on the easy side of steady — 5:10–5:20/km. Comfortable throughout; the lighter week\'s long run.\n\nFuel every 45 min.', effort:'steady', fuel:true },
@@ -2263,25 +2283,25 @@ const weeks = [
     aim:'87km · Biggest week of the sheet · Wed 7×5.5 min 10k pace (hard) · Sat 29k with 9k of MP',
     days:{
       Mon:{ type:'Easy Run', km:'12km', time:'64–68 min', session:'12k easy', detail:'12k easy — 5:20/km or slower.', effort:'easy' },
-      Tue:{ type:'Solid Steady', km:'13km', time:'64–66 min', session:'13k solid side of steady', detail:'13k solid side of steady — just outside current MP, HR high 160s.\n\nAround 4:55–5:00/km: quicker than the usual 5:00–5:10 steady band, sitting just slower than the 4:50–4:55 notional MP.', effort:'steady' },
+      Tue:{ type:'Solid Steady', km:'13km', time:'64–66 min', session:'13k solid side of steady', detail:'13k solid side of steady — just outside current MP, HR high 160s.\n\nAround 4:40–4:45/km: quicker than the usual 4:50–4:55 steady band, sitting just slower than the 4:30–4:35 notional MP.', effort:'steady' },
       Wed:{ type:'10k Intervals — Hard', km:'~13km', time:'70–78 min', session:'7×5.5 min 10k pace — hard session', detail:'WU → 7×5.5 min at 10k pace (4:15/km), 60 sec recovery → CD.\n\n38.5 min of work at 10k pace. Coach flags this one as a hard session — respect the recoveries (v easy jog or walk) and don\'t start too fast.', effort:'tenk' },
       Thu:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — 5:20/km or slower.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Long Run — Steady/MP', km:'29km', time:'~2h22m–2h27m', session:'29k: 2k easy then 3×(6k steady + 3k MP)', detail:'2k easy, then 3×(6k steady + 3k at Marathon Pace 4:50–4:55/km).\n\nMP volume steps up: 9k of MP total vs 6k a fortnight ago, inside the biggest long run of the sheet.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
+      Sat:{ type:'Long Run — Steady/MP', km:'29km', time:'~2h22m–2h27m', session:'29k: 2k easy then 3×(6k steady + 3k MP)', detail:'2k easy, then 3×(6k steady + 3k at Marathon Pace 4:30–4:35/km).\n\nMP volume steps up: 9k of MP total vs 6k a fortnight ago, inside the biggest long run of the sheet.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
       Sun:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
     }
   },
   // Week 29 — 21 Sep (COACH SHEET · w/e 27 Sept · 75km · Battersea Half)
   { phase:'Peak', weekType:'Tune-Up Race', weekA_B:'',
     km:'75km', time:'6h20m–6h45m',
-    aim:'75km · Battersea Half Marathon Sat · Tue HMP with MP-pace floats · 10 weeks to Valencia',
+    aim:'75km · Battersea Half Marathon Sat — tests the new 4:15 half pace · 10 weeks to Valencia',
     days:{
       Mon:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — 5:20/km or slower.', effort:'easy' },
-      Tue:{ type:'HMP + MP Floats', km:'~13km', time:'65–70 min', session:'5×7 min HMP with 3 min floats at c. 4:50', detail:'WU → 5×(7 min at Half Marathon Pace 4:30/km + 3 min float at c. 4:50/km) → CD.\n\nNote: the floats are NOT easy jogs — coach specifies c. 4:50/km, i.e. Marathon Pace. That makes this 50 min of continuous quality between 4:30 and 4:50.', effort:'hmp' },
+      Tue:{ type:'HMP + MP Floats', km:'~13km', time:'65–70 min', session:'5×7 min HMP with 3 min floats at c. 4:50', detail:'WU → 5×(7 min at Half Marathon Pace 4:15/km + 3 min float at c. 4:50/km) → CD.\n\nNote: the floats are NOT easy jogs — the sheet says c. 4:50/km, which under the updated paces is steady, not MP. That makes this 50 min of continuous quality between 4:15 and 4:50.', effort:'hmp' },
       Wed:{ type:'Easy Run', km:'10km', time:'53–58 min', session:'10k easy', detail:'10k easy.\n\nCoach\'s alternative: 37k charity walk, Surrey Downs — if the walk is on, it replaces the run.', effort:'easy' },
       Thu:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — keep it genuinely easy two days out from the race.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Half Marathon Race', km:'21.1km', time:'~1h35m', session:'Battersea Half Marathon', detail:'Race day — Battersea Half Marathon.\n\nAt Half Marathon Pace (4:30/km) that\'s roughly 1h35. Coach hasn\'t specified the target effort on the sheet — confirm whether it\'s a full race or a controlled tune-up before the gun.\n\nFuel and pacing as race rehearsal for Valencia.', effort:'hmp', fuel:true, race:true },
+      Sat:{ type:'Half Marathon Race', km:'21.1km', time:'~1h35m', session:'Battersea Half Marathon', detail:'Race day — Battersea Half Marathon.\n\nThis is the race coach wants to test the new 4:15/km half pace against — roughly 1h30 across 21.1k.\n\nFuel and pacing as race rehearsal for Valencia.', effort:'hmp', fuel:true, race:true },
       Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy post-race shakeout.\n\n10 weeks to Valencia (6 Dec).', effort:'easy' },
     }
   },
@@ -2515,9 +2535,9 @@ function effortChip(effort) {
     vo2max:     '5k/VO2max · Z5 · HR 178–196',
     mp:         'Marathon Pace · Z3 · HR 158–165',
     progression:'Progression · Easy→Steady→Threshold',
-    steady:     'Steady · 5:00–5:10 · HR high 160s',
+    steady:     'Steady · 4:50–4:55 · HR high 160s',
     tenk:       '10k Pace · 4:15/km',
-    hmp:        'Half Marathon Pace · 4:30/km',
+    hmp:        'Half Marathon Pace · 4:15/km',
   };
   const col = effortColour(effort);
   const bg = hexToRgba(col, 0.15);
@@ -2882,9 +2902,9 @@ function renderHRCue(effort) {
     vo2max:     ['HR target · 178–196 bpm', "Z5. Cannot speak. Maximal breathing. Short hard bursts — effort is the point, not pace."],
     mp:         ['HR target · 158–165 bpm', "Z3. A few words at a time. Controlled and sustainable. Should feel almost too easy in the first segment."],
     progression:['Progressive HR', "Easy 130–155 → Steady 155–163 → Threshold 165–178. Clear steps — do not blur the transitions."],
-    steady:     ['Solid steady guide', "Coach pegs solid steady at HR high 160s–low 170s. Comfortably hard, a notch below threshold — clipped sentences, not single words."],
+    steady:     ['Solid steady guide', "Coach pegs solid steady at c. 4:50–4:55/km, HR high 160s–low 170s. Comfortably hard, a notch below threshold — clipped sentences, not single words."],
     tenk:       ['10k pace · 4:15/km', "Hard but repeatable. Recoveries are v easy jog or walk unless stated — keep them honest."],
-    hmp:        ['Half marathon pace · 4:30/km', "Controlled hard. Recoveries are v easy jog or walk unless the session says otherwise."],
+    hmp:        ['Half marathon pace · 4:15/km', "Controlled hard. Recoveries are v easy jog or walk unless the session says otherwise."],
   };
   const c = cues[effort];
   return c ? cue('hr','💓', c[0], c[1]) : '';
@@ -3355,10 +3375,14 @@ function renderCalendar() {
     `${MONTHS[calMonth]} ${calYear}`;
   document.getElementById('calPage').innerHTML = calGridHTML(calYear, calMonth);
 
-  const cb = document.getElementById('calCurrentBtn');
-  if (cb) {
-    const t = new Date();
-    cb.style.visibility = (calYear === t.getFullYear() && calMonth === t.getMonth()) ? 'hidden' : 'visible';
+  const t = new Date();
+  const diff = (calYear * 12 + calMonth) - (t.getFullYear() * 12 + t.getMonth());
+  const cctx = document.getElementById('calContext');
+  if (cctx) {
+    if (diff === 0) { cctx.textContent = 'This month'; cctx.style.color = 'var(--orange)'; }
+    else if (diff === 1) { cctx.textContent = 'Next month'; cctx.style.color = 'var(--teal)'; }
+    else if (diff === -1) { cctx.textContent = 'Last month'; cctx.style.color = 'var(--text3)'; }
+    else { cctx.textContent = ''; }
   }
 }
 
@@ -3453,11 +3477,13 @@ function calGridHTML(calYear, calMonth) {
 }
 
 function calGoCurrent() {
+  if (window.calSwiper) calSwiper.sweep();
   const t = new Date();
   calYear = t.getFullYear();
   calMonth = t.getMonth();
   renderCalendar();
 }
+
 
 function calMorph() {
   const modal = document.getElementById('calModal');
@@ -3716,6 +3742,7 @@ function currentWeekIdx() {
 }
 
 function summaryGoCurrent() {
+  if (window.weekSwiper) weekSwiper.sweep();
   summaryWeekIdx = currentWeekIdx();
   renderWeekSummary();
 }
@@ -3830,12 +3857,24 @@ function renderWeekSummary() {
       <button class="wm-btn wm-export" onclick="openWeekExport()">Export</button>
       <button class="cal-nav-btn" onclick="summaryNavigate(-1)" ${summaryWeekIdx === 0 ? 'disabled style="opacity:0.3"' : ''}>&#8592;</button>
       <div class="wm-titlebox">
+        <div class="view-context" id="weekContext"></div>
         <div class="wm-title">Week ${summaryWeekIdx + 1}</div>
         <div class="wm-range">${weekStart.getDate()} ${MONTHS[weekStart.getMonth()].slice(0,3)} – ${weekEnd.getDate()} ${MONTHS[weekEnd.getMonth()].slice(0,3)}</div>
       </div>
       <button class="cal-nav-btn" onclick="summaryNavigate(1)" ${summaryWeekIdx === 38 ? 'disabled style="opacity:0.3"' : ''}>&#8594;</button>
-      <button class="wm-btn wm-current" onclick="summaryGoCurrent()" style="visibility:${isCurrentWeek ? 'hidden' : 'visible'}">Current</button>
+      <span class="wm-btn-spacer" aria-hidden="true"></span>
     </div>`;
+
+  // Same contextual cue as the day view's TODAY / TOMORROW
+  const cw = currentWeekIdx();
+  const wctx = document.getElementById('weekContext');
+  if (wctx) {
+    const diff = summaryWeekIdx - cw;
+    if (diff === 0) { wctx.textContent = 'This week'; wctx.style.color = 'var(--orange)'; }
+    else if (diff === 1) { wctx.textContent = 'Next week'; wctx.style.color = 'var(--teal)'; }
+    else if (diff === -1) { wctx.textContent = 'Last week'; wctx.style.color = 'var(--text3)'; }
+    else { wctx.textContent = ''; }
+  }
 
   document.getElementById('weekPage').innerHTML = weekBodyHTML(summaryWeekIdx);
   document.getElementById('weekSwipe').scrollTop = 0;
