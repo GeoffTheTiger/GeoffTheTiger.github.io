@@ -1757,7 +1757,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 23</div>
+      <div id="buildTag">build 24</div>
     </div>
   </div>
 </div>
@@ -1872,8 +1872,8 @@ const RACE_DATE  = new Date(2026, 11, 6); // 6 Dec 2026
 const PACES = [
   { id:'vvo2',   zone:'vVO&#8322;max', lo:225, hi:225, colour:'#ec4899', note:'Velocity at VO&#8322;max · short intervals' },
   { id:'3k',     zone:'3k',            lo:230, hi:230, colour:'#a855f7', note:'3k race pace' },
-  { id:'5k',     zone:'5k',            lo:240, hi:245, colour:'#8b5cf6', note:'5k race pace' },
-  { id:'10k',    zone:'10k',           lo:255, hi:255, colour:'#f59e0b', note:'10k race pace' },
+  { id:'5k',     zone:'5k',            lo:230, hi:230, colour:'#8b5cf6', note:'5k training pace · c. 3:50' },
+  { id:'10k',    zone:'10k',           lo:240, hi:245, colour:'#f59e0b', note:'10k training pace' },
   { id:'at',     zone:'AT',            lo:260, hi:260, colour:'#ef4444', note:'Anaerobic threshold · &#8776;4:20' },
   { id:'hmp',    zone:'Half',          lo:255, hi:255, colour:'#06b6d4', note:'Half marathon pace · race test at Battersea' },
   { id:'mp',     zone:'Marathon',      lo:270, hi:275, colour:'#3b82f6', note:'Notional marathon pace' },
@@ -2313,7 +2313,7 @@ const weeks = [
       Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
       Tue:{ type:'Easy Run', km:'11km', time:'59–63 min', session:'11k easy', detail:'11k easy, 5:20/km or slower.', effort:'easy' },
       Wed:{ type:'Easy + Strides', km:'13km', time:'70–75 min', session:'13k easy incl 8×20 sec strides', detail:'13k easy with 8×20 sec strides worked in.\n\nStrides: controlled accelerations, full recovery between each.', effort:'easy', strides:true },
-      Thu:{ type:'HMP/10k + MP', km:'~16km', time:'75–80 min', session:'2×8 min HMP + 3×5 min 10k pace, then 7k MP', detail:'WU → 2×8 min at Half Marathon Pace (4:15/km), 70 sec recovery → 3×5 min at 10k pace (4:15/km), 60 sec recovery → 7k at Marathon Pace (4:30–4:35/km).\n\nThe sheet lists no recovery before the 7k and no cooldown, so treat the MP block as the finish of the session.', effort:'hmp' },
+      Thu:{ type:'HMP/10k + MP', km:'~16km', time:'75–80 min', session:'2×8 min HMP + 3×5 min 10k pace, then 7k MP', detail:'WU → 2×8 min at Half Marathon Pace (4:15/km), 70 sec recovery → 3×5 min at 10k pace (4:00–4:05/km), 60 sec recovery → 7k at Marathon Pace (4:30–4:35/km).\n\nThe sheet lists no recovery before the 7k and no cooldown, so treat the MP block as the finish of the session.', effort:'hmp' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
       Sat:{ type:'Long Run: Steady/MP', km:'32km', time:'~2h32m–2h38m', session:'32k: 2k easy then 3×(8k steady + 2k MP)', detail:'2k easy, then 3×(8k steady at HR low/mid 150s + 2k at Marathon Pace 4:30–4:35/km).\n\nContinuous, no recoveries between blocks. 24k of steady and 6k of MP.\n\nNote the steady HR guide here is low/mid 150s, lower than earlier sheets.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
       Sun:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
@@ -2325,7 +2325,7 @@ const weeks = [
     aim:'92km · Tue 19k hard block · Thu 24×35 sec 10k effort · Sat 34k with negative split',
     days:{
       Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold Block: Hard', km:'~21km', time:'88–97 min', session:'19k as 2×(6k c. 4:20 + 3.5k c. 3:50–3:55), hard effort', detail:'WU → 19k continuous as 2×(6k at c. 4:20/km + 3.5k at c. 3:50–3:55/km).\n\nCHECK WITH COACH: 3:50–3:55 is 3k pace, which would make this extremely hard. If it is meant to be 4:50–4:55 (steady float), the session reads as 2×(6k at threshold + 3.5k steady), which fits the 19k hard effort far better.', effort:'threshold' },
+      Tue:{ type:'Threshold Block: Hard', km:'~21km', time:'88–97 min', session:'19k as 2×(6k c. 4:20 + 3.5k c. 3:50–3:55), hard effort', detail:'WU → 19k continuous as 2×(6k at c. 4:20/km + 3.5k at c. 3:50–3:55/km).\n\nThe 3.5k blocks sit at your 5k training pace (c. 3:50), straight off 6k just outside threshold. No recoveries between blocks. Coach flags this as a hard effort.', effort:'threshold' },
       Wed:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
       Thu:{ type:'10k Effort Reps', km:'~9km', time:'48–53 min', session:'24×35 sec at 10k effort (25 sec jog)', detail:'WU → 24×35 sec at 10k effort, not faster, 25 sec jog between → CD.\n\n14 min of work in total. Effort caps the pace: controlled, not flat out.', effort:'tenk' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
@@ -2339,7 +2339,7 @@ const weeks = [
     aim:'90km · Tue 8×4 min 10k pace then 2×9 min HMP · Sat 34k progressive thirds',
     days:{
       Mon:{ type:'Easy + Strength', km:'11km', time:'58–63 min + 30–35 min strength', session:'11k easy + Strength', detail:'11k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
-      Tue:{ type:'10k/HMP Intervals', km:'~14km', time:'68–75 min', session:'8×4 min 10k pace, then 2×9 min HMP', detail:'WU → 8×4 min at 10k pace (4:15/km), 50 sec recovery → 2×9 min at Half Marathon Pace (4:15/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'tenk' },
+      Tue:{ type:'10k/HMP Intervals', km:'~14km', time:'68–75 min', session:'8×4 min 10k pace, then 2×9 min HMP', detail:'WU → 8×4 min at 10k pace (4:00–4:05/km), 50 sec recovery → 2×9 min at Half Marathon Pace (4:15/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'tenk' },
       Wed:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
       Thu:{ type:'Easy Run', km:'13km', time:'69–74 min', session:'13k easy', detail:'13k easy, 5:20/km or slower.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
@@ -2536,7 +2536,7 @@ function effortChip(effort) {
     mp:         'Marathon Pace · Z3 · HR 158–165',
     progression:'Progression · Easy→Steady→Threshold',
     steady:     'Steady · 4:50–4:55 · HR high 160s',
-    tenk:       '10k Pace · 4:15/km',
+    tenk:       '10k Pace · 4:00–4:05/km',
     hmp:        'Half Marathon Pace · 4:15/km',
   };
   const col = effortColour(effort);
@@ -2903,7 +2903,7 @@ function renderHRCue(effort) {
     mp:         ['HR target · 158–165 bpm', "Z3. A few words at a time. Controlled and sustainable. Should feel almost too easy in the first segment."],
     progression:['Progressive HR', "Easy 130–155 → Steady 155–163 → Threshold 165–178. Clear steps — do not blur the transitions."],
     steady:     ['Solid steady guide', "Coach pegs solid steady at c. 4:50–4:55/km, HR high 160s–low 170s. Comfortably hard, a notch below threshold — clipped sentences, not single words."],
-    tenk:       ['10k pace · 4:15/km', "Hard but repeatable. Recoveries are v easy jog or walk unless stated — keep them honest."],
+    tenk:       ['10k pace · 4:00–4:05/km', "Hard but repeatable. Recoveries are v easy jog or walk unless stated — keep them honest."],
     hmp:        ['Half marathon pace · 4:15/km', "Controlled hard. Recoveries are v easy jog or walk unless the session says otherwise."],
   };
   const c = cues[effort];
