@@ -1757,7 +1757,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 22</div>
+      <div id="buildTag">build 23</div>
     </div>
   </div>
 </div>
@@ -2254,7 +2254,7 @@ const weeks = [
     km:'85km', time:'7h25m–7h55m',
     aim:'85km · Sat 28k: 3×(7k solid steady + 2k MP) · Wed 10k/5k pace intervals · Rest Friday',
     days:{
-      Mon:{ type:'Easy Run', km:'11km', time:'58–63 min', session:'11k easy', detail:'11k easy — 5:20/km or slower, fully conversational.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'11km', time:'58–63 min + 30–35 min strength', session:'11k easy + Strength', detail:'11k easy, 5:20/km or slower, fully conversational. Strength session after the run.', effort:'easy', strength:true },
       Tue:{ type:'Solid Steady', km:'13km', time:'64–68 min', session:'13k solid steady', detail:'13k solid steady — HR high 160s/low 170s.\n\nTop of the steady band, around 4:50/km. Comfortably hard, but this is not threshold — stay controlled.', effort:'steady' },
       Wed:{ type:'10k/5k Intervals', km:'~12km', time:'65–72 min', session:'5×5 min 10k pace + 5×2 min 5k pace', detail:'WU → 5×5 min at 10k pace (4:15/km), 60 sec recovery → 5×2 min at 5k pace (4:00–4:05/km), 60 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'tenk' },
       Thu:{ type:'V Easy Run', km:'12km', time:'66–72 min', session:'12k very easy', detail:'12k very easy — slower than normal easy, 5:30/km or slower. Recovery emphasis before Saturday.', effort:'easy' },
@@ -2268,7 +2268,7 @@ const weeks = [
     km:'69km', time:'6h05m–6h30m',
     aim:'69km · Lighter week · Wed HMP/5k intervals · Sat 21k easy side of steady',
     days:{
-      Mon:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy — 5:20/km or slower.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'9km', time:'48–52 min + 30–35 min strength', session:'9k easy + Strength', detail:'9k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
       Tue:{ type:'Easy + Strides', km:'10km', time:'53–58 min + strides', session:'10k easy incl 8×20 sec strides', detail:'10k easy with 8×20 sec strides worked in.\n\nStrides: controlled accelerations, full recovery between each.', effort:'easy', strides:true },
       Wed:{ type:'HMP/5k Intervals', km:'~11km', time:'58–65 min', session:'3×8 min HMP + 3×4 min 5k pace', detail:'WU → 3×8 min at Half Marathon Pace (4:15/km), 75 sec recovery → 3×4 min at 5k pace (4:00–4:05/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'hmp' },
       Thu:{ type:'Easy Run', km:'10km', time:'53–58 min', session:'10k easy', detail:'10k easy — 5:20/km or slower.', effort:'easy' },
@@ -2282,7 +2282,7 @@ const weeks = [
     km:'87km', time:'7h25m–7h55m',
     aim:'87km · Biggest week of the sheet · Wed 7×5.5 min 10k pace (hard) · Sat 29k with 9k of MP',
     days:{
-      Mon:{ type:'Easy Run', km:'12km', time:'64–68 min', session:'12k easy', detail:'12k easy — 5:20/km or slower.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'12km', time:'64–68 min + 30–35 min strength', session:'12k easy + Strength', detail:'12k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
       Tue:{ type:'Solid Steady', km:'13km', time:'64–66 min', session:'13k solid side of steady', detail:'13k solid side of steady — just outside current MP, HR high 160s.\n\nAround 4:40–4:45/km: quicker than the usual 4:50–4:55 steady band, sitting just slower than the 4:30–4:35 notional MP.', effort:'steady' },
       Wed:{ type:'10k Intervals — Hard', km:'~13km', time:'70–78 min', session:'7×5.5 min 10k pace — hard session', detail:'WU → 7×5.5 min at 10k pace (4:15/km), 60 sec recovery → CD.\n\n38.5 min of work at 10k pace. Coach flags this one as a hard session — respect the recoveries (v easy jog or walk) and don\'t start too fast.', effort:'tenk' },
       Thu:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — 5:20/km or slower.', effort:'easy' },
@@ -2294,71 +2294,71 @@ const weeks = [
   // Week 29 — 21 Sep (COACH SHEET · w/e 27 Sept · 75km · Battersea Half)
   { phase:'Peak', weekType:'Tune-Up Race', weekA_B:'',
     km:'75km', time:'6h20m–6h45m',
-    aim:'75km · Battersea Half Marathon Sat — tests the new 4:15 half pace · 10 weeks to Valencia',
+    aim:'75km · Battersea Half Marathon Sat, tests the new 4:15 half pace · Valencia minus 9 weeks',
     days:{
-      Mon:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — 5:20/km or slower.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'11km', time:'58–62 min + 30–35 min strength', session:'11k easy + Strength', detail:'11k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
       Tue:{ type:'HMP + MP Floats', km:'~13km', time:'65–70 min', session:'5×7 min HMP with 3 min floats at c. 4:50', detail:'WU → 5×(7 min at Half Marathon Pace 4:15/km + 3 min float at c. 4:50/km) → CD.\n\nNote: the floats are NOT easy jogs — the sheet says c. 4:50/km, which under the updated paces is steady, not MP. That makes this 50 min of continuous quality between 4:15 and 4:50.', effort:'hmp' },
       Wed:{ type:'Easy Run', km:'10km', time:'53–58 min', session:'10k easy', detail:'10k easy.\n\nCoach\'s alternative: 37k charity walk, Surrey Downs — if the walk is on, it replaces the run.', effort:'easy' },
       Thu:{ type:'Easy Run', km:'11km', time:'58–62 min', session:'11k easy', detail:'11k easy — keep it genuinely easy two days out from the race.', effort:'easy' },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
       Sat:{ type:'Half Marathon Race', km:'21.1km', time:'~1h35m', session:'Battersea Half Marathon', detail:'Race day — Battersea Half Marathon.\n\nThis is the race coach wants to test the new 4:15/km half pace against — roughly 1h30 across 21.1k.\n\nFuel and pacing as race rehearsal for Valencia.', effort:'hmp', fuel:true, race:true },
-      Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy post-race shakeout.\n\n10 weeks to Valencia (6 Dec).', effort:'easy' },
+      Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy post-race shakeout.\n\nValencia 6 Dec minus 9 weeks (9 full training weeks, then race week).', effort:'easy' },
     }
   },
-  // Week 30 — 28 Sep (WEEK A · PEAK LONG RUN 2 · HARDEST WEEK)
-  { phase:'Peak', weekType:'PEAK LONG RUN 2', weekA_B:'A',
-    km:'97.3–114.9km', time:'9h13m–10h15m',
-    aim:'WEEK A · PEAK LONG RUN 2 · 55 min MP · Thu PLANNED EASY · HARDEST WEEK · 9 weeks to race',
+  // Week 30 — 28 Sep (COACH SHEET · w/e 4 Oct · 91km)
+  { phase:'Peak', weekType:'', weekA_B:'',
+    km:'91km', time:'7h40m–8h00m',
+    aim:'91km · Thu HMP/10k set then 7k MP · Sat 32k: 3×(8k steady + 2k MP) · Rest Friday',
     days:{
-      Mon:{ type:'Easy + Strength', km:'11.7–13.7km', time:'67–72 min run + 30–45 min strength', session:'Easy run + Strength', detail:'67–72 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'13.5–14.5km', time:'~62–66 min', session:'4×7 min threshold', detail:'15 WU → 4×7 / 90 sec rec → 12 CD.\n\nHR 165–178.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'17.0–21.9km', time:'AM: 74–82 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 74–82 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Easy Run (Planned)', km:'9.6–12.8km', time:'55–67 min', session:'Easy run — PLANNED easy (no quality)', detail:'Intentional full recovery. HR 130–155. No quality this week — you have the biggest long run Saturday.', effort:'easy' },
-      Fri:{ type:'Recovery', km:'5.2–6.7km', time:'30–35 min', session:'Recovery run', detail:'30–35 min easy.', effort:'easy' },
-      Sat:{ type:'Long Run + MP Finish', km:'30.7–33.9km', time:'155–163 min (last 55 min at MP)', session:'PEAK LONG RUN 2 — 55 min Marathon Pace finish', detail:'155–163 min total — last 55 min at Marathon Pace. This is the hardest session of the entire plan.\n\nHR 158–165 for MP section. Fuel every 45 min from the start. Trust your training.', effort:'mp', mpFinish:true, fuel:true },
-      Sun:{ type:'Recovery', km:'9.6–11.4km', time:'55–60 min', session:'Recovery run', detail:'55–60 min Z1–Z2 easy.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'11km', time:'59–63 min', session:'11k easy', detail:'11k easy, 5:20/km or slower.', effort:'easy' },
+      Wed:{ type:'Easy + Strides', km:'13km', time:'70–75 min', session:'13k easy incl 8×20 sec strides', detail:'13k easy with 8×20 sec strides worked in.\n\nStrides: controlled accelerations, full recovery between each.', effort:'easy', strides:true },
+      Thu:{ type:'HMP/10k + MP', km:'~16km', time:'75–80 min', session:'2×8 min HMP + 3×5 min 10k pace, then 7k MP', detail:'WU → 2×8 min at Half Marathon Pace (4:15/km), 70 sec recovery → 3×5 min at 10k pace (4:15/km), 60 sec recovery → 7k at Marathon Pace (4:30–4:35/km).\n\nThe sheet lists no recovery before the 7k and no cooldown, so treat the MP block as the finish of the session.', effort:'hmp' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run: Steady/MP', km:'32km', time:'~2h32m–2h38m', session:'32k: 2k easy then 3×(8k steady + 2k MP)', detail:'2k easy, then 3×(8k steady at HR low/mid 150s + 2k at Marathon Pace 4:30–4:35/km).\n\nContinuous, no recoveries between blocks. 24k of steady and 6k of MP.\n\nNote the steady HR guide here is low/mid 150s, lower than earlier sheets.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true },
+      Sun:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
     }
   },
-  // Week 31 — 5 Oct (CUT-BACK · 8 weeks to race)
-  { phase:'Peak', weekType:'CUT-BACK', weekA_B:'',
-    km:'66.7–80.2km', time:'6h35m–7h25m',
-    aim:'CUT-BACK · Peak block absorbed · Quality identical · 8 weeks to race',
+  // Week 31 — 5 Oct (COACH SHEET · w/e 11 Oct · 92km)
+  { phase:'Peak', weekType:'', weekA_B:'',
+    km:'92km', time:'7h45m–8h05m',
+    aim:'92km · Tue 19k hard block · Thu 24×35 sec 10k effort · Sat 34k with negative split',
     days:{
-      Mon:{ type:'Easy + Strength', km:'7.5–9.1km', time:'43–48 min run + 30–45 min strength', session:'Easy run + Strength', detail:'43–48 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 / 2 min rec → 15 CD. Quality identical.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'11.9–16.2km', time:'AM: 45–52 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout (shorter)', detail:'AM: 45–52 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Progression', km:'12.0–12.5km', time:'~60 min', session:'20/20/20 Progression run', detail:'20 easy → 20 steady → 20 threshold.', effort:'progression' },
-      Fri:{ type:'Recovery', km:'3.5–4.8km', time:'20–25 min', session:'Recovery run', detail:'20–25 min easy.', effort:'easy' },
-      Sat:{ type:'Easy Long', km:'14.4–17.7km', time:'83–93 min', session:'Easy long run (shorter)', detail:'83–93 min easy. Fuel if over 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'5.9–7.4km', time:'34–39 min', session:'Recovery run', detail:'34–39 min Z1–Z2 easy.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'Threshold Block: Hard', km:'~21km', time:'88–97 min', session:'19k as 2×(6k c. 4:20 + 3.5k c. 3:50–3:55), hard effort', detail:'WU → 19k continuous as 2×(6k at c. 4:20/km + 3.5k at c. 3:50–3:55/km).\n\nCHECK WITH COACH: 3:50–3:55 is 3k pace, which would make this extremely hard. If it is meant to be 4:50–4:55 (steady float), the session reads as 2×(6k at threshold + 3.5k steady), which fits the 19k hard effort far better.', effort:'threshold' },
+      Wed:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
+      Thu:{ type:'10k Effort Reps', km:'~9km', time:'48–53 min', session:'24×35 sec at 10k effort (25 sec jog)', detail:'WU → 24×35 sec at 10k effort, not faster, 25 sec jog between → CD.\n\n14 min of work in total. Effort caps the pace: controlled, not flat out.', effort:'tenk' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run: Easy/Steady', km:'34km', time:'~2h50m–2h55m', session:'34k easy side of steady, second half negative split', detail:'34k mainly on the easy side of steady, around 5:00–5:10/km.\n\nMake the second half a negative split of c. 2 to 2.5 min: roughly 7–9 sec/km quicker over the last 17k.\n\nFuel from the start, gel every 45 min.', effort:'steady', fuel:true },
+      Sun:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy, 5:30/km or slower.', effort:'easy' },
     }
   },
-  // Week 32 — 12 Oct (BRIDGE · 7 weeks to race)
-  { phase:'Peak', weekType:'BRIDGE', weekA_B:'',
-    km:'72.8–87.2km', time:'7h12m–8h02m',
-    aim:'BRIDGE · Stepped return after peak cut-back · 7 weeks to race',
+  // Week 32 — 12 Oct (COACH SHEET · w/e 18 Oct · 90km)
+  { phase:'Peak', weekType:'', weekA_B:'',
+    km:'90km', time:'7h30m–7h50m',
+    aim:'90km · Tue 8×4 min 10k pace then 2×9 min HMP · Sat 34k progressive thirds',
     days:{
-      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'11.5–12.5km', time:'~55–58 min', session:'4×5 min threshold', detail:'15 WU → 4×5 / 2 min rec → 15 CD.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'13.7–18.1km', time:'AM: 55–62 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 55–62 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Progression', km:'9.0–9.5km', time:'~45 min', session:'15/15/15 Progression run', detail:'15 easy → 15 steady → 15 threshold. Bridge week — lighter progression.', effort:'progression' },
-      Fri:{ type:'Recovery', km:'3.8–5.1km', time:'22–27 min', session:'Recovery run', detail:'22–27 min easy.', effort:'easy' },
-      Sat:{ type:'Easy Long', km:'18.8–22.5km', time:'108–118 min', session:'Easy long run', detail:'108–118 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'7.3–9.0km', time:'42–47 min', session:'Recovery run', detail:'42–47 min Z1–Z2 easy.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'11km', time:'58–63 min + 30–35 min strength', session:'11k easy + Strength', detail:'11k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'10k/HMP Intervals', km:'~14km', time:'68–75 min', session:'8×4 min 10k pace, then 2×9 min HMP', detail:'WU → 8×4 min at 10k pace (4:15/km), 50 sec recovery → 2×9 min at Half Marathon Pace (4:15/km), 75 sec recovery → CD.\n\nRecoveries: v easy jog or walk.', effort:'tenk' },
+      Wed:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
+      Thu:{ type:'Easy Run', km:'13km', time:'69–74 min', session:'13k easy', detail:'13k easy, 5:20/km or slower.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run: Progressive', km:'34km', time:'~2h34m–2h38m', session:'34k: 1k easy then 33k in progressive thirds', detail:'1k easy, then 33k in three 11k thirds: c. 4:45/km → c. 4:30/km → c. 4:20–4:25/km.\n\nThe middle third sits at Marathon Pace; the last third is quicker than MP. Hold back in the first third.\n\nFuel from the start, gel every 45 min.', effort:'progression', fuel:true },
+      Sun:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
     }
   },
-  // Week 33 — 19 Oct (WEEK B · 6 weeks to race)
-  { phase:'Peak', weekType:'', weekA_B:'B',
-    km:'89.8–105.8km', time:'8h48m–9h40m',
-    aim:'WEEK B · Thu 45+45 MP · Wed double · 6 weeks to race',
+  // Week 33 — 19 Oct (COACH SHEET · w/e 25 Oct · 93km · longest run)
+  { phase:'Peak', weekType:'Longest Run', weekA_B:'',
+    km:'93km', time:'8h00m–8h20m',
+    aim:'93km · Tue 7×7 min HMP plus 8k c. 4:20 · Sat 37–38k, longest run · Valencia minus 5 weeks',
     days:{
-      Mon:{ type:'Easy + Strength', km:'10.4–12.4km', time:'60–65 min run + 30–45 min strength', session:'Easy run + Strength', detail:'60–65 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'VO2max', km:'12.5–13.5km', time:'~62–66 min', session:'14×1 min on/off', detail:'12 WU → 14×1 min at 5k effort / 1 min easy → 12 CD.\n\nHR 178–196 on reps.', effort:'vo2max' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'15.9–20.8km', time:'AM: 68–76 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 68–76 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Marathon Pace', km:'17.5–18.5km', time:'~90 min', session:'45 min easy + 45 min at Marathon Pace', detail:'45 min easy → 45 min at MP.\n\nMP: HR 158–165. Closest session to race conditions.', effort:'mp' },
-      Fri:{ type:'Recovery', km:'4.7–6.1km', time:'27–32 min', session:'Recovery run', detail:'27–32 min easy.', effort:'easy' },
-      Sat:{ type:'Easy Long', km:'20.5–24.4km', time:'118–128 min', session:'Easy long run', detail:'118–128 min easy. Fuel every 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'8.3–10.1km', time:'48–53 min', session:'Recovery run', detail:'48–53 min Z1–Z2 easy.', effort:'easy' },
+      Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'HMP + Threshold: Hard', km:'~21km', time:'95–102 min', session:'7×7 min HMP, plus 8k c. 4:20, hard effort', detail:'WU → 7×7 min at Half Marathon Pace (4:15/km), 70 sec recovery → 8k at c. 4:20/km.\n\n49 min at HMP then 8k just off threshold. Coach flags this as a hard effort.', effort:'hmp' },
+      Wed:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy, 5:30/km or slower.', effort:'easy' },
+      Thu:{ type:'10k Effort Reps', km:'~8km', time:'44–49 min', session:'18×50 sec at 10k effort (30 sec recovery)', detail:'WU → 18×50 sec at 10k effort, not faster, 30 sec recovery → CD.\n\n15 min of work in total.', effort:'tenk' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run: Easy/Steady', km:'37–38km', time:'~3h08m–3h15m', session:'37–38k easy side of steady, longest run', detail:'37–38k on the easy side of steady, around 5:00–5:10/km. The longest run of the block.\n\nFuel from the start, gel every 45 min. A good rehearsal for race-day fuelling.', effort:'steady', fuel:true },
+      Sun:{ type:'V Easy Run', km:'8km', time:'44–48 min', session:'8k very easy', detail:'8k very easy.\n\nValencia 6 Dec minus 5 weeks (5 full training weeks, then race week).', effort:'easy' },
     }
   },
   // Week 34 — 26 Oct (CONSOLIDATION · WEEK A · 5 weeks to race)
