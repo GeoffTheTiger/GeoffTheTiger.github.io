@@ -1687,6 +1687,50 @@
     text-align: center;
   }
   #calHeader .wm-titlebox .view-context { margin-bottom: 1px; }
+
+  /* ══ BUILD 25 — distance plan ══ */
+  .dist-plan { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 2px 0 6px; }
+  .dp-item {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text2);
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .dp-item b { color: var(--text); font-weight: 700; }
+  .dp-item.dp-total { border-color: rgba(245,130,10,0.45); color: var(--orange); }
+  .dp-item.dp-total b { color: var(--orange); }
+
+  /* ══ BUILD 27 — bike mode ══ */
+  .mode-btn {
+    width: 60px; height: 36px; flex-shrink: 0; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--text2);
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .mode-k { font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text3); line-height: 1; }
+  .mode-v { font-family: var(--font-display); font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.1; }
+  .mode-btn:active { filter: brightness(1.3); }
+  .bike-mode .mode-btn { background: rgba(129,140,248,0.16); border-color: rgba(129,140,248,0.55); color: #a5b4fc; }
+  .bike-mode .mode-btn .mode-k { color: rgba(165,180,252,0.75); }
+
+  .bike-mode .panel-header { flex-direction: column; gap: 3px; }
+  .bike-mode .panel-header::before {
+    content: 'Bike mode';
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #a5b4fc;
+  }
+  .bike-mode .stat-block { cursor: default; }
+
+  .bike-plan {
+    text-align: left; background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid #818cf8; border-radius: 3px; padding: 7px 9px; margin: 4px 0 6px;
+  }
+  .bk-line { font-family: var(--font-mono); font-size: 10.5px; line-height: 1.55; color: var(--text); }
+  .bike-note { font-size: 10px; color: var(--text3); margin: 2px 0 6px; text-align: center; }
+  .cd-km.cd-ride { opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -1699,7 +1743,7 @@
       </div>
     </div>
     <div class="nav-controls">
-      <div class="today-spacer" aria-hidden="true"></div>
+      <button class="mode-btn" id="modeBtn" onclick="toggleSport()" aria-label="Switch between run and bike"><span class="mode-k">Mode</span><span class="mode-v">Run</span></button>
       <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">&#8592;</button>
       <div class="date-display" id="dateDisplayWrap" onclick="openCalendar()" style="cursor:pointer">
         <div class="day-context" id="dayContext"></div>
@@ -1736,11 +1780,11 @@
           <div class="session-type-label" id="sessionTypeLabel">—</div>
         </div>
         <div class="stats-row" id="statsRow">
-          <div class="stat-block" onclick="toggleDistanceUnit()">
+          <div class="stat-block" onclick="statTapKm()">
             <div class="stat-label" id="statKmLabel">Distance</div>
             <div class="stat-value km" id="statKm">—</div>
           </div>
-          <div class="stat-block" onclick="toggleTimePace()">
+          <div class="stat-block" onclick="statTapTime()">
             <div class="stat-label" id="statTimeLabel">Duration</div>
             <div class="stat-value time" id="statTime">—</div>
           </div>
@@ -1757,7 +1801,7 @@
     <div id="progress-bottom">
       <div class="progress-label-bottom" id="progressLabel">Week — of 39 · Day —</div>
       <div class="progress-bar-full"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div id="buildTag">build 24</div>
+      <div id="buildTag">build 27</div>
     </div>
   </div>
 </div>
@@ -2361,60 +2405,70 @@ const weeks = [
       Sun:{ type:'V Easy Run', km:'8km', time:'44–48 min', session:'8k very easy', detail:'8k very easy.\n\nValencia 6 Dec minus 5 weeks (5 full training weeks, then race week).', effort:'easy' },
     }
   },
-  // Week 34 — 26 Oct (CONSOLIDATION · WEEK A · 5 weeks to race)
-  { phase:'Consolidation', weekType:'', weekA_B:'A',
-    km:'80.9–98.2km', time:'7h54m–8h57m',
-    aim:'WEEK A · Thu PLANNED EASY · Last MP long run · 5 weeks to race',
+  // Week 34 — 26 Oct (COACH SHEET · w/e 1 Nov · 92km)
+  { phase:'Peak', weekType:'', weekA_B:'',
+    km:'92km', time:'7h40m–7h55m',
+    aim:'92km · Tue 5×10 min HMP with floats · Thu 3 sets of 8×40 sec 10k effort · Sat 34k: 3×(7k steady + 3k MP)',
     days:{
-      Mon:{ type:'Easy + Strength', km:'9.6–11.4km', time:'55–60 min run + 30–45 min strength', session:'Easy run + Strength', detail:'55–60 min easy + strength.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'13.0–14.5km', time:'~62–67 min', session:'Odds & Evens threshold', detail:'12 WU → Odds & Evens (odd reps threshold / even reps steady) → 10 CD.\n\nOdd: HR 165–178. Even: HR 155–163.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'14.9–19.6km', time:'AM: 62–70 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 62–70 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Easy Run (Planned)', km:'8.3–11.0km', time:'48–58 min', session:'Easy run — PLANNED easy (no quality)', detail:'Intentional full recovery. HR 130–155. Last MP long run is Saturday — protect your legs today.', effort:'easy' },
-      Fri:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run', detail:'25–30 min easy.', effort:'easy' },
-      Sat:{ type:'Long Run + MP Finish', km:'23.0–26.5km', time:'122–132 min (last 28 min at MP)', session:'LAST MP LONG RUN — 28 min Marathon Pace finish', detail:'122–132 min total — last 28 min at Marathon Pace. Final long run with MP finish.\n\nHR 158–165 for MP section. Fuel every 45 min.', effort:'mp', mpFinish:true, fuel:true },
-      Sun:{ type:'Recovery', km:'7.8–9.5km', time:'45–50 min', session:'Recovery run', detail:'45–50 min Z1–Z2 easy.', effort:'easy' },
-    }
-  },
-  // Week 35 — 2 Nov (WEEK B · 4 weeks to race)
-  { phase:'Consolidation', weekType:'', weekA_B:'B',
-    km:'78.5–93.3km', time:'7h40m–8h34m',
-    aim:'WEEK B · Thu 3×15 MP · Last proper long run · 4 weeks to race',
-    days:{
-      Mon:{ type:'Easy + Strength', km:'8.7–10.5km', time:'50–55 min run + 30–45 min strength', session:'Easy run + Strength', detail:'50–55 min easy + strength. Maintain load.', effort:'easy', strength:true },
-      Tue:{ type:'Threshold', km:'12.0–13.0km', time:'~57–60 min', session:'5×5 min threshold', detail:'15 WU → 5×5 / 90 sec rec → 15 CD.\n\nHR 165–178.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'13.7–18.1km', time:'AM: 55–62 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 55–62 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Marathon Pace', km:'14.5–15.5km', time:'~73–77 min', session:'3×15 min at Marathon Pace', detail:'12 WU → 3×15 at MP / 3 min jog rec → 10 CD.\n\nMP: HR 158–165. Final standalone MP session before taper.', effort:'mp' },
-      Fri:{ type:'Recovery', km:'3.8–5.1km', time:'22–27 min', session:'Recovery run', detail:'22–27 min easy.', effort:'easy' },
-      Sat:{ type:'Easy Long', km:'18.8–22.5km', time:'108–118 min', session:'Easy long run — LAST PROPER LONG RUN', detail:'108–118 min easy. Last significant long run. Fuel every 45 min. Absorb it, the taper starts next week.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'7.0–8.6km', time:'40–45 min', session:'Recovery run', detail:'40–45 min Z1–Z2 easy.', effort:'easy' },
-    }
-  },
-  // Week 36 — 9 Nov (TAPER T-3)
-  { phase:'Taper', weekType:'T-3', weekA_B:'',
-    km:'52.9–64.9km', time:'5h02m–5h48m',
-    aim:'T-3 · One proper stimulus (3×5 threshold) · One sharpening touch (strides) · Mon = strength only',
-    days:{
-      Mon:{ type:'Strength', km:null, time:'30–45 min (reduced 50%)', session:'Strength only (taper — 50% reduction)', detail:'Strength only, no run. Load reduced 50%. This is taper — protect the legs.', strength:true, strengthOnly:true },
-      Tue:{ type:'Threshold', km:'10.5–11.5km', time:'~52–55 min', session:'3×5 min threshold', detail:'15 WU → 3×5 / 2 min rec → 15 CD. Taper threshold — one proper stimulus. HR 165–178.', effort:'threshold' },
-      Wed:{ type:'Easy + Strides + PM Double', km:'12.8–17.3km', time:'AM: 50–58 min + strides / PM: 20–30 min', session:'AM easy + strides · PM shakeout', detail:'AM: 50–58 min easy + strides.\nPM: 20–30 min easy shakeout.', effort:'easy', strides:true, pmDouble:true },
-      Thu:{ type:'Easy + Strides', km:'7.8–9.5km', time:'45–50 min', session:'Easy run + 6–8×100m strides', detail:'45–50 min easy + 6–8×100m strides. Sharpening touch for the legs.', effort:'easy', strides:true },
+      Mon:{ type:'Easy + Strength', km:'12km', time:'64–68 min + 30–35 min strength', session:'12k easy + Strength', detail:'12k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'HMP + Floats', km:'~19.5km', time:'88–92 min', session:'5×10 min HMP with 5 min floats at c. 4:35–4:40', detail:'WU → 5×10 min at Half Marathon Pace (4:15/km), with 5 min floats at c. 4:35–4:40/km between → CD.\n\nThe floats are NOT easy jogs: they sit just slower than Marathon Pace, so the main set is 70 min of continuous running.', effort:'hmp',
+        wo:{ steps:[ {t:'rep', n:5, steps:[ {t:'run', s:600, p:'hmp'} ], btw:{t:'rec', s:300, p:[275,280], l:'float'} } ] } },
+      Wed:{ type:'V Easy Run', km:'9km', time:'50–54 min', session:'9k very easy', detail:'9k very easy, 5:30/km or slower.', effort:'easy' },
+      Thu:{ type:'10k Effort Reps', km:'~8.5km', time:'42–46 min', session:'3 sets of 8×40 sec at 10k effort (20 sec rec, 90 sec between sets)', detail:'WU → 3 sets of 8×40 sec at 10k effort, not faster, with 20 sec recovery between reps and 90 sec between sets → CD.\n\n16 min of work in total. Effort caps the pace: controlled, not flat out.', effort:'tenk',
+        wo:{ steps:[ {t:'rep', n:3, steps:[ {t:'rep', n:8, steps:[ {t:'run', s:40, p:'10k', l:'effort, not faster'} ], btw:{t:'rec', s:20} } ], btw:{t:'rec', s:90} } ] } },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'15.7–19.0km', time:'90–100 min (optional: last 10 min at MP)', session:'Easy long run (optional last 10 min at MP)', detail:'90–100 min easy. Optional: last 10 min at Marathon Pace if legs feel good. Fuel if over 45 min.', effort:'easy', fuel:true },
-      Sun:{ type:'Recovery', km:'6.1–7.6km', time:'35–40 min', session:'Recovery run', detail:'35–40 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Long Run: Steady/MP', km:'34km', time:'~2h43m–2h48m', session:'34k: 2k easy then 3×(7k steady + 3k MP)', detail:'2k easy, then 3×(7k steady + 3k at Marathon Pace 4:30–4:35/km), continuous with no recoveries.\n\nThe blocks only add up to 32k, so finish with 2k easy to reach the 34k on the sheet.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true,
+        wo:{ fixed:true, cd:2, steps:[ {t:'run', km:2, p:'easy'}, {t:'rep', n:3, steps:[ {t:'run', km:7, p:'steady'}, {t:'run', km:3, p:'mp'} ] } ] } },
+      Sun:{ type:'Easy Run', km:'9km', time:'48–52 min', session:'9k easy', detail:'9k easy.', effort:'easy' },
     }
   },
-  // Week 37 — 16 Nov (TAPER T-2)
-  { phase:'Taper', weekType:'T-2', weekA_B:'',
-    km:'36.5–46.4km', time:'3h50m–4h41m',
-    aim:'T-2 · Protective · Feel springy not trained · 2×5 threshold + strides · Mon = strength only',
+  // Week 35 — 2 Nov (COACH SHEET · w/e 8 Nov · 79km lighter, into hard long run)
+  { phase:'Peak', weekType:'Lighter Week', weekA_B:'',
+    km:'79km', time:'6h25m–6h35m',
+    aim:'79km · lighter into a hard long run · Tue 7×5 min 10k pace · Sat 33k: 4×(1k steady + 7k MP)',
     days:{
-      Mon:{ type:'Strength', km:null, time:'30–45 min (reduced 50%)', session:'Strength only (taper — 50% reduction)', detail:'Strength only, no run. Load reduced 50%. Protect the legs. You are ready.', strength:true, strengthOnly:true },
-      Tue:{ type:'Threshold + Strides', km:'9.0–10.0km', time:'~45–48 min', session:'2×5 min threshold + 4–6×100m strides', detail:'15 WU → 2×5 min threshold / 2 min rec → 10 CD + strides at the end.\n\nLight touch. Feel sharp not tired.', effort:'threshold', strides:true },
-      Wed:{ type:'Easy + Strides', km:'6.7–8.8km', time:'35–43 min + strides', session:'Easy run + strides', detail:'35–43 min easy + strides (~0.6km).', effort:'easy', strides:true },
-      Thu:{ type:'Easy + Strides', km:'6.1–8.6km', time:'35–45 min', session:'Easy run + 6×100m strides', detail:'35–45 min easy + 6×100m strides. Last Thursday quality stimulus before race day.', effort:'easy', strides:true },
+      Mon:{ type:'Easy + Strength', km:'9km', time:'48–52 min + 30–35 min strength', session:'9k easy + Strength', detail:'9k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'10k Pace Reps', km:'10km', time:'43–46 min', session:'7×5 min at 10k pace (60 sec)', detail:'Short WU → 7×5 min at 10k pace (4:00–4:05/km), 60 sec recovery.\n\nThe main set is about 9.6k of the 10k, so the warmup is only about 0.4k and there is no cooldown. Ease into the first rep.', effort:'tenk',
+        wo:{ noCd:true, steps:[ {t:'rep', n:7, steps:[ {t:'run', s:300, p:'10k'} ], btw:{t:'rec', s:60} } ] } },
+      Wed:{ type:'Easy Run', km:'10km', time:'53–57 min', session:'10k easy', detail:'10k easy.', effort:'easy' },
+      Thu:{ type:'Marathon Pace Run', km:'10km', time:'45–47 min', session:'1k easy then 9k c. 4:30', detail:'1k easy, then 9k at c. 4:30/km, which is Marathon Pace on the current numbers.', effort:'mp',
+        wo:{ fixed:true, steps:[ {t:'run', km:1, p:'easy'}, {t:'run', km:9, p:[270,270]} ] } },
       Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
-      Sat:{ type:'Easy Long', km:'10.4–13.3km', time:'60–70 min', session:'Easy long run', detail:'60–70 min easy. Comfortable aerobic run — no pressure.', effort:'easy' },
-      Sun:{ type:'Recovery', km:'4.3–5.7km', time:'25–30 min', session:'Recovery run', detail:'25–30 min Z1–Z2 easy.', effort:'easy' },
+      Sat:{ type:'Hard Long Run', km:'33km', time:'~2h30m–2h35m', session:'33k: 1k easy then 4×(1k c. 4:45 steady + 7k target MP)', detail:'1k easy, then 4×(1k at c. 4:45/km steady + 7k at target Marathon Pace 4:30–4:35/km), continuous.\n\n28k at MP in total: the hardest long run of the block. The 1k steady sections are a breather, not a stop.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true,
+        wo:{ fixed:true, steps:[ {t:'run', km:1, p:'easy'}, {t:'rep', n:4, steps:[ {t:'run', km:1, p:[285,285], l:'steady'}, {t:'run', km:7, p:'mp'} ] } ] } },
+      Sun:{ type:'Easy Jog', km:'7km', time:'40–44 min', session:'7k jog', detail:'7k easy jog.', effort:'easy' },
+    }
+  },
+  // Week 36 — 9 Nov (COACH SHEET · w/e 15 Nov · 99km biggest · long run Sunday)
+  { phase:'Peak', weekType:'Biggest Week', weekA_B:'',
+    km:'99km', time:'8h15m–8h30m',
+    aim:'99km · biggest week · Thu HMP/10k set · Saturday rest, long run Sunday: 34k progressive thirds',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'10km', time:'53–57 min + 30–35 min strength', session:'10k easy + Strength', detail:'10k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'12km', time:'64–68 min', session:'12k easy', detail:'12k easy, 5:20/km or slower.', effort:'easy' },
+      Wed:{ type:'Easy Run', km:'13km', time:'69–74 min', session:'13k easy', detail:'13k easy, 5:20/km or slower.', effort:'easy' },
+      Thu:{ type:'HMP/10k Intervals', km:'18km', time:'80–84 min', session:'4×2.5k HMP (70 sec) then 4×1k 10k pace (60 sec)', detail:'WU → 4×2.5k at Half Marathon Pace (4:15/km), 70 sec recovery → 4×1k at 10k pace (4:00–4:05/km), 60 sec recovery → CD.\n\nTake a 70 sec recovery between the two sets.', effort:'hmp',
+        wo:{ steps:[ {t:'rep', n:4, steps:[ {t:'run', km:2.5, p:'hmp'} ], btw:{t:'rec', s:70} }, {t:'rec', s:70, l:'between sets'}, {t:'rep', n:4, steps:[ {t:'run', km:1, p:'10k'} ], btw:{t:'rec', s:60} } ] } },
+      Fri:{ type:'V Easy Run', km:'12km', time:'66–72 min', session:'12k very easy', detail:'12k very easy, 5:30/km or slower. The rest day moves to Saturday this week.', effort:'easy' },
+      Sat:{ type:'Rest', km:null, time:null, session:'Rest day: long run moves to Sunday this week', rest:true },
+      Sun:{ type:'Long Run: Progressive', km:'34km', time:'~2h37m–2h41m', session:'34k: 1k easy then 33k in progressive thirds', detail:'1k easy, then 33k in three 11k thirds: c. 4:55/km → c. 4:40/km → c. 4:20–4:25/km.\n\nThe long run is on Sunday this week, with Saturday as the rest day. The last third is quicker than Marathon Pace, so hold back early.\n\nFuel from the start, gel every 45 min.', effort:'progression', fuel:true,
+        wo:{ fixed:true, steps:[ {t:'run', km:1, p:'easy'}, {t:'run', km:11, p:[295,295]}, {t:'run', km:11, p:[280,280]}, {t:'run', km:11, p:[260,265]} ] } },
+    }
+  },
+  // Week 37 — 16 Nov (COACH SHEET · w/e 22 Nov · 90km)
+  { phase:'Peak', weekType:'', weekA_B:'',
+    km:'90km', time:'7h25m–7h40m',
+    aim:'90km · Wed 20k hard in alternating 2k blocks · Sat 27k: 3×(6k steady + 3k MP) · Valencia minus 2 weeks',
+    days:{
+      Mon:{ type:'Easy + Strength', km:'9km', time:'48–52 min + 30–35 min strength', session:'9k easy + Strength', detail:'9k easy, 5:20/km or slower. Strength session after the run.', effort:'easy', strength:true },
+      Tue:{ type:'Easy Run', km:'12km', time:'64–68 min', session:'12k easy', detail:'12k easy, 5:20/km or slower.', effort:'easy' },
+      Wed:{ type:'Alternating 2k Blocks: Hard', km:'22km', time:'96–100 min', session:'20k hard as alternating 2k blocks c. 4:35 / 4:05–4:08', detail:'WU → 20k continuous as alternating 2k blocks: c. 4:35/km, then c. 4:05–4:08/km, five of each.\n\nThe 4:35 blocks sit just slower than Marathon Pace; the 4:05–4:08 blocks are just off 10k pace. No cooldown is listed, so the session finishes at the end of the last block.', effort:'tenk',
+        wo:{ noCd:true, steps:[ {t:'rep', n:5, steps:[ {t:'run', km:2, p:[275,275]}, {t:'run', km:2, p:[245,248]} ] } ] } },
+      Thu:{ type:'Easy Run', km:'11km', time:'58–63 min', session:'11k easy', detail:'11k easy, 5:20/km or slower.', effort:'easy' },
+      Fri:{ type:'Rest', km:null, time:null, session:'Rest day', rest:true },
+      Sat:{ type:'Long Run: Steady/MP', km:'27km', time:'~2h07m–2h11m', session:'27k as 3×(6k steady + 3k MP)', detail:'3×(6k steady + 3k at Marathon Pace 4:30–4:35/km), continuous.\n\nNo easy start is listed, so ease into the first steady block.\n\nFuel from the start, gel every 45 min.', effort:'mp', fuel:true,
+        wo:{ fixed:true, steps:[ {t:'rep', n:3, steps:[ {t:'run', km:6, p:'steady'}, {t:'run', km:3, p:'mp'} ] } ] } },
+      Sun:{ type:'Easy + Strides', km:'9km', time:'48–52 min', session:'9k easy incl 8×20 sec strides at c. 10k effort', detail:'9k easy with 8×20 sec strides at around 10k effort.\n\nValencia 6 Dec minus 2 weeks.', effort:'easy', strides:true },
     }
   },
   // Week 38 — 23 Nov (TAPER T-1)
@@ -2609,6 +2663,17 @@ function renderStats(dayData) {
     return;
   }
   statsRow.style.display = 'grid';
+
+  if (isBike()) {
+    const bp = bikePlan(dayData);
+    if (bp) {
+      kmLabel.textContent = 'Ride time';
+      setStat(statKm, fmtRide(bp.total));
+      timeLabel.textContent = 'Main HR';
+      setStat(statTime, HR_ZONES[bp.mainZone].join('–'));
+      return;
+    }
+  }
   kmLabel.textContent = `Distance · ${distUnit}`;
 
   if (dayData.raceDay) {
@@ -2649,6 +2714,9 @@ function toggleDistanceUnit() {
   if (currentDayData) renderStats(currentDayData);
   if (document.getElementById('paceOverlay').classList.contains('open')) renderPaceCard();
 }
+
+function statTapKm() { if (!isBike()) toggleDistanceUnit(); }
+function statTapTime() { if (!isBike()) toggleTimePace(); }
 
 function toggleTimePace() {
   showPace = !showPace;
@@ -2767,7 +2835,7 @@ function renderSession(planDay) {
 
   // Session type label
   const stl = document.getElementById('sessionTypeLabel');
-  stl.textContent = dayData.type;
+  stl.textContent = (isBike() && bikePlan(dayData)) ? bikeTypeName(dayData) : dayData.type;
 
   // Colour session type
   let typeColour = 'var(--text)';
@@ -2834,6 +2902,9 @@ function renderSession(planDay) {
     return;
   }
 
+  if (isBike() && bikePlan(dayData)) {
+    html += bikeSessionHTML(dayData);
+  } else {
   // Session title
   html += `<span class="label">Session</span>`;
   html += `<div class="session-text"><p>${dayData.session}</p></div>`;
@@ -2849,6 +2920,17 @@ function renderSession(planDay) {
       <div class="cue-head"><span class="label" style="margin:0">What to do</span><span class="cue-chevron">&#8250;</span></div>
       <div class="cue-body"><div class="cue-inner"><div class="session-text"><p>${dayData.detail.replace(/\n/g,'<br>')}</p></div></div></div>
     </button>`;
+  }
+
+  // Distance plan: warmup + main + cooldown always equals the day's target
+  const dplan = woPlan(dayData);
+  if (dplan) {
+    let items = '';
+    if (dplan.wu > 0 && !dplan.fixed) items += `<span class="dp-item">Warmup <b>${dplan.wu.toFixed(1)} km</b></span>`;
+    items += `<span class="dp-item">${dplan.fixed ? 'Session' : 'Main set'} <b>≈${round1(dplan.main)} km</b></span>`;
+    if (dplan.cd > 0) items += `<span class="dp-item">${dplan.fixed ? 'Finish' : 'Cooldown'} <b>${dplan.cd.toFixed(1)} km</b></span>`;
+    items += `<span class="dp-item dp-total">Total <b>${round1(dplan.total)} km</b></span>`;
+    html += `<span class="label">Distance plan</span><div class="dist-plan">${items}</div>`;
   }
 
   // Strides note
@@ -2874,9 +2956,11 @@ function renderSession(planDay) {
     html += cue('fuel','🍬','Fuelling',"Take a gel every 45 min. Practise what you plan to use on race day. Aim for ~60g carbs/hour on runs over 90 min.");
   }
 
+  }
+
   // Strength block for combined Monday sessions
   if (hasStrength && hasRun) {
-    html += `<span class="label">Strength Session (after run)</span>`;
+    html += `<span class="label">Strength Session (after ${isBike() ? 'ride' : 'run'})</span>`;
     html += `<button class="strength-section strength-clickable" onclick="openExerciseModal('monday')">`;
     html += `<div class="strength-header">💪 Strength — 30–35 min <span class="strength-tap">tap for exercises &#8250;</span></div>`;
     html += `<div class="session-text" style="font-size:11px;color:var(--text2)">4 supersets · 3 sets of 10–12 · break between each set</div>`;
@@ -2885,7 +2969,7 @@ function renderSession(planDay) {
 
   // Core block, Wednesday only
   if (dayKey === 'Wed' && !dayData.rest && !dayData.holiday) {
-    html += `<span class="label">Core Session (after run)</span>`;
+    html += `<span class="label">Core Session (after ${isBike() ? 'ride' : 'run'})</span>`;
     html += `<button class="strength-section strength-clickable" onclick="openExerciseModal('core')">`;
     html += `<div class="strength-header">💪 Core <span class="strength-tap">tap for exercises &#8250;</span></div>`;
     html += `<div class="session-text" style="font-size:11px;color:var(--text2)">2 exercises · 3 sets · break between each set</div>`;
@@ -2996,7 +3080,7 @@ function renderTopStrip(planDay) {
   const vk = document.getElementById('volKm');
   vk.textContent = week.km;
   vk.classList.toggle('sv-small', week.km.length > 7);
-  document.getElementById('volTime').textContent = week.time;
+  document.getElementById('volTime').textContent = isBike() ? `≈${fmtHoursM(bikeWeekSec(week))}` : week.time;
 }
 
 // ═══════════════════════════════════════════════
@@ -3420,7 +3504,7 @@ function calGridHTML(calYear, calMonth) {
     else if (isToday) cls += ' cal-today';
 
     // Day number takes the colour of its session's pace zone; distance sits under it
-    let col = '', km = '';
+    let col = '', km = '', rideTxt = '';
     if (inRange) {
       const pd = getPlanDay(date);
       const dd = pd && pd.week.days[pd.dayKey];
@@ -3431,21 +3515,24 @@ function calGridHTML(calYear, calMonth) {
         else if (dd.effort) col = effortColour(dd.effort);
         if (dd.km) {
           // '11km' -> '11', '~12km' -> '12', '97.3–114.9km' -> '97–115'
-          km = String(dd.km).replace(/km/gi, '').replace(/[~\s]/g, '')
-                 .replace(/(\d+)\.(\d+)/g, (m, a, bb) => String(Math.round(Number(`${a}.${bb}`))));
+          km = String(dd.km).replace(/km/gi, '').replace(/[~\s]/g, '');
+          if (km.includes('–')) km = km.replace(/(\d+)\.(\d+)/g, (m, a, bb) => String(Math.round(Number(`${a}.${bb}`))));
         }
+        if (isBike()) { const bp = bikePlan(dd); if (bp) rideTxt = fmtRideShort(bp.total); }
       }
     }
 
     // Tier the label size so 'km' always fits, even on ranges
     let kmCls = 'cd-km';
-    if (km.length > 5) kmCls += ' cd-km-xs';
-    else if (km.length > 2) kmCls += ' cd-km-long';
+    const shown = rideTxt || km;
+    if (shown.length > 5) kmCls += ' cd-km-xs';
+    else if (shown.length > 2) kmCls += ' cd-km-long';
+    if (rideTxt) kmCls += ' cd-ride';
 
     const onclick = inRange ? `calSelectDay(${calYear},${calMonth},${d})` : '';
     cells.push(`<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}${col ? ` style="color:${col}"` : ''}>
       <span class="cd-num">${d}</span>
-      <span class="${kmCls}">${km ? km + '<i>km</i>' : (inRange ? '&middot;' : '')}</span>
+      <span class="${kmCls}">${rideTxt ? rideTxt : (km ? km + '<i>km</i>' : (inRange ? '&middot;' : ''))}</span>
     </div>`);
   }
 
@@ -3463,7 +3550,9 @@ function calGridHTML(calYear, calMonth) {
     if (pd) {
       // Compact forms: '97.3–114.9km' -> '97–115km', '7h25m–7h55m' -> '7:25–7:55'
       const cKm = String(pd.week.km).replace(/(\d+)\.(\d+)/g, (m, a, b) => String(Math.round(Number(`${a}.${b}`))));
-      const cTime = String(pd.week.time).replace(/(\d+)h(\d+)m/g, '$1:$2').replace(/~/g, '');
+      const cTime = isBike()
+        ? '≈' + fmtHoursM(bikeWeekSec(pd.week)).replace(/(\d+)h(\d+)m/, '$1:$2')
+        : String(pd.week.time).replace(/(\d+)h(\d+)m/g, '$1:$2').replace(/~/g, '');
       html += `<div class="cal-week" onclick="calOpenWeek(${pd.weekIdx})">
         <span class="cw-km">${cKm}</span>
         <span class="cw-time">${cTime}</span>
@@ -3759,15 +3848,342 @@ function fmtKm(sec) {
   return `${m}:${String(s).padStart(2,'0')}`;
 }
 
-function buildWeekExport(idx) {
+// Structured workouts: every quality session is sized so warmup + main set
+// + cooldown equals the day's distance target. Warmup and cooldown are
+// distance steps, never open-ended time, so the watch cannot overshoot.
+const WO_NAMES = { hmp:'HMP', '10k':'10k pace', '5k':'5k pace', '3k':'3k pace', mp:'MP', steady:'steady', easy:'easy', at:'AT' };
+const WO_JOG = 390; // v easy jog/walk recoveries, sec/km (estimate)
+
+function woPaceSec(p) {
+  if (!p || p === 'jog') return WO_JOG;
+  if (Array.isArray(p)) return (p[0] + p[1]) / 2;
+  const z = PACES.find(x => x.id === p);
+  return z ? (z.lo + z.hi) / 2 : WO_JOG;
+}
+
+function woPaceText(p) {
+  if (!p || p === 'jog') return 'v easy jog or walk';
+  if (Array.isArray(p)) return `${p[0] === p[1] ? fmtKm(p[0]) : fmtKm(p[0]) + '–' + fmtKm(p[1])}/km`;
+  const z = PACES.find(x => x.id === p);
+  if (!z) return String(p);
+  const v = z.open ? `${fmtKm(z.lo)}/km or slower` : `${z.lo === z.hi ? fmtKm(z.lo) : fmtKm(z.lo) + '–' + fmtKm(z.hi)}/km`;
+  return `${WO_NAMES[p] || decodeEntities(z.zone)} (${v})`;
+}
+
+function woDist(s) {
+  if (s.t === 'rep') {
+    const one = s.steps.reduce((a, x) => a + woDist(x), 0);
+    return s.n * one + (s.btw ? (s.n - 1) * woDist(s.btw) : 0);
+  }
+  if (s.km != null) return s.km;
+  return s.s / woPaceSec(s.p);
+}
+
+function woDur(s) {
+  if (s.km != null) return `${s.km} km`;
+  if (s.s % 60 === 0) return `${s.s / 60} min`;
+  if (s.s > 60) return `${Math.floor(s.s / 60)} min ${s.s % 60} sec`;
+  return `${s.s} sec`;
+}
+
+function woInline(s) {
+  if (s.t === 'rec') return `${woDur(s)} ${s.p ? '@ ' + woPaceText(s.p) : 'v easy jog or walk'}${s.l ? ' · ' + s.l : ''}`;
+  return `${woDur(s)} @ ${woPaceText(s.p)}${s.l ? ' · ' + s.l : ''}`;
+}
+
+function woLines(steps, ind) {
+  const out = [];
+  steps.forEach(s => {
+    if (s.t === 'rep') {
+      if (s.steps.length === 1 && s.steps[0].t !== 'rep') {
+        out.push(`${ind}${s.n} × ${woInline(s.steps[0])}`);
+      } else {
+        out.push(`${ind}${s.n} ×`);
+        out.push(...woLines(s.steps, ind + '    '));
+      }
+      if (s.btw) out.push(`${ind}    with ${woInline(s.btw)} between each (${s.n - 1}×)`);
+    } else {
+      out.push(`${ind}${woInline(s)}`);
+    }
+  });
+  return out;
+}
+
+function round1(x) { return Math.round(x * 10) / 10; }
+
+function woTarget(d) {
+  const m = String(d.km || '').match(/\d+(?:\.\d+)?/);
+  return m ? Number(m[0]) : null;
+}
+
+function woPlan(d) {
+  const w = d.wo;
+  if (!w) return null;
+  const target = woTarget(d);
+  const main = w.steps.reduce((a, s) => a + woDist(s), 0);
+  let wu, cd;
+  if (w.fixed) {
+    wu = w.wu || 0; cd = w.cd || 0;
+  } else {
+    const left = Math.max(0, (target || main) - main);
+    if (w.noCd) { wu = round1(left); cd = 0; }
+    else { wu = round1(left * 0.6); cd = round1(Math.max(0, left - wu)); }
+  }
+  return { target, main, wu, cd, total: main + wu + cd, fixed: !!w.fixed, noCd: !!w.noCd };
+}
+
+// ═══════════════════════════════════════════════
+// BIKE MODE: cycling equivalents at the same heart rate
+// Easy and steady time scales by BIKE_FACTOR (cycling is lower load at the
+// same HR); MP and faster keep their exact durations so intervals keep
+// their shape. HR targets are identical to the run.
+// ═══════════════════════════════════════════════
+const BIKE_FACTOR = 1.25;
+const EASY_SEC_KM = 320;
+const HR_ZONES = {
+  easy:[130,155], steady:[148,158], mp:[158,165], hmp:[165,172],
+  at:[165,178], '10k':[170,178], '5k':[178,196]
+};
+const HR_ZONE_NAME = { easy:'easy', steady:'steady', mp:'MP', hmp:'HMP', at:'threshold', '10k':'10k', '5k':'5k/VO2max' };
+const EFFORT_HR_ZONE = { easy:'easy', steady:'steady', mp:'mp', hmp:'hmp', tenk:'10k', threshold:'at', vo2max:'5k', progression:'steady' };
+
+let sportMode = 'run';
+try { sportMode = localStorage.getItem('sportMode') === 'bike' ? 'bike' : 'run'; } catch (e) {}
+function isBike() { return sportMode === 'bike'; }
+
+function toggleSport() {
+  sportMode = isBike() ? 'run' : 'bike';
+  try { localStorage.setItem('sportMode', sportMode); } catch (e) {}
+  applySportMode();
+  render();
+}
+
+function applySportMode() {
+  document.body.classList.toggle('bike-mode', isBike());
+  const b = document.getElementById('modeBtn');
+  if (b) {
+    b.innerHTML = `<span class="mode-k">Mode</span><span class="mode-v">${isBike() ? 'Bike' : 'Run'}</span>`;
+    b.setAttribute('aria-pressed', isBike() ? 'true' : 'false');
+  }
+  const vl = document.querySelectorAll('#volume-row .vol-label');
+  if (vl.length === 2) {
+    vl[0].textContent = isBike() ? 'Run Equivalent' : 'Weekly Volume';
+    vl[1].textContent = isBike() ? 'Ride Time' : 'Hours';
+  }
+  const et = document.querySelector('#exportModal .sheet-title');
+  if (et) et.textContent = isBike() ? 'Bike Export' : 'Week Export';
+  const ef = document.querySelector('#exportModal .sheet-footer');
+  if (ef) ef.textContent = isBike()
+    ? 'Bike sessions only, no runs. Tap Copy (or screenshot), paste into Claude, and ask it to schedule the week on your watch.'
+    : 'Quality sessions only. Tap Copy (or screenshot), paste into Claude, and ask it to schedule the week on your watch.';
+}
+
+function hrZoneOfPace(p) {
+  if (!p) return 'easy';
+  if (typeof p === 'string') return ({ easy:'easy', steady:'steady', mp:'mp', hmp:'hmp', at:'at', '10k':'10k', '5k':'5k', '3k':'5k', vvo2:'5k' })[p] || 'easy';
+  const s = (p[0] + p[1]) / 2;
+  if (s < 236) return '5k';
+  if (s < 249) return '10k';
+  if (s < 257.5) return 'hmp';
+  if (s < 266) return 'at';
+  if (s < 282.5) return 'mp';
+  if (s < 306) return 'steady';
+  return 'easy';
+}
+
+function bikeSec(runSec, zone) {
+  const scaled = (zone === 'easy' || zone === 'steady') ? runSec * BIKE_FACTOR : runSec;
+  return scaled >= 120 ? Math.round(scaled / 60) * 60 : Math.round(scaled);
+}
+
+function bikeStep(s) {
+  if (s.t === 'rep') return { t:'rep', n:s.n, steps:s.steps.map(bikeStep), btw: s.btw ? bikeStep(s.btw) : null };
+  if (s.t === 'rec' && !s.p) return { t:'rec', sec:s.s, label:s.l };
+  const zone = hrZoneOfPace(s.p);
+  const runSec = s.s != null ? s.s : s.km * woPaceSec(s.p);
+  return { t:'ride', sec: bikeSec(runSec, zone), zone, label: s.l };
+}
+
+function bikeStepSec(s) {
+  if (s.t === 'rep') return s.n * s.steps.reduce((a, x) => a + bikeStepSec(x), 0) + (s.btw ? (s.n - 1) * bikeStepSec(s.btw) : 0);
+  return s.sec;
+}
+
+function bikeRunMinutes(d) {
+  const t = String(d.time || '');
+  let m = t.match(/(\d+)h(\d+)m(?:\s*[–-]\s*(\d+)h(\d+)m)?/);
+  if (m) { const a = +m[1] * 60 + +m[2]; const b = m[3] ? +m[3] * 60 + +m[4] : a; return (a + b) / 2; }
+  m = t.match(/(\d+)(?:\s*[–-]\s*(\d+))?\s*min/);
+  if (m) { const a = +m[1]; const b = m[2] ? +m[2] : a; return (a + b) / 2; }
+  return null;
+}
+
+// null = no bike version (rest, holiday, strength only, race)
+function bikePlan(d) {
+  if (!d || d.rest || d.holiday || d.strengthOnly || d.raceDay || d.race) return null;
+  const mainZone = EFFORT_HR_ZONE[d.effort] || 'easy';
+  if (d.wo) {
+    const rp = woPlan(d);
+    const wu = rp.wu > 0 ? Math.round(rp.wu * EASY_SEC_KM * BIKE_FACTOR / 60) * 60 : 0;
+    const cd = rp.cd > 0 ? Math.round(rp.cd * EASY_SEC_KM * BIKE_FACTOR / 60) * 60 : 0;
+    const steps = d.wo.steps.map(bikeStep);
+    const main = steps.reduce((a, s) => a + bikeStepSec(s), 0);
+    return { steps, wu, cd, main, total: wu + main + cd, fixed: rp.fixed, mainZone, runKm: rp.target };
+  }
+  const mins = bikeRunMinutes(d);
+  if (!mins) return null;
+  if (d.effort && d.effort !== 'easy') {
+    const sec = Math.round(mins) * 60;
+    return { steps: [], wu: 0, cd: 0, main: sec, total: sec, unstructured: true, mainZone, runKm: woTarget(d) };
+  }
+  const sec = Math.round(mins * BIKE_FACTOR / 5) * 5 * 60;
+  return { steps: [{ t:'ride', sec, zone:'easy' }], wu: 0, cd: 0, main: sec, total: sec, fixed: true, easy: true, mainZone: 'easy', runKm: woTarget(d), spinups: !!d.strides };
+}
+
+function fmtRide(sec) {
+  if (sec < 60) return `${sec} sec`;
+  if (sec % 60 !== 0 && sec < 600) return `${Math.floor(sec / 60)} min ${sec % 60} sec`;
+  const m = Math.round(sec / 60);
+  if (m < 60) return `${m} min`;
+  return `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`;
+}
+
+function fmtRideShort(sec) {
+  const m = Math.round(sec / 60);
+  return m < 60 ? `${m}m` : `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`;
+}
+
+function fmtHoursM(sec) {
+  const m = Math.round(sec / 60);
+  return `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}m`;
+}
+
+function hrText(zone) { const z = HR_ZONES[zone]; return `HR ${z[0]}–${z[1]}`; }
+
+function bikeStepText(s) {
+  if (s.t === 'rec') return `${fmtRide(s.sec)} easy spin, no target${s.label ? ' · ' + s.label : ''}`;
+  const name = s.zone === 'easy' ? 'easy spin' : `${HR_ZONE_NAME[s.zone]} effort`;
+  const tgt = (s.sec < 120 && s.zone !== 'easy') ? 'by feel, too short for HR to respond' : hrText(s.zone);
+  return `${fmtRide(s.sec)} ${name} · ${tgt}${s.label ? ' · ' + s.label : ''}`;
+}
+
+function bikeLines(steps, ind) {
+  const out = [];
+  steps.forEach(s => {
+    if (s.t === 'rep') {
+      if (s.steps.length === 1 && s.steps[0].t !== 'rep') out.push(`${ind}${s.n} × ${bikeStepText(s.steps[0])}`);
+      else { out.push(`${ind}${s.n} ×`); out.push(...bikeLines(s.steps, ind + '    ')); }
+      if (s.btw) out.push(`${ind}    with ${bikeStepText(s.btw)} between each (${s.n - 1}×)`);
+    } else out.push(`${ind}${bikeStepText(s)}`);
+  });
+  return out;
+}
+
+function bikeWeekSec(week) {
+  return Object.values(week.days).reduce((a, d) => { const p = bikePlan(d); return a + (p ? p.total : 0); }, 0);
+}
+
+function bikeTypeName(d) {
+  if (d.effort === 'easy' && !d.wo) {
+    let n = 'Easy Ride';
+    if (d.strides) n += ' + Spin-ups';
+    if (d.strength) n += ' + Strength';
+    return n;
+  }
+  return String(d.type).replace(/Long Run/g, 'Long Ride').replace(/\bRun\b/g, 'Ride');
+}
+
+function bikeSessionHTML(d) {
+  const bp = bikePlan(d);
+  let html = `<span class="label">Bike session</span>`;
+  html += `<div class="session-text"><p>Ride ≈ ${fmtRide(bp.total)} at the same heart rate as the run${d.km ? ` (replaces ${d.km})` : ''}.</p></div>`;
+  if (bp.unstructured) {
+    html += `<div class="session-text"><p>Ride the run session below by time, at the same HR targets.</p></div>`;
+  } else {
+    const lines = [];
+    if (bp.wu > 0) lines.push(`Warmup: ${fmtRide(bp.wu)} easy spin · ${hrText('easy')}`);
+    lines.push(...bikeLines(bp.steps, ''));
+    if (bp.cd > 0) lines.push(`${bp.fixed ? 'Finish' : 'Cooldown'}: ${fmtRide(bp.cd)} easy spin · ${hrText('easy')}`);
+    html += `<div class="bike-plan">${lines.map(l => {
+      const lead = l.match(/^ */)[0].length;
+      return `<div class="bk-line" style="padding-left:${lead * 3.5}px">${l.trim()}</div>`;
+    }).join('')}</div>`;
+    if (!bp.easy) {
+      let items = '';
+      if (bp.wu > 0) items += `<span class="dp-item">Warmup <b>${fmtRide(bp.wu)}</b></span>`;
+      items += `<span class="dp-item">${bp.fixed ? 'Ride' : 'Main set'} <b>${fmtRide(bp.main)}</b></span>`;
+      if (bp.cd > 0) items += `<span class="dp-item">${bp.fixed ? 'Finish' : 'Cooldown'} <b>${fmtRide(bp.cd)}</b></span>`;
+      items += `<span class="dp-item dp-total">Total <b>${fmtRide(bp.total)}</b></span>`;
+      html += `<span class="label">Ride plan</span><div class="dist-plan">${items}</div>`;
+    }
+  }
+  html += `<div class="bike-note">Converted from the run: easy and steady time ×${BIKE_FACTOR}, MP and faster kept the same length, same HR targets.</div>`;
+  if (d.strides) html += cue('effort','⚡','Spin-ups',"8×20 sec at high cadence (110+ rpm) in a light gear, during the last 15 min. Smooth and fast legs, not a sprint.");
+  const z = HR_ZONES[bp.mainZone];
+  html += cue('hr','💓',`HR target · ${z[0]}–${z[1]} bpm`,"Same heart rate as the run session. On the bike HR usually sits 5–10 bpm lower for the same effort, so the upper zones will feel harder than running. If you cannot reach them, ride by effort.");
+  if (d.fuel) html += cue('fuel','🍬','Fuelling',"Take a gel every 45 min on rides over 90 min. Aim for ~60g carbs/hour.");
+  html += `<button class="wtd" onclick="toggleCue(this)">
+      <div class="cue-head"><span class="label" style="margin:0">Run version (coach's session)</span><span class="cue-chevron">&#8250;</span></div>
+      <div class="cue-body"><div class="cue-inner"><div class="session-text"><p>${d.session || ''}${d.detail ? '<br><br>' + d.detail.replace(/\n/g,'<br>') : ''}</p></div></div></div>
+    </button>`;
+  return html;
+}
+
+function buildBikeExport(idx) {
   const week = weeks[idx];
   const start = new Date(PLAN_START);
   start.setDate(start.getDate() + idx * 7);
   const L = [];
-  L.push(`NAT — WEEK ${idx + 1} OF 39 · w/c ${start.getDate()} ${MONTHS[start.getMonth()]} ${start.getFullYear()}`);
+  L.push(`NAT · BIKE · WEEK ${idx + 1} OF 39 · w/c ${start.getDate()} ${MONTHS[start.getMonth()]} ${start.getFullYear()}`);
+  L.push(`Run equivalent ${week.km} · ride ≈ ${fmtHoursM(bikeWeekSec(week))} · ${week.phase}`);
+  L.push('');
+  L.push('For Claude: I am cross-training on the bike this week. Build a Garmin structured CYCLING workout (sport: cycling) for each session below, exactly as written, and push it to my watch on its date via athletedata. These replace this week\'s runs: do not push any running workouts.');
+  L.push('RULES: Every step is TIME-based with a HEART RATE target in bpm (custom HR range, not pace or power). Steps marked "by feel" have no target. Recoveries are easy spinning with no target. Do not lengthen warmup or cooldown. Easy rides are listed for reference only and need nothing on the watch.');
+  L.push('');
+  let count = 0;
+  const easy = [];
+  DAY_COLS.forEach((k, i) => {
+    const d = week.days[k];
+    const bp = bikePlan(d);
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
+    const label = `${k.toUpperCase()} ${date.getDate()} ${MONTHS[date.getMonth()].slice(0,3)}`;
+    if (!bp) { if (d && (d.raceDay || d.race)) easy.push(`${label}: ${d.type}, race day, run as planned`); return; }
+    if (bp.easy) { easy.push(`${label}: ${fmtRide(bp.total)} easy spin, ${hrText('easy')}${bp.spinups ? ', with 8×20 sec spin-ups' : ''}`); return; }
+    count++;
+    L.push(`${label} · BIKE · ${bikeTypeName(d)} · ≈ ${fmtRide(bp.total)}`);
+    L.push(`  Replaces the run: ${d.session}${d.km ? ' (' + d.km + ')' : ''}`);
+    if (bp.unstructured) {
+      L.push(`  Ride the run structure by time, ≈ ${fmtRide(bp.total)} total, at the same HR targets (${hrText(bp.mainZone)} for the efforts).`);
+      if (d.detail) d.detail.split(/\n+/).forEach(p => { const t = p.trim(); if (t) L.push(`  ${t}`); });
+    } else {
+      if (bp.wu > 0) L.push(`  Warmup: ${fmtRide(bp.wu)} easy spin · ${hrText('easy')}`);
+      L.push(bp.fixed ? '  Ride it as:' : '  Main set:');
+      L.push(...bikeLines(bp.steps, '    '));
+      if (bp.cd > 0) L.push(`  ${bp.fixed ? 'Finish' : 'Cooldown'}: ${fmtRide(bp.cd)} easy spin · ${hrText('easy')}`);
+      else if (!bp.fixed) L.push('  Cooldown: none, the session ends after the main set');
+      L.push(`  Total ≈ ${fmtRide(bp.total)}. Do not lengthen warmup or cooldown.`);
+    }
+    if (d.fuel) L.push('  Fuel: gel every 45 min');
+    L.push('');
+  });
+  if (count === 0) { L.push('No quality sessions this week: nothing to schedule.'); L.push(''); }
+  if (easy.length) { L.push('EASY RIDES (reference only, nothing to push):'); easy.forEach(e => L.push(`  ${e}`)); L.push(''); }
+  L.push('HR ZONES (bpm): ' + Object.keys(HR_ZONES).map(z => `${HR_ZONE_NAME[z]} ${HR_ZONES[z][0]}–${HR_ZONES[z][1]}`).join(' · '));
+  return L.join('\n');
+}
+
+function buildWeekExport(idx) {
+  if (isBike()) return buildBikeExport(idx);
+  const week = weeks[idx];
+  const start = new Date(PLAN_START);
+  start.setDate(start.getDate() + idx * 7);
+  const L = [];
+  L.push(`NAT · WEEK ${idx + 1} OF 39 · w/c ${start.getDate()} ${MONTHS[start.getMonth()]} ${start.getFullYear()}`);
   L.push(`${week.km} · ${week.time} · ${week.phase}${week.weekType ? ' · ' + week.weekType : ''}`);
   L.push('');
-  L.push('For Claude: build a Garmin structured workout for each QUALITY session below and push it to my watch on its date via athletedata. Use the paces given. Recoveries are v easy jog or walk unless stated. Easy runs and rest days are not listed and need nothing on the watch.');
+  L.push('For Claude: build a Garmin structured workout for each QUALITY session below, exactly as written, and push it to my watch on its date via athletedata.');
+  L.push('RULES: Warmup and cooldown are DISTANCE steps sized so each session totals its target km. Do not lengthen them, add extra warmup or cooldown, or convert them to time. Time-based reps stay time-based. Recoveries are v easy jog or walk unless stated. Easy runs and rest days are not listed and need nothing on the watch.');
   L.push('');
   let count = 0;
   DAY_COLS.forEach((k, i) => {
@@ -3779,16 +4195,33 @@ function buildWeekExport(idx) {
     const date = new Date(start);
     date.setDate(date.getDate() + i);
     const label = `${k.toUpperCase()} ${date.getDate()} ${MONTHS[date.getMonth()].slice(0,3)}`;
-    const meta = [d.km, d.time].filter(Boolean).join(' · ');
-    L.push(`${label} — ${d.type}${meta ? ' · ' + meta : ''}`);
-    if (d.session) L.push(`  ${d.session}`);
-    if (d.detail) d.detail.split(/\n+/).forEach(p => { const t = p.trim(); if (t) L.push(`  ${t}`); });
+    const plan = woPlan(d);
+    if (plan) {
+      const tgt = plan.target != null ? plan.target : round1(plan.total);
+      L.push(`${label} · ${d.type} · TARGET ${tgt} km`);
+      if (d.session) L.push(`  ${d.session}`);
+      if (!plan.fixed && plan.wu > 0) L.push(`  Warmup: ${plan.wu.toFixed(1)} km easy (distance step)`);
+      L.push(plan.fixed ? '  Run it as:' : '  Main set:');
+      L.push(...woLines(d.wo.steps, '    '));
+      if (plan.cd > 0) L.push(`  ${plan.fixed ? 'Finish' : 'Cooldown'}: ${plan.cd.toFixed(1)} km easy (distance step)`);
+      else if (!plan.fixed) L.push('  Cooldown: none, the session ends after the main set');
+      if (plan.fixed) L.push('  No extra warmup or cooldown beyond what is written.');
+      L.push(`  Total ≈ ${plan.total.toFixed(1)} km (main set ≈ ${plan.main.toFixed(1)} km). Do not exceed ${tgt} km.`);
+      if (d.detail) d.detail.split(/\n\n+/).slice(1).forEach(p => { const t = p.trim().replace(/\n/g, ' '); if (t && !/^Fuel/i.test(t)) L.push(`  Note: ${t}`); });
+    } else {
+      const meta = [d.km, d.time].filter(Boolean).join(' · ');
+      L.push(`${label} · ${d.type}${meta ? ' · ' + meta : ''}`);
+      if (d.session) L.push(`  ${d.session}`);
+      if (d.detail) d.detail.split(/\n+/).forEach(p => { const t = p.trim(); if (t) L.push(`  ${t}`); });
+      const tgt = woTarget(d);
+      if (tgt) L.push(`  Day target: ${d.km} in total. Fit any warmup and cooldown inside this; do not add extra.`);
+    }
     if (d.strides) L.push('  Strides: 100m controlled accelerations, full recovery');
     if (d.pmDouble) L.push('  PM: very easy Z1 shakeout');
     if (d.fuel) L.push('  Fuel: gel every 45 min');
     L.push('');
   });
-  if (count === 0) { L.push('No quality sessions this week — nothing to schedule.'); L.push(''); }
+  if (count === 0) { L.push('No quality sessions this week: nothing to schedule.'); L.push(''); }
   L.push('PACES (min/km): ' + PACES.map(p => {
     const v = p.open ? `${fmtKm(p.lo)}+` : (p.lo === p.hi ? fmtKm(p.lo) : `${fmtKm(p.lo)}–${fmtKm(p.hi)}`);
     return `${decodeEntities(p.zone)} ${v}`;
@@ -3888,13 +4321,13 @@ function weekBodyHTML(idx) {
   // Volume bar first — same position and styling as the home screen
   let out = `<div id="weekModalTotals">
     <div class="vol-block">
-      <div class="vol-label">Weekly Volume</div>
+      <div class="vol-label">${isBike() ? 'Run Equivalent' : 'Weekly Volume'}</div>
       <div class="vol-value${String(week.km).length > 7 ? ' sv-small' : ''}">${week.km}</div>
     </div>
     <div class="vol-divider"></div>
     <div class="vol-block">
-      <div class="vol-label">Hours</div>
-      <div class="vol-value vol-time${String(week.time).length > 11 ? ' sv-small' : ''}">${week.time}</div>
+      <div class="vol-label">${isBike() ? 'Ride Time' : 'Hours'}</div>
+      <div class="vol-value vol-time${String(week.time).length > 11 && !isBike() ? ' sv-small' : ''}">${isBike() ? '≈' + fmtHoursM(bikeWeekSec(week)) : week.time}</div>
     </div>
   </div>`;
   out += `<div id="weekModalAim">${week.aim || ''}</div>`;
@@ -3935,8 +4368,8 @@ function weekBodyHTML(idx) {
   let tableHtml = `
     <div class="ws-col-headers">
       <div class="ws-col-h">Day / Session</div>
-      <div class="ws-col-h right km">Distance</div>
-      <div class="ws-col-h right">Time</div>
+      <div class="ws-col-h right km">${isBike() ? 'Run km' : 'Distance'}</div>
+      <div class="ws-col-h right">${isBike() ? 'Ride' : 'Time'}</div>
     </div>`;
 
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
@@ -3948,7 +4381,8 @@ function weekBodyHTML(idx) {
     const isToday = dayDate.getTime() === todayMidnight.getTime();
 
     const accent = accentMap[d.effort] || '#636b76';
-    const timeVal = d.time || '—';
+    const bpw = isBike() ? bikePlan(d) : null;
+    const timeVal = bpw ? fmtRide(bpw.total) : (d.time || '—');
     const kmVal = d.km || (d.rest ? 'Rest' : d.holiday ? 'Holiday' : d.strengthOnly ? 'Strength' : '—');
     const kmStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
     const timeStyle = (d.rest || d.holiday || d.strengthOnly) ? 'color:var(--text3)' : '';
@@ -3963,7 +4397,7 @@ function weekBodyHTML(idx) {
         <div class="ws-accent" style="background:${(d.raceDay || d.race) ? RACE_ACCENT : accent}"></div>
         <div class="ws-day">
           <div class="ws-day-name">${dayLabel}</div>
-          <div class="ws-session-type">${d.type}</div>
+          <div class="ws-session-type">${bpw ? bikeTypeName(d) : d.type}</div>
         </div>
         <div class="ws-km${String(kmVal).length > 8 ? ' ws-shrink' : ''}" style="${kmStyle}">${kmVal}</div>
         <div class="ws-time${String(timeVal).length > 10 ? ' ws-shrink' : ''}" style="${timeStyle}">${timeVal}</div>
@@ -3992,6 +4426,7 @@ if ('serviceWorker' in navigator) {
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
+applySportMode();
 render();
 </script>
 </body>
